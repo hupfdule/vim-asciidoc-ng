@@ -1,0 +1,67 @@
+* [ ] Syntax highlighting
+  - Based on dagwieers, with some additional fixes.
+  - [ ] Highlight Title
+  - [ ] Use italics for emph
+  - [ ] highlight bullets
+  - [ ] Color highlight admonition types (WARNING, IMPORTANT, CAUTION in red)
+  - different colors for attributes (like :toc:) and its values
+  - Highlight block captions
+  - Highlight callout markers
+  - Lowlight comments
+  - Highlight keyboard macros (kbd:[Ctrl-T])
+  - Highlight markdown structures?
+  - [ ] Differentiate between asciidoc/asciidoctor/enhancedAsciidoctor?
+- [ ] Movements
+  - [x] Section movement [[,]],[],][
+  - [ ] Jump to next/prev section of the same level g[[,g]],g[],g[]
+       (Problem: g] gibt‘s schon)
+  - [ ] Jump to the next/prev section of lower/higher level [{,]},[},]{
+- [ ] Text objects
+  - [ ] section
+  - [ ] section heading
+  - [ ] block (code, admonition, etc.)
+  - [ ] list
+  - [ ] list item
+  - [ ] label (above blocks, etc.)
+- [ ] Code / Markup generation
+  - [ ] Lists
+    - [ ] Support different configurable list styles
+      - [ ] real numbers instead of dots
+      - [ ] define number/bullet style per level (e.g.
+        g:unordered_list_styles=[*, -, +], Bullshit! Asciidoc doesn‘t allow
+        this! We _have_ to use several ** to specify indentation. Only the
+        dash is an additional bullet char
+        g:ordered_list_styles=[1,a,i,A,I]
+    - use indentation as much as possible
+  - [ ] Blocks (code, listing, admonition, etc.)
+- [ ] UltiSnips
+- [ ] Functions / Commands
+  - [x] Switch section heading style (partly)
+  - [ ] Switch _all_ section heading styles
+  - [ ] Switch block type
+  - [ ] Prettify block (Set width of block delimiters to width of content.
+        Attention! When the delimiter has the same (+/- 1 char) length as
+        the text line above it, it cannot be distinguished from a setext
+        section header! Therefore we need to make sure that the lower
+        delimiters length is more than 2 chars different than the last
+        content line.
+  - [ ] Prettify whole file (all blocks)
+
+
+Für Blöcke in Asciidoc die regexes von Markdown mit verwenden, die per \z und \z1 angeben,
+dass zwei Elemente absolut gleich sein sollen. Damit kann man prüfen, dass die Einleitung und Ausleitung
+von Blöcken absolut gleich sind.
+Also
+
+=========
+Inhalt
+=========
+
+statt
+
+=========
+Nudel
+======
+
+
+Das prüft das jetzige Syntax-File nämlich nicht.

@@ -1,0 +1,64 @@
+is   inner section
+     All the text of the current section without heading and without
+     subsections.
+as   a section
+     The text of the current section with heading, but without subsections.
+iS   inner Section
+     The text of the current section without heading, but with all
+     subsections (including their headings of course).
+aS   a Section
+     The text of the current section with headin and with all subsections.
+
+ih   inner heading
+     The text of the heading of the current section without section level markers.
+ah   a heading
+     The text of the heading of the current section with section level markers.
+
+ib   inner block
+     The text in the current block without the surrounding block
+     delimiters.
+ab   a block
+     The text in the current block with the surrounding block delimiters.
+     But without any decorators like labels.
+aB   a Block
+     The text in the current block with the surrounding block delimiters
+     and also any decorators like labels.
+
+il   inner list
+     All list items adjacent to the current one (including the current
+     one).
+iL   inner List
+     All list items adjacent to the current one (including the current one)
+     and also all descendents. FIXME: This is bullshit. 'il' would also
+     have to include all descendents!
+al   a list
+     All list items of the current list of all levels.
+
+ii   inner item
+     the content of the current list item, but without the bullet.
+ai   an item
+     the current list item with the bullet, but without its descendents.
+aI   an Item
+     the current list item with the bullet and all its descendents.
+
+Title? Should this be any special than the sections?
+
+Document header? (document title, author and revision information, and document-wide attributes)
+
+Document preamble? Split in first and remaining paragraphs?
+
+Table. Inner? Outer?
+Table Cell?
+Table Row?
+Table Column?
+
+Block Title. To be able to modify (or add!) it while somewhere in the
+block. Therefore a _motion_ to jump to the Block title would be handy, too.
+
+Block Metadata. The same as for block title. But since there can be
+multiple lines of metadata, it may not be that useful.
+
+(Link, Xref, Image etc.) Macro. The macro itself and another one for its label.
+
+
+and so on...
