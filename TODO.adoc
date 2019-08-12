@@ -1,0 +1,31 @@
+* [ ] Syntax highlighting
+  - Based on dagwieers, with some additional fixes.
+  - [ ] Highlight Title
+  - [ ] Use italics for emph
+  - [ ] highlight bullets 
+  - [ ] Color highlight admonition types (WARNING, IMPORTANT, CAUTION in red)
+  - different colors for attributes (like :toc:) and its values
+  - Highlight block captions
+  - Highlight callout markers
+  - Lowlight comments
+  - Highlight keyboard macros (kbd:[Ctrl-T])
+  - Highlight markdown structures?
+        
+
+Für Blöcke in Asciidoc die regexes von Markdown mit verwenden, die per \z und \z1 angeben, 
+dass zwei Elemente absolut gleich sein sollen. Damit kann man prüfen, dass die Einleitung und Ausleitung 
+von Blöcken absolut gleich sind.
+Also 
+
+=========
+Inhalt
+=========
+
+statt
+
+=========
+Nudel
+======
+
+
+Das prüft das jetzige Syntax-File nämlich nicht.

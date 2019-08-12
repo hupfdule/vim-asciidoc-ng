@@ -1,0 +1,298 @@
+Asciidoc example test file
+==========================
+The Author <me@my.com>
+2000-01-01
+:toc:
+:homepage: http://my.homepage.com/
+:experimental:
+:compat-mode!:
+:source-highlighter: prettify
+
+This is the abstract.
+It is not very long.
+
+But it spans multiple paragraphs
+
+// Single character setex headings are currently not highlighted correctly
+A
+-
+
+// Single character atx headings are of course supported
+= B
+
+Highlighing (setex)
+-------------------
+
+// TODO inside comment should be highlighted.
+
+////
+Comment blocks can also contain a TODO
+////
+
+TODO as part of the text should _not_ be highlighted.
+
+NOTE: We can have admonitions, too.
+
+TIP: Admonitions have several types.
+
+WARNING: Even a warning exists.
+
+IMPORTANT: And this is important.
+
+CAUTION: Beware!
+
+[NOTE]
+====
+Our homepage is {homepage}[here]. And this is http://example.com[Another
+URL]. Link texts may be highlighted:
+https://github.com/asciidoctor[Asciidoctor @ *GitHub*].
+
+You can reach me at me@my.com.
+Please see the <<Second section>> for more examples.
+====
+
+====
+Why is a block without trailing dot incorrectly highlighted (it seems to be
+mistaken for a setex title)?
+====
+
+======================================================================
+An admonition block may contain complex content.
+
+.A list
+- one
+- two
+- three
+
+Another paragraph.
+======================================================================
+
+We include another file here.
+
+include::included.adoc[]
+
+Here is an internal link to https://asciidoctor.org[Asciidoctor]
+
+This is a sentence.footnote:[It contains a footnote]
+
+Some inline image: image:my-icon.svg[Icon, width=“50“].
+
+
+=== Text emphasis (atx async)
+
+ - *bold*, --*bold*, *bold*--bla*nonbold*, partly**bold**
+ - _emph_, --_emph_, _emph_--bla_nonemph_, partly__emph__
+ - *_bolditalic_*, --*_bolditalic_*, *_bolditalic_*--bla*_nonbolditalic_*, partly**__bolditalic__**
+ - +passthrough+. --+passthrough+, +passthrough+--bla+nonpassthrough+, partly++passthrough++
+//FIXME partlymonospace doesn't exist? Asciidoctor isn't rendering it as well
+//      compat-mode needs to be unset.
+ - `monospace`. --`monospace`, `monospace`--bla`nonmonospace`, partly``monospace``
+ - `*_monobolditalic_*`, --`*_monobolditalic_*`, `*_monobolditalic_*`--bla`*_nonmonobolditalic_*`, partly``**__monobolditalic__**``
+ - ^super^script, ~sub~script
+ - "`double curved quote'", '`single curved quotes`'
+
+
+== Lists (atx sync) ==
+
+ - Bulleted list item 1
+ - Bulleted list item 2
+
+ 1. Numbered list item 1
+ 2. Numbered list item 2
+
+Correct indentation: simple numbers at the start of lines should not be
+confused with list items. These are numbered lists, so lines following a
+list item should be indented:
+
+. Integer numbered list item. Lorem ipsum dolor sit amet, consectetuer
+  adipiscing elit.
+1. Integer numbered list item with optional numbering. Lorem ipsum dolor
+   sit amet, consectetuer adipiscing elit.
+2. Integer numbered list item with optional numbering. Lorem ipsum dolor
+   sit amet, consectetuer adipiscing elit.
+3. Integer numbered list item with optional numbering. Lorem ipsum dolor
+   sit amet, consectetuer adipiscing elit.
+4. Integer numbered list item with optional numbering. Lorem ipsum dolor
+   sit amet, consectetuer adipiscing elit.
+5. Integer numbered list item with optional numbering. Lorem ipsum dolor
+   sit amet, consectetuer adipiscing elit.
+6. Integer numbered list item with optional numbering. Lorem ipsum dolor
+   sit amet, consectetuer adipiscing elit.
+7. Integer numbered list item with optional numbering. Lorem ipsum dolor
+   sit amet, consectetuer adipiscing elit.
+8. Integer numbered list item with optional numbering. Lorem ipsum dolor
+   sit amet, consectetuer adipiscing elit.
+9. Integer numbered list item with optional numbering. Lorem ipsum dolor
+   sit amet, consectetuer adipiscing elit.
+10. Integer numbered list item with optional numbering. Lorem ipsum dolor
+   sit amet, consectetuer adipiscing elit.
+11. Integer numbered list item with optional numbering. Lorem ipsum dolor
+   sit amet, consectetuer adipiscing elit.
+12. Integer numbered list item with optional numbering. Lorem ipsum dolor
+    sit amet, consectetuer adipiscing elit.
+i) lower roman numbering
+ii) lower roman numbering
+iii) lower roman numbering
+iv) lower roman numbering
+v) lower roman numbering
+vi) lower roman numbering
+vii) lower roman numbering
+viii) lower roman numbering
+ix) lower roman numbering
+x) lower roman numbering
+xi) lower roman numbering
+I) upperroman numbering
+II) upperroman numbering
+III) upperroman numbering
+IV) upperroman numbering
+V) upperroman numbering
+VI) upperroman numbering
+a. loweralpha numbering
+b. loweralpha numbering
+c. loweralpha numbering
+A. upperalpha numbering
+B. upperalpha numbering
+C. upperalpha numbering
+D. upperalpha numbering
+
+
+But these are just numbers that happen to occur at the start of a line and
+should not trigger indentation:
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce euismod od
+1 commodo velit. Qui in magna commodo, est labitur dolorum an. Est ne magna
+primis. Sit munere ponderum dignissim et. Minim luptatum et vel. Vivamus
+12.5. mi eu lacus. Donec eget arcu bibendum nunc consequat lobortis. Lorem
+ipsum dolor sit amet, consectetuer adipiscing elit. Fusce euismod commodo
+
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce euismod od
+c. commodo velit. Qui in magna commodo, est labitur dolorum an. Est ne magna
+primis. Sit munere ponderum dignissim et. Minim luptatum et vel. (Vivamus
+xi) mi eu lacus. Donec eget arcu bibendum nunc consequat lobortis. Lorem
+ipsum dolor sit amet, consectetuer adipiscing elit. Fusce euismod commodo
+
+first term:: Definition
+second term:: Also some definition
+//commented out:: This should highlighted as comment
+
+* [*] checked
+* [x] also checked
+* [ ] not checked
+
+* Every list item has at least one paragraph of content,
+  which may be wrapped, even using a hanging indent.
++
+Additional paragraphs or blocks are adjoined by putting
+a list continuation on a line adjacent to both blocks.
++
+list continuation:: a plus sign (`{plus}`) on a line by itself
+
+* A literal paragraph does not require a list continuation.
+
+ $ gem install asciidoctor
+
+* AsciiDoc lists may contain any complex content.
++
+[cols="2", options="header"]
+|===
+|Application
+|Language
+
+|AsciiDoc
+|Python
+
+|Asciidoctor
+|Ruby
+|===
+|===================
+| Col1    | Col2
+| Value 1 | Value 2
+|===================
+
+
+=== Code blocks
+
+.app.rb
+[source,ruby]
+----
+require 'sinatra' // <1>
+
+get '/hi' do // <2>
+  "Hello World!" // <3>
+end
+----
+<1> Library import
+<2> URL mapping
+<3> HTTP response body
+
+[source,xml]
+----
+<section>
+  <title>Section Title</title> <!--1-->
+</section>
+----
+<1> The section title is required.
+
+
+=== Quotes
+
+"I hold it that a little rebellion now and then is a good thing,
+and as necessary in the political world as storms in the physical."
+-- Thomas Jefferson, Papers of Thomas Jefferson: Volume 11
+
+[quote, Abraham Lincoln, Address delivered at the dedication of the Cemetery at Gettysburg]
+____
+Four score and seven years ago our fathers brought forth
+on this continent a new nation...
+____
+
+[quote, Albert Einstein]
+A person who never made a mistake never tried anything new.
+
+____
+A person who never made a mistake never tried anything new.
+____
+
+[quote, Charles Lutwidge Dodgson, 'Mathematician and author, also known as https://en.wikipedia.org/wiki/Lewis_Carroll[Lewis Carroll]']
+____
+If you don't know where you are going, any road will get you there.
+____
+
+
+
+=== UI Macros and Text replacement
+
+- (C) is the copyright symbol
+- (R) is the registered symbol
+- (TM) is the trademark symbol
+
+[horizontal]
+kbd:[Ctrl+T]:: Open a new tab
+btn:[OK]:: Confirm
+
+
+## A markdown section
+
+It contains markdown styled content.
+
+> > Can we do markdown style quotes?
+> Yes, we can!
+> This markdown section
+> contains markdown style quotes.
+> -- Me, at the age of 41
+
+* * *
+
+```ruby
+require 'sinatra'
+
+get '/hi' do
+  "Hello World!"
+end
+```
+
+```java
+public class A {
+  private static final String S= "Hurz!"
+}
+```
