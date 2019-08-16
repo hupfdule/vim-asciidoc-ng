@@ -182,4 +182,7 @@ hi def link asciidocTwoLineTitle Title
 hi def link asciidocURL Macro
 let b:current_syntax = "asciidoc"
 
+
+" TODO: source only if specific flag is true
+runtime syntax/markdown-style.vim
 " vim: wrap et sw=2 sts=2:
