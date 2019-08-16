@@ -50,6 +50,7 @@ syn match asciidocQuotedSuperscript /\\\@<!\^\S\_.\{-}\(\^\|\n\s*\n\)/ contains=
 syn match asciidocQuotedMonospaced /\(^\|[| \t([.,=\]]\)\@<=+\([+ \n\t]\)\@!\(.\|\n\(\s*\n\)\@!\)\{-}\S\(+\([| \t)[\],.?!;:=]\|$\)\@=\)/ contains=asciidocEntityRef
 syn match asciidocQuotedMonospaced2 /\(^\|[| \t([.,=\]]\)\@<=`\([` \n\t]\)\@!\(.\|\n\(\s*\n\)\@!\)\{-}\S\(`\([| \t)[\],.?!;:=]\|$\)\@=\)/
 syn match asciidocQuotedUnconstrainedMonospaced /[\\+]\@<!++\S\_.\{-}\(++\|\n\s*\n\)/ contains=asciidocEntityRef
+syn match asciidocQuotedUnconstrainedMonospaced2 /[\\`]\@<!``\S\_.\{-}\(``\|\n\s*\n\)/ contains=asciidocEntityRef
 
 syn match asciidocQuotedEmphasized /\(^\|[| \t([.,=\]]\)\@<=_\([_ \n\t]\)\@!\(.\|\n\(\s*\n\)\@!\)\{-}\S\(_\([| \t)[\],.?!;:=]\|$\)\@=\)/ contains=asciidocEntityRef
 syn match asciidocQuotedEmphasized2 /\(^\|[| \t([.,=\]]\)\@<='\([' \n\t]\)\@!\(.\|\n\(\s*\n\)\@!\)\{-}\S\('\([| \t)[\],.?!;:=]\|$\)\@=\)/ contains=asciidocEntityRef
@@ -164,6 +165,7 @@ hi def link asciidocQuotedSuperscript Type
 hi def link asciidocQuotedUnconstrainedBold Special
 hi def link asciidocQuotedUnconstrainedEmphasized Type
 hi def link asciidocQuotedUnconstrainedMonospaced Identifier
+hi def link asciidocQuotedUnconstrainedMonospaced2 Identifier
 hi def link asciidocRefMacro Macro
 hi def link asciidocRuler Type
 hi def link asciidocSidebarDelimiter Type
