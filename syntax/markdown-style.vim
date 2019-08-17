@@ -33,6 +33,21 @@ syn match  asciidocMarkdownHRule         /^\s*-\s\{0,1}-\s\{0,1}-\(-\|\s\)*$/
 syn match  asciidocMarkdownHRule         /^\s*_\s\{0,1}_\s\{0,1}_\(_\|\s\)*$/
 
 
-" TODO: Link all the other syntax groups
-hi def link asciidocMarkdownCode Identifier
+" TODO: Specify "fancy" colors
+hi def link asciidocMarkdownSection1     asciidocOneLineTitle
+hi def link asciidocMarkdownSection2     asciidocOneLineTitle
+hi def link asciidocMarkdownSection3     asciidocOneLineTitle
+hi def link asciidocMarkdownSection4     asciidocOneLineTitle
+hi def link asciidocMarkdownSection5     asciidocOneLineTitle
+hi def link asciidocMarkdownSection6     asciidocOneLineTitle
+" Invent highlighting for quotes (still missing in asciidoc syntasx)
+hi def link asciidocMarkdownBlockquote1  Ignore
+hi def link asciidocMarkdownBlockquote2  Ignore
+hi def link asciidocMarkdownBlockquote3  Ignore
+hi def link asciidocMarkdownBlockquote4  Ignore
+hi def link asciidocMarkdownBlockquote5  Ignore
+hi def link asciidocMarkdownBlockquote6  Ignore
+hi def link asciidocMarkdownCode         asciidocListingBlock
+" should be the same as in asciidoc (needs to be defined)
 hi def link asciidocMarkdownCodeLanguage Type
+hi def link asciidocMarkdownHRule        asciidocRuler
