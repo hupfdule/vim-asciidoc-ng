@@ -1,7 +1,11 @@
 " TODO: create   T   title text-object
 " TODO: make section jumps [[ ]] etc work
 
-let s:atx_title = '\_^=*\s\+\(\S\%(.\%(\s\+=\+\s*\_$\)\@!\)*.\)\(\s\+=\+\)\?\s*$'
+" TODO: We could differentiate wheter to support markdown headings, 1 char
+" heading (only asciidoctor) or plain asciidoc headings (at least 2 char
+" headings), but is it worth the hassle? At the moment this regex matches
+" everything that is valid for asciidoctor.
+let s:atx_title = '^\(=\{1,6}\|\#{1,6})\s\+\(\S.\+)\(\s\+\1)\?$'
 let s:setext_title_underline = '[-=~^+]\+\s*$'
 let s:setext_title = '\_^\(\S.\+\)\s*\n' . s:setext_title_underline
 let s:setext_levels = ['=','-', '~', '^', '+']
