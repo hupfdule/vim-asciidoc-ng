@@ -39,16 +39,16 @@ nnoremap <buffer> <leader>2 :call asciidoc#set_section_title_level(3)<cr>
 nnoremap <buffer> <leader>3 :call asciidoc#set_section_title_level(4)<cr>
 nnoremap <buffer> <leader>4 :call asciidoc#set_section_title_level(5)<cr>
 
-" TODO: Make simple 'j/k' offsets honour setext style sections
+" TODO: Change to allow these mappings in operator-pending mode
 nnoremap <buffer> <expr><silent> [[ asciidoc#find_prior_section_title()
-nnoremap <buffer> <expr><silent> [] asciidoc#find_prior_section_title() . 'j'
+nnoremap <buffer> <expr><silent> [] asciidoc#find_prior_section_end()
 nnoremap <buffer> <expr><silent> ]] asciidoc#find_next_section_title()
-nnoremap <buffer> <expr><silent> ][ asciidoc#find_next_section_title() . 'k'
+nnoremap <buffer> <expr><silent> ][ asciidoc#find_next_section_end()
 
 xnoremap <buffer> <expr><silent> [[ asciidoc#find_prior_section_title()
-xnoremap <buffer> <expr><silent> [] asciidoc#find_prior_section_title() . 'j'
+xnoremap <buffer> <expr><silent> [] asciidoc#find_prior_section_end()
 xnoremap <buffer> <expr><silent> ]] asciidoc#find_next_section_title()
-xnoremap <buffer> <expr><silent> ][ asciidoc#find_next_section_title() . 'k'
+xnoremap <buffer> <expr><silent> ][ asciidoc#find_next_section_end()
 
 " TODO: Rethink default mappings. These don't seem to be well chosen
 " TODO: Provide <Plug> mappings for all commands
