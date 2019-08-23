@@ -1,11 +1,10 @@
 " TODO: create   T   title text-object
-" TODO: make section jumps [[ ]] etc work
 
 " TODO: We could differentiate wheter to support markdown headings, 1 char
 " heading (only asciidoctor) or plain asciidoc headings (at least 2 char
 " headings), but is it worth the hassle? At the moment this regex matches
 " everything that is valid for asciidoctor.
-let s:atx_title = '^\(=\{1,6}\|\#{1,6})\s\+\(\S.\+)\(\s\+\1)\?$'
+let s:atx_title = '^\(=\{1,6}\|\#\{1,6}\)\s\+\(\S.\+\)\(\s\+\1\)\?$'
 let s:setext_title_underline = '[-=~^+]\+\s*$'
 let s:setext_title = '\_^\(\S.\+\)\s*\n' . s:setext_title_underline
 let s:setext_levels = ['=','-', '~', '^', '+']
@@ -33,6 +32,49 @@ function! asciidoc#find_next_section_title()
     return
   endif
   return next . 'G'
+endfunction
+
+function! asciidoc#find_prior_section_end()
+  let old_pos = getpos('.')
+  let pos = old_pos
+  let pos[2] = 0
+  call setpos('.', pos)
+  let prior_atx = search(s:atx_title, 'Wbn')
+  let prior_setext = search(s:setext_title, 'Wbn')
+  call setpos('.', old_pos)
+  let prior = max([prior_atx, prior_setext])
+  if prior <= 1
+    " FIXME: We need to take leading comments and whitespace into account
+    return
+  endif
+  return prior - 1 . 'G'
+endfunction
+
+function! asciidoc#find_next_section_end()
+  let old_pos = getpos('.')
+  let next_atx = search(s:atx_title, 'Wn')
+  let next_setext = search(s:setext_title, 'Wn')
+  let next = min(filter([next_atx, next_setext], 'v:val != 0'))
+  if next == 0
+    " FIXME: This is a bit too much code duplication
+    return prevnonblank(line('$')) . 'G'
+  endif
+  let prev_non_blank = prevnonblank(next - 1)
+  if prev_non_blank <= old_pos[1]
+    " FIXME: This should be refactored to be a recursive call
+    let old_pos[1] = next
+    call setpos('.', old_pos)
+    let next_atx = search(s:atx_title, 'Wn')
+    let next_setext = search(s:setext_title, 'Wn')
+    let next = min(filter([next_atx, next_setext], 'v:val != 0'))
+    if next == 0
+      return prevnonblank(line('$')) . 'G'
+    else
+      return next -1 . 'G'
+    endif
+  else
+    return next - 1 . 'G'
+  endif
 endfunction
 
 function! asciidoc#get_atx_section_title(line_number)
