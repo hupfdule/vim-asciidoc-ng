@@ -4,7 +4,7 @@
 " heading (only asciidoctor) or plain asciidoc headings (at least 2 char
 " headings), but is it worth the hassle? At the moment this regex matches
 " everything that is valid for asciidoctor.
-let s:atx_title = '^\(=\{1,6}\|\#\{1,6}\)\s\+\(\S.\+\)\(\s\+\1\)\?$'
+let s:atx_title = '^\(=\{1,6}\|\#\{1,6}\)\s\+\(\S.\{-}\)\(\s\+\1\)\?$'
 let s:setext_title_underline = '[-=~^+]\+\s*$'
 let s:setext_title = '\_^\(\S.\+\)\s*\n' . s:setext_title_underline
 let s:setext_levels = ['=','-', '~', '^', '+']
@@ -80,10 +80,11 @@ endfunction
 function! asciidoc#get_atx_section_title(line_number)
   let line = getline(a:line_number)
   let match = matchlist(line, s:atx_title)
+  echo match
   if !empty(match)
-    let title = match[1]
-    let symmetric = len(match[2]) != 0
-    let level = len(matchstr(line, '^=*'))
+    let level = len(match[1])
+    let title = match[2]
+    let symmetric = len(match[3]) != 0
     return {'line' : a:line_number, 'type' : 'atx', 'symmetric' : symmetric, 'level' : level, 'title' : title}
   else
     return {}
