@@ -15,9 +15,6 @@ endif
 compiler asciidoc
 
 setlocal foldmethod=marker
-if &spelllang == ''
-  setlocal spelllang=en
-endif
 
 setlocal spell
 setlocal autoindent expandtab softtabstop=2 shiftwidth=2 wrap
