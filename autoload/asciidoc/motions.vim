@@ -8,6 +8,62 @@ let s:setext_title_underline = '[-=~^+]\+\s*$'
 let s:setext_title = '\_^\(\S.\+\)\s*\n' . s:setext_title_underline
 let s:setext_levels = ['=','-', '~', '^', '+']
 
+
+""
+" Change the line specified by {line_number} into an atx section header
+" of the given {level} with the given {title} either {symmetric} or not.
+"
+" FIXME: This function is not a motion, but depends on script-local
+" functions in this script. This should be refactored again.
+function! asciidoc#motions#set_atx_section_title(line_number, level, title, symmetric) abort
+  let level_marks = repeat('=', a:level)
+  call setline(a:line_number, level_marks . ' ' . a:title . (a:symmetric ? (' ' . level_marks) : ''))
+endfunction
+
+""
+" Change the line specified by {line_number} into a setext section header
+" of the given {level} with the given {title}.
+"
+" FIXME: This function is not a motion, but depends on script-local
+" functions in this script. This should be refactored again.
+function! asciidoc#motions#set_setext_section_title(line_number, level, title) abort
+  let line_number = a:line_number + 1
+  let level_marks = repeat(s:setext_levels[a:level - 1], len(a:title))
+  if getline(line_number) =~ '^$'
+    call append(line_number - 1, level_marks)
+  else
+    call setline(line_number, level_marks)
+  endif
+endfunction
+
+""
+" Change the current line into a section header of the given level.
+" If the current line already is a valid section header its style
+" (atx/setext and symmetric/asymmetric) is retained. Otherwise the default
+" style specified by |g:asciidoc_title_style| and
+" |g:asciidoc_title_style_atx| is used.
+"
+" FIXME: This function is not a motion, but depends on script-local
+" functions in this script. This should be refactored again.
+function! asciidoc#motions#set_section_title_level(level) abort
+  let line = line('.')
+  let section_title = s:get_section_title(line)
+  if !empty(section_title)
+    if section_title.type == 'atx'
+      call asciidoc#set_atx_section_title(section_title.line, a:level, section_title.title, section_title.symmetric)
+    else
+      call asciidoc#set_setext_section_title(section_title.line, a:level, section_title.title)
+    endif
+  else
+    let title = getline('.')
+    if g:asciidoc_title_style == 'atx'
+      call asciidoc#set_atx_section_title(line, a:level, title, g:asciidoc_title_style_atx != 'asymmetric')
+    else
+      call asciidoc#set_setext_section_title(line, a:level, title)
+    endif
+  endif
+endfunction
+
 ""
 " Jumps to the title of the current section.
 " If the cursor already is at the title of the current section,

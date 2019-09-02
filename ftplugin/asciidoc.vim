@@ -33,11 +33,11 @@ setlocal nosmartindent nocindent
 setlocal isk-=_
 
 " headings
-nnoremap <buffer> <leader>0 :call asciidoc#set_section_title_level(1)<cr>
-nnoremap <buffer> <leader>1 :call asciidoc#set_section_title_level(2)<cr>
-nnoremap <buffer> <leader>2 :call asciidoc#set_section_title_level(3)<cr>
-nnoremap <buffer> <leader>3 :call asciidoc#set_section_title_level(4)<cr>
-nnoremap <buffer> <leader>4 :call asciidoc#set_section_title_level(5)<cr>
+nnoremap <buffer> <leader>0 :call asciidoc#motions#set_section_title_level(1)<cr>
+nnoremap <buffer> <leader>1 :call asciidoc#motions#set_section_title_level(2)<cr>
+nnoremap <buffer> <leader>2 :call asciidoc#motions#set_section_title_level(3)<cr>
+nnoremap <buffer> <leader>3 :call asciidoc#motions#set_section_title_level(4)<cr>
+nnoremap <buffer> <leader>4 :call asciidoc#motions#set_section_title_level(5)<cr>
 
 noremap <buffer> <expr><silent> [[ asciidoc#motions#jump_to_prior_section_title()
 noremap <buffer> <expr><silent> [] asciidoc#motions#jump_to_prior_section_end()
@@ -46,10 +46,10 @@ noremap <buffer> <expr><silent> ][ asciidoc#motions#jump_to_next_section_end()
 
 " TODO: Rethink default mappings. These don't seem to be well chosen
 " TODO: Provide <Plug> mappings for all commands
-xnoremap <buffer> <silent> lu :call asciidoc#make_list('*')<cr>gv
-xnoremap <buffer> <silent> lo :call asciidoc#make_list('.')<cr>gv
-xnoremap <buffer> <silent> l< :call asciidoc#dent_list('in')<cr>gv
-xnoremap <buffer> <silent> l> :call asciidoc#dent_list('out')<cr>gv
+xnoremap <buffer> <silent> lu :call asciidoc#lists#make_list('*')<cr>gv
+xnoremap <buffer> <silent> lo :call asciidoc#lists#make_list('.')<cr>gv
+xnoremap <buffer> <silent> l< :call asciidoc#lists#dent_list('in')<cr>gv
+xnoremap <buffer> <silent> l> :call asciidoc#lists#dent_list('out')<cr>gv
 
 nmap     <buffer> <leader>lu viplu<c-\><c-n>``
 nmap     <buffer> <leader>lo viplo<c-\><c-n>``
