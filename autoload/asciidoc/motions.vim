@@ -8,6 +8,11 @@ let s:setext_title_underline = '[-=~^+]\+\s*$'
 let s:setext_title = '\_^\(\S.\+\)\s*\n' . s:setext_title_underline
 let s:setext_levels = ['=','-', '~', '^', '+']
 
+""
+" Jumps to the title of the current section.
+" If the cursor already is at the title of the current section,
+" jump to the title of the previous section.
+" If the cursor is at the title of the first section, do nothing.
 function! asciidoc#motions#jump_to_prior_section_title() abort
   let old_pos = getpos('.')
   let pos = old_pos
@@ -23,6 +28,10 @@ function! asciidoc#motions#jump_to_prior_section_title() abort
   return prior . 'G'
 endfunction
 
+""
+" Jumps to the title of the next section.
+" If the cursor already is at the title of the last section,
+" do nothing.
 function! asciidoc#motions#jump_to_next_section_title() abort
   let next_atx = search(s:atx_title, 'Wn')
   let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
@@ -33,6 +42,10 @@ function! asciidoc#motions#jump_to_next_section_title() abort
   return next . 'G'
 endfunction
 
+""
+" Jumps to the last non-empty line of the previous section.
+" If the cursor already is at the end of the first section,
+" do nothing.
 function! asciidoc#motions#jump_to_prior_section_end() abort
   let old_pos = getpos('.')
   let pos = old_pos
@@ -49,6 +62,11 @@ function! asciidoc#motions#jump_to_prior_section_end() abort
   return prior - 1 . 'G'
 endfunction
 
+""
+" Jumps to the last non-empty line of the current section.
+" If the cursor already is at the end of the current section,
+" jump to the end of the next section.
+" If the cursor is at the end of the last section, do nothing.
 function! asciidoc#motions#jump_to_next_section_end() abort
   let old_pos = getpos('.')
   let next_atx = search(s:atx_title, 'Wn')
