@@ -70,7 +70,7 @@ function! asciidoc#find_prior_section_end()
   let pos[2] = 0
   call setpos('.', pos)
   let prior_atx = search(s:atx_title, 'Wbn')
-  let prior_setext = search(s:setext_title, 'Wbn')
+  let prior_setext = asciidoc#find_next_setext_section_title(line('.'), 'Wbn')
   call setpos('.', old_pos)
   let prior = max([prior_atx, prior_setext])
   if prior <= 1
@@ -83,7 +83,7 @@ endfunction
 function! asciidoc#find_next_section_end()
   let old_pos = getpos('.')
   let next_atx = search(s:atx_title, 'Wn')
-  let next_setext = search(s:setext_title, 'Wn')
+  let next_setext = asciidoc#find_next_setext_section_title(line('.'), 'Wn')
   let next = min(filter([next_atx, next_setext], 'v:val != 0'))
   if next == 0
     " FIXME: This is a bit too much code duplication
