@@ -32,6 +32,7 @@
         this! We _have_ to use several ** to specify indentation. Only the
         dash is an additional bullet char
         g:ordered_list_styles=[1,a,i,A,I]
+    - use indentation as much as possible
   - [ ] Blocks (code, listing, admonition, etc.)
 - [ ] UltiSnips
 
