@@ -39,10 +39,10 @@ nnoremap <buffer> <leader>2 :call asciidoc#set_section_title_level(3)<cr>
 nnoremap <buffer> <leader>3 :call asciidoc#set_section_title_level(4)<cr>
 nnoremap <buffer> <leader>4 :call asciidoc#set_section_title_level(5)<cr>
 
-noremap <buffer> <expr><silent> [[ asciidoc#find_prior_section_title()
-noremap <buffer> <expr><silent> [] asciidoc#find_prior_section_end()
-noremap <buffer> <expr><silent> ]] asciidoc#find_next_section_title()
-noremap <buffer> <expr><silent> ][ asciidoc#find_next_section_end()
+noremap <buffer> <expr><silent> [[ asciidoc#motions#jump_to_prior_section_title()
+noremap <buffer> <expr><silent> [] asciidoc#motions#jump_to_prior_section_end()
+noremap <buffer> <expr><silent> ]] asciidoc#motions#jump_to_next_section_title()
+noremap <buffer> <expr><silent> ][ asciidoc#motions#jump_to_next_section_end()
 
 " TODO: Rethink default mappings. These don't seem to be well chosen
 " TODO: Provide <Plug> mappings for all commands
