@@ -21,7 +21,7 @@ let &l:errorformat = ''
       \. '%Wasciidoc: DEPRECATED: %f: line %l: %m,'
       \. '%Wasciidoc: DEPRECATED: %f: %m'
 
-function! s:set_makeprg()
+function! s:set_makeprg() abort
   let &l:makeprg = ''
         \. 'asciidoctor'
         \. ' -a urldata'
@@ -42,7 +42,7 @@ if ! exists('g:asciidoctor_theme')
   let g:asciidoctor_theme = 'default'
 endif
 
-function! s:asciidoctor_themes()
+function! s:asciidoctor_themes() abort
   if ! exists('g:asciidoctor_themes_dir')
     echohl Warning
     echom 'Set g:asciidoctor_themes_dir for theme support.'
@@ -53,11 +53,11 @@ function! s:asciidoctor_themes()
         \, 'fnamemodify(v:val, ":p:t")')
 endfunction
 
-function! s:available_themes_completer(ArgLead, CmdLine, CursorPos)
+function! s:available_themes_completer(ArgLead, CmdLine, CursorPos) abort
   return filter(s:asciidoctor_themes(), 'v:val =~ a:ArgLead')
 endfunction
 
-function! s:update_theme(theme)
+function! s:update_theme(theme) abort
   if a:theme == 'default'
     let b:asciidoctor_theme = ''
   else

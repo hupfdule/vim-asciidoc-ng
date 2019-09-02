@@ -1,4 +1,4 @@
-function! vimple#overlay#controller(...)
+function! vimple#overlay#controller(...) abort
   if a:0
     for [key, act] in items(a:1)
       exe 'nnoremap <buffer> ' . key . ' ' . act
@@ -8,14 +8,14 @@ endfunction
 
 let s:overlay_count = 1
 
-function! vimple#overlay#popup(list, ...)
+function! vimple#overlay#popup(list, ...) abort
   let actions = {'q' : ':call vimple#overlay#close()<cr>'}
   let user_options = a:0 ? a:1 : {}
   let options = extend({'filter' : 0, 'use_split' : 1, 'vertical' : 0}, user_options)
   call vimple#overlay#show(a:list, actions, options)
 endfunction
 
-function! vimple#overlay#show(list, actions, ...)
+function! vimple#overlay#show(list, actions, ...) abort
   let overlay_parent_altbuf = bufnr('#')
   let overlay_parent        = bufnr('%')
 
@@ -75,7 +75,7 @@ function! vimple#overlay#show(list, actions, ...)
   call vimple#overlay#controller(a:actions)
 endfunction
 
-function! vimple#overlay#update(list)
+function! vimple#overlay#update(list) abort
   let line = line('.')
   % delete
   call append(0, a:list)
@@ -96,7 +96,7 @@ function! vimple#overlay#update(list)
   endif
 endfunction
 
-function! vimple#overlay#close()
+function! vimple#overlay#close() abort
   if b:options.use_split
     let scratch_buf = bufnr('')
     wincmd q
@@ -112,18 +112,18 @@ function! vimple#overlay#close()
   endif
 endfunction
 
-function! vimple#overlay#select_line()
+function! vimple#overlay#select_line() abort
   let line = getline('.')
   call vimple#overlay#close()
   return line
 endfunction
 
-function! vimple#overlay#select_buffer()
+function! vimple#overlay#select_buffer() abort
   let lines = getline(1,'$')
   call vimple#overlay#close()
   return lines
 endfunction
 
-function! vimple#overlay#command(cmd, actions, options)
+function! vimple#overlay#command(cmd, actions, options) abort
   call vimple#overlay#show(vimple#redir(a:cmd), a:actions, a:options)
 endfunction

@@ -21,7 +21,7 @@ let &l:errorformat = ''
       \. '%Wasciidoc: DEPRECATED: %f: line %l: %m,'
       \. '%Wasciidoc: DEPRECATED: %f: %m'
 
-function! s:set_makeprg()
+function! s:set_makeprg() abort
   let &l:makeprg = ''
         \. 'asciidoc'
         \. ' -a urldata'
@@ -43,11 +43,11 @@ if ! exists('g:asciidoc_theme')
   let g:asciidoc_theme = 'default'
 endif
 
-function! s:available_themes_completer(ArgLead, CmdLine, CursorPos)
+function! s:available_themes_completer(ArgLead, CmdLine, CursorPos) abort
   return filter(copy(g:asciidoc_themes), 'v:val =~ a:ArgLead')
 endfunction
 
-function! s:update_theme(theme)
+function! s:update_theme(theme) abort
   if a:theme == 'default'
     let b:asciidoc_theme = ''
   else

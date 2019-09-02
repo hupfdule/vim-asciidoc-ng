@@ -8,7 +8,7 @@ let s:setext_title_underline = '[-=~^+]\+\s*$'
 let s:setext_title = '\_^\(\S.\+\)\s*\n' . s:setext_title_underline
 let s:setext_levels = ['=','-', '~', '^', '+']
 
-function! asciidoc#motions#jump_to_prior_section_title()
+function! asciidoc#motions#jump_to_prior_section_title() abort
   let old_pos = getpos('.')
   let pos = old_pos
   let pos[2] = 0
@@ -23,7 +23,7 @@ function! asciidoc#motions#jump_to_prior_section_title()
   return prior . 'G'
 endfunction
 
-function! asciidoc#motions#jump_to_next_section_title()
+function! asciidoc#motions#jump_to_next_section_title() abort
   let next_atx = search(s:atx_title, 'Wn')
   let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
   let next = min(filter([next_atx, next_setext], 'v:val != 0'))
@@ -33,7 +33,7 @@ function! asciidoc#motions#jump_to_next_section_title()
   return next . 'G'
 endfunction
 
-function! asciidoc#motions#jump_to_prior_section_end()
+function! asciidoc#motions#jump_to_prior_section_end() abort
   let old_pos = getpos('.')
   let pos = old_pos
   let pos[2] = 0
@@ -49,7 +49,7 @@ function! asciidoc#motions#jump_to_prior_section_end()
   return prior - 1 . 'G'
 endfunction
 
-function! asciidoc#motions#jump_to_next_section_end()
+function! asciidoc#motions#jump_to_next_section_end() abort
   let old_pos = getpos('.')
   let next_atx = search(s:atx_title, 'Wn')
   let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
@@ -106,7 +106,7 @@ function! s:find_next_setext_section_title(start_line, search_flags) abort
   endif
 endfunction
 
-function! s:get_atx_section_title(line_number)
+function! s:get_atx_section_title(line_number) abort
   let line = getline(a:line_number)
   let match = matchlist(line, s:atx_title)
   echo match
@@ -120,7 +120,7 @@ function! s:get_atx_section_title(line_number)
   endif
 endfunction
 
-function! s:get_setext_section_title(line_number)
+function! s:get_setext_section_title(line_number) abort
   let line = getline(a:line_number)
   if line =~ '^' . s:setext_title_underline
     let underline = line
@@ -138,7 +138,7 @@ function! s:get_setext_section_title(line_number)
   endif
 endfunction
 
-function! s:get_section_title(line_number)
+function! s:get_section_title(line_number) abort
   let atx = s:get_atx_section_title(a:line_number)
   if !empty(atx)
     return atx

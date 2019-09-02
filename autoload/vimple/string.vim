@@ -1,4 +1,4 @@
-function! vimple#string#scanner(str)
+function! vimple#string#scanner(str) abort
   let obj = {}
   if type(a:str) == type([])
     let obj.string = join(a:str, "\n")
@@ -89,7 +89,7 @@ function! vimple#string#scanner(str)
 endfunction
 
 " A list of tokens with navigation methods & element access
-function! vimple#string#tokens()
+function! vimple#string#tokens() abort
   let obj          = {}
   let obj.tokens   = []
   let obj.index    = 0
@@ -120,7 +120,7 @@ function! vimple#string#tokens()
   return obj
 endfunction
 
-function! vimple#string#lexer(string)
+function! vimple#string#lexer(string) abort
   let obj               = {}
   let obj.tokens        = string#tokens()
   let obj.string        = ''
@@ -203,7 +203,7 @@ let s:stops = map(
       \ ["a" , "about" , "above" , "after" , "again" , "against" , "all" , "am" , "an" , "and" , "any" , "are" , "aren't" , "as" , "at" , "be" , "because" , "been" , "before" , "being" , "below" , "between" , "both" , "but" , "by" , "can't" , "cannot" , "could" , "couldn't" , "did" , "didn't" , "do" , "does" , "doesn't" , "doing" , "don't" , "down" , "during" , "each" , "few" , "for" , "from" , "further" , "had" , "hadn't" , "has" , "hasn't" , "have" , "haven't" , "having" , "he" , "he'd" , "he'll" , "he's" , "her" , "here" , "here's" , "hers" , "herself" , "him" , "himself" , "his" , "how" , "how's" , "i" , "i'd" , "i'll" , "i'm" , "i've" , "if" , "in" , "into" , "is" , "isn't" , "it" , "it's" , "its" , "itself" , "let's" , "me" , "more" , "most" , "mustn't" , "my" , "myself" , "no" , "nor" , "not" , "of" , "off" , "on" , "once" , "only" , "or" , "other" , "ought" , "our" , "ours" , "ourselves" , "out" , "over" , "own" , "same" , "shan't" , "she" , "she'd" , "she'll" , "she's" , "should" , "shouldn't" , "so" , "some" , "such" , "than" , "that" , "that's" , "the" , "their" , "theirs" , "them" , "themselves" , "then" , "there" , "there's" , "these" , "they" , "they'd" , "they'll" , "they're" , "they've" , "this" , "those" , "through" , "to" , "too" , "under" , "until" , "up" , "very" , "was" , "wasn't" , "we" , "we'd" , "we'll" , "we're" , "we've" , "were" , "weren't" , "what" , "what's" , "when" , "when's" , "where" , "where's" , "which" , "while" , "who" , "who's" , "whom" , "why" , "why's" , "with" , "won't" , "would" , "wouldn't" , "you" , "you'd" , "you'll" , "you're" , "you've" , "your" , "yours" , "yourself" , "yourselves"]
       \, 'ml#porter#stemmer(v:val)')
 
-function! vimple#string#tokenize(text)
+function! vimple#string#tokenize(text) abort
   let t = (type(a:text) == type([]) ? join(a:text, ' ') : a:text)
   let text = map(
         \  split(
@@ -228,11 +228,11 @@ function! vimple#string#tokenize(text)
 endfunction
 
 
-function! vimple#string#trim(str)
+function! vimple#string#trim(str) abort
   return matchstr(a:str, '^\_s*\zs.\{-}\ze\_s*$')
 endfunction
 
-function! vimple#string#to_string(obj)
+function! vimple#string#to_string(obj) abort
   let obj = a:obj
   if type(obj) < 2
     return obj
@@ -241,7 +241,7 @@ function! vimple#string#to_string(obj)
   endif
 endfunction
 
-function! vimple#string#eval(line)
+function! vimple#string#eval(line) abort
   let line = string#trim(a:line)
   if line[0] =~ '[{[]'
     return eval(line)
@@ -254,7 +254,7 @@ endfunction
 " range(65, 90) - ['a' .. 'z']
 " range('a', 'f') - ['a' .. 'f']
 " range('A', 6) - ['A' .. 'F']
-function! vimple#string#range(...)
+function! vimple#string#range(...) abort
   if ! a:0
     throw 'vimple string#range: not enough arguments'
   endif
@@ -283,7 +283,7 @@ function! vimple#string#range(...)
 endfunction
 
 " returns a dict of {word : count}
-function! vimple#string#words(text)
+function! vimple#string#words(text) abort
   let words = {}
   for w in split(a:text)
     let words[w] = get(words, w, 0) + 1

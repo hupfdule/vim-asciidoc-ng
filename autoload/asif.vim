@@ -30,7 +30,7 @@ set cpo&vim
 "let g:loaded_asif = 1
 
 " Public Interface: {{{1
-function! asif#Asif(content, filetype, commands)
+function! asif#Asif(content, filetype, commands) abort
   let content = join(type(a:content) == type('')
         \ ? split(a:content, "\n")
         \ : a:content, ' ')

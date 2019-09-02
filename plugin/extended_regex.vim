@@ -1,4 +1,4 @@
-function! ExtendedRegexObject(...)
+function! ExtendedRegexObject(...) abort
   return call('extended_regex#ExtendedRegex', a:000)
 endfunction
 

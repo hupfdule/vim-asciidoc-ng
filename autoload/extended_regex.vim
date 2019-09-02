@@ -34,7 +34,7 @@ set cpo&vim
 
 " Library Interface: {{{1
 
-function! extended_regex#ExtendedRegex(...)
+function! extended_regex#ExtendedRegex(...) abort
   let erex = {}
   let erex.lookup_function = ''
   let erex.lookup_dict = {}

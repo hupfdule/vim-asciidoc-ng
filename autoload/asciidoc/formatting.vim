@@ -40,7 +40,7 @@ let s:asciidoc.list_pattern = ERex.parse('
 " let s:asciidoc.itemization_pattern = '^\s*[-*+.]\+\s'
 
 
-function! asciidoc#formatting#AsciidocFormatexpr()
+function! asciidoc#formatting#AsciidocFormatexpr() abort
   return s:asciidoc.formatexpr()
 endfunction
 

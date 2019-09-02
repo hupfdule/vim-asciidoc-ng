@@ -6,7 +6,7 @@
 "        b = [1, 2]
 " list#flat(a,b)      : ['a', 'b', 1,  2]
 "
-function! vimple#list#flat(...)
+function! vimple#list#flat(...) abort
   let fl = []
   let list = a:000
   if a:0 == 1
@@ -23,7 +23,7 @@ function! vimple#list#flat(...)
   return fl
 endfunction
 
-function! vimple#list#split(list, match)
+function! vimple#list#split(list, match) abort
   let ret = []
   let r = []
   for e in a:list
@@ -51,7 +51,7 @@ endfunction
 "
 " NOTE: If one list is longer than the other, the tail of that list is added
 " to the result.
-function! vimple#list#zip(a, b, ...)
+function! vimple#list#zip(a, b, ...) abort
   let method = 1
   if a:0
     let method = a:1
@@ -82,7 +82,7 @@ function! vimple#list#zip(a, b, ...)
 endfunction "}}}1
 
 " list#inject(list, init, funcref)
-function! vimple#list#inject(list, init, funcref)
+function! vimple#list#inject(list, init, funcref) abort
   if ! exists('*' . a:funcref)
     throw 'vimple: list#inject(): Funcref ' . a:funcref . ' does not exist!'
     return a:init
@@ -97,7 +97,7 @@ function! vimple#list#inject(list, init, funcref)
 endf
 
 " partition list into count-element sublists
-function! vimple#list#partition(list, count)
+function! vimple#list#partition(list, count) abort
   let lst = deepcopy(a:list)
   let len = len(lst)
   let cnt = a:count
@@ -120,7 +120,7 @@ endfunc
 " partition list into cols sublists and join with colsep=\t
 " list#lspread(list, cols, colsep="\t")
 " returns a list
-function! vimple#list#lspread(list, cols, ...)
+function! vimple#list#lspread(list, cols, ...) abort
   let colsep = "\t"
   if a:0
     let colsep = a:1
@@ -131,7 +131,7 @@ endfunction
 " partition list into cols sublists and join with col and row seps
 " list#spread(list, cols, colsep, rowsep)
 " returns a string
-function! vimple#list#spread(list, cols, ...)
+function! vimple#list#spread(list, cols, ...) abort
   let colsep = "\t"
   let rowsep = "\n"
   if a:0
@@ -150,7 +150,7 @@ endfunction
 "   return map(a:list, 'map(v:val, ''' . a:expr . ''')')
 " endfunction
 
-function! vimple#list#shuffle(a)
+function! vimple#list#shuffle(a) abort
   let b = type(a:a) == type('') ? split(deepcopy(a:a), "\n") : a:a
   let n = 0
   let length = len(b)
@@ -164,7 +164,7 @@ function! vimple#list#shuffle(a)
   return b
 endfunction
 
-function! vimple#Shuffle(...) range abort
+function! vimple#Shuffle(...) range abort abort
   let reg = @@
   exe a:firstline . ',' . a:lastline . 'd'
   let lines = list#shuffle(@@)
@@ -193,7 +193,7 @@ command! -nargs=0 -range=% -bar Shuffle <line1>,<line2> call Shuffle()
 " dua
 " tiga
 " call append('.', Paste(@a, @b))
-function! vimple#list#paste(a, b, ...)
+function! vimple#list#paste(a, b, ...) abort
   let join = (a:0 >= 1) ? a:1 : ' '
   let sep = (a:0 == 2) ? a:2 : '\n'
   if type(a:a) == 1
@@ -208,12 +208,12 @@ endfunction
 
 " list#lrotate(array)
 " Perform a Left Rotate on array
-function! vimple#list#lrotate(a)
+function! vimple#list#lrotate(a) abort
   return extend(a:a[1:-1], [a:a[0]])
 endfunction
 
 " list#rrotate(array)
 " Perform a Right Rotate on array
-function! vimple#list#rrotate(a)
+function! vimple#list#rrotate(a) abort
   return extend([a:a[-1]], a:a[0:-2])
 endfunction

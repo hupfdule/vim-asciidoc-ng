@@ -15,7 +15,7 @@ augroup END
 " Checks for a valid AsciiDoc document title after first skipping any
 " leading comments.
 " Original code by Stuart Rackham <srackham@gmail.com>
-function! s:FTasciidoc()
+function! s:FTasciidoc() abort
   " this check doesn't play well with
   " some CMake files and should be skipped
   if expand('%:t') == "CMakeLists.txt"

@@ -120,7 +120,7 @@ endif
 setlocal indentexpr=GetAsciidocIndent()
 
 " stolen from the RST equivalent
-function! GetAsciidocIndent()
+function! GetAsciidocIndent() abort
   let lnum = prevnonblank(v:lnum - 1)
   if lnum == 0
     return 0
@@ -155,7 +155,7 @@ endfunction
 nnoremap <silent> <buffer> Q  :call <SID>Q(0)<cr>
 nnoremap <silent> <buffer> gQ :call <SID>Q(1)<cr>
 
-function! s:Q(skip_block_after_format)
+function! s:Q(skip_block_after_format) abort
   if ! a:skip_block_after_format
     let save_clip = @*
     let save_reg  = @@

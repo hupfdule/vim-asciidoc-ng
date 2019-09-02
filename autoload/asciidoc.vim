@@ -1,12 +1,12 @@
 " TODO: create   T   title text-object
 
 
-function! asciidoc#set_atx_section_title(line_number, level, title, symmetric)
+function! asciidoc#set_atx_section_title(line_number, level, title, symmetric) abort
   let level_marks = repeat('=', a:level)
   call setline(a:line_number, level_marks . ' ' . a:title . (a:symmetric ? (' ' . level_marks) : ''))
 endfunction
 
-function! asciidoc#set_setext_section_title(line_number, level, title)
+function! asciidoc#set_setext_section_title(line_number, level, title) abort
   let line_number = a:line_number + 1
   let level_marks = repeat(s:setext_levels[a:level - 1], len(a:title))
   if getline(line_number) =~ '^$'
@@ -16,7 +16,7 @@ function! asciidoc#set_setext_section_title(line_number, level, title)
   endif
 endfunction
 
-function! asciidoc#set_section_title_level(level)
+function! asciidoc#set_section_title_level(level) abort
   let line = line('.')
   let section_title = s:get_section_title(line)
   if !empty(section_title)
@@ -35,13 +35,13 @@ function! asciidoc#set_section_title_level(level)
   endif
 endfunction
 
-function! asciidoc#make_list(type) range
+function! asciidoc#make_list(type) range abort
   let old_search = @/
   exe a:firstline . ',' . a:lastline . 's/^\s*\([*.]*\)\s*/\=repeat("' . a:type . '", max([1, len(submatch(1))]))." "/'
   let @/ = old_search
 endfunction
 
-function! asciidoc#dent_list(in_out) range
+function! asciidoc#dent_list(in_out) range abort
   let old_search = @/
   if a:in_out == 'in'
     silent! exe a:firstline . ',' . a:lastline . 's/^[*.]//'
