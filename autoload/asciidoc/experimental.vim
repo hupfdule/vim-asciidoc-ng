@@ -1,6 +1,18 @@
 " Vim autoload file
 " vim-ft-asciidoc/autoload/experimental.vim
 "
+let g:asciidoc_blocks = {
+            \ '/': '////',
+            \ '=': '====',
+            \ '-': '----',
+            \ '.': '....',
+            \ '+': '++++',
+            \ '*': '****',
+            \ 'o': '--',
+            \ 'q': '____',
+            \ 'v': '____',
+            \ }
+
 function! asciidoc#experimental#block_operator(type, ...) abort "{{{
     " {{{
     let debug = []

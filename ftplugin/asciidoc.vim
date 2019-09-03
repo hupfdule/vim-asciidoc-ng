@@ -156,6 +156,8 @@ endfunction
 " the gQ form subsequently jumps over the reformatted block
 nnoremap <silent> <buffer> Q  :call <SID>Q(0)<cr>
 nnoremap <silent> <buffer> gQ :call <SID>Q(1)<cr>
+" FIXME: How to retain the opertor-pending?
+nnoremap <silent> <buffer> gq :call <SID>Q(0)<cr>
 
 function! s:Q(skip_block_after_format) abort
   if ! a:skip_block_after_format
@@ -187,5 +189,11 @@ function! s:Q(skip_block_after_format) abort
   endif
 endfunction
 
+" FIXME: This moves the viewport and places the cursor in the
+" center of the screen (vertically). That should not happen.
+" Interestingly the Q function above _doesn't_ do this!
+" Therefore the above should be mapped to gq. However it should still allow
+" to specify a motion or text object to operate on. How to do this?
+" opfunc seems to be what we need here: https://vi.stackexchange.com/a/5497/21417
 setlocal formatexpr=asciidoc#formatting#AsciidocFormatexpr()
 

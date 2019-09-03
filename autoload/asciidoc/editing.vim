@@ -1,6 +1,22 @@
 " Vim autoload file
 " vim-ft-asciidoc/autoload/editing.vim
 
+let g:setext_to_atx = {
+            \ '=': '=',
+            \ '-': '==',
+            \ '~': '===',
+            \ '^': '====',
+            \ '+': '=====',
+            \ }
+
+let g:atx_to_setext = {
+            \ '='    : '=',
+            \ '=='   : '-',
+            \ '==='  : '~',
+            \ '====' : '^',
+            \ '=====': '+',
+            \ }
+
 function! asciidoc#editing#format_text(fchar) abort " {{{
     let mode = visualmode()
     let save_reg = getreg('a', 1, 1)
@@ -54,12 +70,24 @@ function! asciidoc#editing#sentence_per_line(mode) abort " {{{
     call setpos('.', save_cursor)
 endfunc " }}}
 
+""
+" Toggle section title style of the current section between ATX and SETEXT
+" style.
+" FIXME: ATX style only uses asymmetric syntax. It should support symmetric
+" syntax, too (based on the config variable).
+" FIXME: The detection of SETEXT headers is fragile. It doesn't check the
+" length of the title text and the underline (even that would not be 100%
+" correct). It should use s:find_next_setext_section_title in motions.vim
 function! asciidoc#editing#toggle_title() abort "{{{
     let save_pos = getcurpos()
     " Find the last title. (Should really check that we aren't on a title already).
     let setext = '^[^. +/].*[^.]\n[-=~^+]\{3,}$'
-    let atx = g:asciidoc_patterns['title']
-    call search('\(' . atx . '\|' . setext . '\)', 'bc')
+    let atx = '^=\{1,6} \w.*$'
+    let title_line = search('\(' . atx . '\|' . setext . '\)', 'bcW')
+    if title_line ==# 0
+      " Don't do anything if no title for the current section is found.
+      return
+    endif
     " Find out which kind of title it is. Make the search land on the _text_
     " for SETEXT and we can rely on a '=' at column one means it's ATX.
     let save_reg = @"
@@ -74,10 +102,24 @@ function! asciidoc#editing#toggle_title() abort "{{{
         let ix = split(@")[0]
         let char = g:atx_to_setext[ix]
         call append(line('.'), repeat(char, len(getline(line('.')))))
+        " Adjust the cursor position since SETEXT titles consume 1 line
+        " more than ATX.
+        " _Except_ the current cursor pos is on the title text.
+        " We want to stay there then.
+        if save_pos[1] !=# title_line
+          let save_pos[1] += 1
+        endif
     else
         " Do the deed: SETEXT to ATX
         execute "normal! jdd"
         execute "normal! kI" . g:setext_to_atx[@"[0]] . " \<Esc>"
+        " Adjust the cursor position since ATX titles consume 1 line
+        " less than SETEXT.
+        " _Except_ the current cursor pos is on the title text.
+        " Otherwise we would land _above_ the title.
+        if save_pos[1] !=# title_line
+          let save_pos[1] -= 1
+        endif
     endif
     let @" = save_reg
     call setpos('.', save_pos)
