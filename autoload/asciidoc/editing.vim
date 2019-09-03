@@ -41,6 +41,8 @@ function! asciidoc#editing#format_text(fchar) abort " {{{
     call setreg('a', save_reg, save_reg_type)
 endfunc " }}}
 
+" FIXME: This should operate on a range specified by the user (motion or
+" text object)
 function! asciidoc#editing#sentence_per_line(mode) abort " {{{
     let save_cursor = getcurpos()
     if a:mode == 'n'
