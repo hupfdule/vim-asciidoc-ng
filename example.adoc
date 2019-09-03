@@ -3,7 +3,7 @@ Asciidoc example test file
 The Author <me@my.com>
 2000-01-01
 :toc:
-:homepage: http://my.homepage.com/
+:homepage: https://github.com/hupfdule/vim-asciidoc-ng/
 :experimental:
 :compat-mode!:
 :source-highlighter: prettify
@@ -13,12 +13,6 @@ It is not very long.
 
 But it spans multiple paragraphs
 
-// Single character setex headings are currently not highlighted correctly
-A
--
-
-// Single character atx headings are of course supported
-= B
 
 Highlighing (setex)
 -------------------
@@ -43,12 +37,22 @@ CAUTION: Beware!
 
 [NOTE]
 ====
-Our homepage is {homepage}[here]. And this is http://example.com[Another
-URL]. Link texts may be highlighted:
+Our homepage is {homepage}[here]. And this is http://asciidoctor.org[the
+Asciidoctor User Guide].
+
+Link texts may be highlighted:
 https://github.com/asciidoctor[Asciidoctor @ *GitHub*].
 
 You can reach me at me@my.com.
 Please see the <<Second section>> for more examples.
+
+You can also link to other documents <<referenced.adoc#Third section>>.
+
+There are different kinds of links. We can use the
+link:https://google.com[Link macro with URL scheme] or
+link:bing.com[without it].
+
+We can also link to other files link:text.xml[].
 ====
 
 ====
