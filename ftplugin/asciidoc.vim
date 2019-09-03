@@ -29,6 +29,11 @@ setlocal indentkeys=!^F,o,O
 setlocal nosmartindent nocindent
 setlocal isk-=_
 
+" Remove # from isfname to let 'gf' correctly handle cross references to
+" external files.
+" FIXME: We should provide better following of cross references.
+setlocal isfname-=#
+
 " headings
 nnoremap <buffer> <leader>0 :call asciidoc#motions#set_section_title_level(1)<cr>
 nnoremap <buffer> <leader>1 :call asciidoc#motions#set_section_title_level(2)<cr>
