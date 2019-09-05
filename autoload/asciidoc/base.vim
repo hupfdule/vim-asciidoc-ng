@@ -19,11 +19,15 @@ function! asciidoc#base#follow_cursor_link(...) abort " {{{
             let [link, title] = split(link, ',')
         endif
     endif
-    " echo type . ": " . link
-    if a:0
-        return asciidoc#base#follow_link(link, type, a:1)
+
+    if empty(type)
+      :normal! gf
     else
-        return asciidoc#base#follow_link(link, type)
+      if a:0
+          return asciidoc#base#follow_link(link, type, a:1)
+      else
+          return asciidoc#base#follow_link(link, type)
+      endif
     endif
 endfunc " }}}
 
@@ -70,6 +74,7 @@ function! asciidoc#base#get_cursor_link() abort "{{{
                 \ 'link': 'link:[^| \t]\{-}\%#[^| \t]\{-}\[[^\]]*\]'
     \ }
     let save_cursor = getcurpos()
+    let link_type = ""
     let link = ""
     for [type, pattern] in items(patterns)
         if search(pattern, 'cn')
@@ -77,6 +82,7 @@ function! asciidoc#base#get_cursor_link() abort "{{{
             let save_reg = @"
             let @/ = pattern
             normal! ygn
+            let link_type = type
             let link = @"
             let @" = save_reg
             let @/ = save_search
@@ -84,7 +90,7 @@ function! asciidoc#base#get_cursor_link() abort "{{{
             break
         endif
     endfor
-    return [type, link]
+    return [link_type, link]
 endfunc " }}}
 
 function! asciidoc#base#follow_link(link, kind, ...) " {{{
