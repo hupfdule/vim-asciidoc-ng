@@ -145,6 +145,13 @@ function! asciidoc#base#follow_link(link, kind, ...) " {{{
                    break
                  endif
                endfor
+
+               " if no valid target was found, don't do anything
+               if target_line ==# 0
+                  let cmd = ''
+                  "echoerr 'No target found for ' . link " This looks too much like a stracktrace
+                  echohl ErrorMsg | echomsg 'No target found for ' . link | echohl None
+               endif
             endif
         endif
     endif
