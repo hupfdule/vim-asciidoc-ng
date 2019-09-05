@@ -133,7 +133,9 @@ function! asciidoc#base#follow_link(link, kind, ...) " {{{
                 endif
             endif
         else
-            call search(link, 'w')
+            let search_pattern = '\V[[' . link . ']]\|[#' . link . ']'
+            call search(search_pattern, 'w')
+            " TODO: If no match is found, try to find matching sections
         endif
     endif
     exe cmd
