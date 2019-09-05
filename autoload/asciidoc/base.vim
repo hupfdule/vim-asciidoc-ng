@@ -141,7 +141,7 @@ function! asciidoc#base#follow_link(link, kind, ...) " {{{
                for l:pattern in [l:target_pattern, l:relaxed_pattern]
                  let target_line = asciidoc#motions#find_next_section_matching(l:pattern)
                  if target_line !=# 0
-                   call setpos('.', [0, target_line, 0, 0])
+                   let cmd .= '| normal! ' . target_line . 'G'
                    break
                  endif
                endfor
@@ -155,6 +155,7 @@ function! asciidoc#base#follow_link(link, kind, ...) " {{{
             endif
         endif
     endif
+    echo cmd
     exe cmd
     return cmd
 endfunc " }}}
