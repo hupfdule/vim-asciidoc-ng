@@ -132,8 +132,22 @@ function! asciidoc#base#follow_link(link, kind, ...) " {{{
             endif
         else
             let search_pattern = '\V[[' . link . ']]\|[#' . link . ']'
-            call search(search_pattern, 'w')
-            " TODO: If no match is found, try to find matching sections
+            let target_line = search(search_pattern, 'w')
+            " If no match is found, try to find matching section titles
+            if target_line ==# 0
+               " find section with exact title
+               let l:target_pattern = '^' . link . '$'
+               " find section title based on automatically generated id
+               let l:relaxed_pattern = '\c\v[_ .-]*' . substitute(trim(link, '_ '), '_', '[_ .-]+', 'g')
+
+               for l:pattern in [l:target_pattern, l:relaxed_pattern]
+                 let target_line = asciidoc#motions#find_next_section_matching(l:pattern)
+                 if target_line !=# 0
+                   call setpos('.', [0, target_line, 0, 0])
+                   break
+                 endif
+               endfor
+            endif
         endif
     endif
     exe cmd

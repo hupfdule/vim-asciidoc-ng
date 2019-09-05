@@ -151,6 +151,41 @@ function! asciidoc#motions#jump_to_next_section_end() abort
 endfunction
 
 ""
+" Find the next section whose title matches the given regex {pattern}.
+"
+" Returns the line number of the found title (the upper line for setext titles)
+" or 0 if no matching section title could be found in the whole document.
+function! asciidoc#motions#find_next_section_matching(pattern) abort
+  " Remember current cursor position
+  let l:old_pos = getpos('.')
+
+  " start search at the document start
+  call setpos('.', [0, 0, 0, 0])
+
+  " search for a section header matching the given {pattern}
+  let l:next = 1 " initialize with 1 to loop at least one iteration
+  while l:next !=# 0
+    let l:next_atx = search(s:atx_title, 'Wn')
+    let l:next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
+    let l:next = min(filter([l:next_atx, l:next_setext], 'v:val != 0'))
+
+    if l:next !=# 0
+      call setpos('.', [0, l:next, 0, 0])
+      let l:section_title = trim(getline('.'), ' \t\f=')
+      if l:section_title =~# a:pattern
+        " if we found a matching section header, we can stop
+        break
+      endif
+    endif
+  endwhile
+
+  " Restore original cursor position
+  call setpos('.', l:old_pos)
+
+  return l:next
+endfunction
+
+""
 " Find the next setext section title starting at {start_line}.
 " The possible {search_flags} are the same as for the builtin |search()|
 " function. Therefore it is possible to search backwords (adding 'b' to the
