@@ -119,7 +119,7 @@ function! asciidoc#base#follow_link(link, kind, ...) " {{{
             endif
             if filereadable(file)
                 let cmd .= file
-                if anchor
+                if !empty(anchor)
                     let cmd .= '| /\[\[' . anchor . ']]'
                 endif
             else
