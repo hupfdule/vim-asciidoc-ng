@@ -12,11 +12,14 @@ if !exists('g:asciidoc_title_style_atx')
   let g:asciidoc_title_style_atx = 'asymmetric'
 endif
 
+" FIXME: Configurable?
 compiler asciidoc
 
+" FIXME: Shouldn't we use our own method? Otherwise don't for 'marker'
 setlocal foldmethod=marker
 
-setlocal spell
+" FIXME: I don't even think we should for the setting of spellcheck
+"setlocal spell
 setlocal autoindent expandtab softtabstop=2 shiftwidth=2 wrap
 if &textwidth == 0
   setlocal textwidth=70
