@@ -5,8 +5,6 @@
 " given anchor.
 " FIXME: When searching for the anchor, it finds the cross reference itself.
 "        Anchors are either [[anchor]] or [#anchor].
-" FIXME: Cross references are only followed if they contain a link name.
-"        If there is a cross ref without name <<my-ref>> it doesn't work.
 function! asciidoc#base#follow_cursor_link(...) abort " {{{
     let [type, link] = asciidoc#base#get_cursor_link()
     if link =~ '{[^}]*}'
