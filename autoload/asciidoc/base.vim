@@ -18,7 +18,7 @@ function! asciidoc#base#follow_cursor_link(...) abort " {{{
             let link = strpart(link, 0, match(link, '\[[^\]]*\]$'))
         endif
     elseif type == 'xref'
-        let link = link[2:-2]
+        let link = link[2:-3]
         if link =~ ','
             let [link, title] = split(link, ',')
         endif
