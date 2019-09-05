@@ -1,6 +1,8 @@
 " Vim autoload file
 " vim-ft-asciidoc/autoload/base.vim
 
+" FIXME: When following a link to another file, it does not jump to the
+" given anchor.
 function! asciidoc#base#follow_cursor_link(...) abort " {{{
     let [type, link] = asciidoc#base#get_cursor_link()
     if link =~ '{[^}]*}'
