@@ -3,8 +3,6 @@
 
 " FIXME: When following a link to another file, it does not jump to the
 " given anchor.
-" FIXME: When searching for the anchor, it finds the cross reference itself.
-"        Anchors are either [[anchor]] or [#anchor].
 function! asciidoc#base#follow_cursor_link(...) abort " {{{
     let [type, link] = asciidoc#base#get_cursor_link()
     if link =~ '{[^}]*}'
