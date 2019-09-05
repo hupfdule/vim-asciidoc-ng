@@ -46,7 +46,20 @@
         delimiters length is more than 2 chars different than the last
         content line.
   - [ ] Prettify whole file (all blocks)
-
+* [ ] Follow cross references
+  - [ ] follow explicit references
+  - [ ] follow extern links (for edit or for display?)
+  - [ ] follow automatic references (for sections)
+        For example if we have a section "My third Section", it gets an
+        auto-generated id "my-third-section". Therefore the link
+        <<other.adoc#my-third-section>> should correctly jump to 
+        == My third Section
+        We must therefore search relaxed.
+          - Search case insensitive
+          - Leading underscore may be missing or existing
+          - underscores may be (any number of) underscores, hyphens, spaces and periods
+        See https://asciidoctor.org/docs/user-manual/#auto-generated-ids
+        for more details.
 
 Für Blöcke in Asciidoc die regexes von Markdown mit verwenden, die per \z und \z1 angeben,
 dass zwei Elemente absolut gleich sein sollen. Damit kann man prüfen, dass die Einleitung und Ausleitung
