@@ -1,8 +1,6 @@
 " Vim autoload file
 " vim-ft-asciidoc/autoload/base.vim
 
-" FIXME: It also opens a split if the target cannot be found. That is ok
-"        for cross-document links, but not inside the same document.
 function! asciidoc#base#follow_cursor_link(...) abort " {{{
     let [type, link] = asciidoc#base#get_cursor_link()
     if link =~ '{[^}]*}'
