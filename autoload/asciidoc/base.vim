@@ -69,9 +69,10 @@ function! asciidoc#base#expand_attributes(s) " {{{
 endfunc " }}}
 
 function! asciidoc#base#get_cursor_link() abort "{{{
+    " The pattern approach is taken from  https://vi.stackexchange.com/a/21112/21417
     let patterns = {
-                \ 'xref': '<<[^>]*\%#[^>]*>>',
-                \ 'link': 'link:[^| \t]\{-}\%#[^| \t]\{-}\[[^\]]*\]'
+                \ 'xref': '\(.*\%#\)\@=\s*<<\([^>]\|>[^>]\)*>>\(\%#.*\)\@<=',
+                \ 'link': '\(.*\%#\)\@=\s*link:[^[]*\[[^[]*\]\(\%#.*\)\@<='
     \ }
     let save_cursor = getcurpos()
     let link_type = ""
@@ -83,7 +84,7 @@ function! asciidoc#base#get_cursor_link() abort "{{{
             let @/ = pattern
             normal! ygn
             let link_type = type
-            let link = @"
+            let link = trim(@")
             let @" = save_reg
             let @/ = save_search
             call setpos('.', save_cursor)
