@@ -45,6 +45,12 @@ endfunction
 "
 " FIXME: This function is not a motion, but depends on script-local
 " functions in this script. This should be refactored again.
+" FIXME: This function doesn't check the given {level} argument.
+" It should only accept valid arguments
+" FIXME: Which levels are valid? What is the topmost level? 0 or 1?
+" Therefore do we need to add +1 to the {level}?
+" Maybe change the expected level number?
+" TODO: Provide function to increment/decrement current section.
 function! asciidoc#motions#set_section_title_level(level) abort
   let line = line('.')
   let section_title = s:get_section_title(line)

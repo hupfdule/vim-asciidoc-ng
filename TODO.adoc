@@ -60,6 +60,10 @@
           - underscores may be (any number of) underscores, hyphens, spaces and periods
         See https://asciidoctor.org/docs/user-manual/#auto-generated-ids
         for more details.
+* [ ] Folding
+  - [ ] Sections
+  - [ ] Blocks
+  - [ ] Document header (attribute list)
 
 Für Blöcke in Asciidoc die regexes von Markdown mit verwenden, die per \z und \z1 angeben,
 dass zwei Elemente absolut gleich sein sollen. Damit kann man prüfen, dass die Einleitung und Ausleitung
@@ -78,3 +82,12 @@ Nudel
 
 
 Das prüft das jetzige Syntax-File nämlich nicht.
+
+See also:
+ - dagwieers
+ - dahu
+ - jjaderberg
+ - habamax
+ - gabrielelana/vim-markdown
+ - plasticboy/vim-markdown
+ - some other plugins...
