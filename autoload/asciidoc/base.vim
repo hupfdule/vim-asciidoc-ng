@@ -121,8 +121,8 @@ function! asciidoc#base#follow_link(link, kind, ...) " {{{
                     let cmd .= '| /\[\[' . anchor . ']]'
                 endif
             else
-                let yn = input("File " . file . " does not exist. Edit it anyway? (y/n) ")
-                if yn == 'y'
+                let yn = confirm("File " . file . " does not exist. Edit it anyway?", "&Yes\n&No", 0, "Question")
+                if yn == 1
                     let cmd .= file . '| normal! i[[' . anchor . ']]0'
                 else
                     let cmd = ''
