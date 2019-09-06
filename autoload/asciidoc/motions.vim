@@ -50,16 +50,16 @@ function! asciidoc#motions#set_section_title_level(level) abort
   let section_title = s:get_section_title(line)
   if !empty(section_title)
     if section_title.type == 'atx'
-      call asciidoc#set_atx_section_title(section_title.line, a:level, section_title.title, section_title.symmetric)
+      call asciidoc#motions#set_atx_section_title(section_title.line, a:level, section_title.title, section_title.symmetric)
     else
-      call asciidoc#set_setext_section_title(section_title.line, a:level, section_title.title)
+      call asciidoc#motions#set_setext_section_title(section_title.line, a:level, section_title.title)
     endif
   else
     let title = getline('.')
     if g:asciidoc_title_style == 'atx'
-      call asciidoc#set_atx_section_title(line, a:level, title, g:asciidoc_title_style_atx != 'asymmetric')
+      call asciidoc#motions#set_atx_section_title(line, a:level, title, g:asciidoc_title_style_atx != 'asymmetric')
     else
-      call asciidoc#set_setext_section_title(line, a:level, title)
+      call asciidoc#motions#set_setext_section_title(line, a:level, title)
     endif
   endif
 endfunction
