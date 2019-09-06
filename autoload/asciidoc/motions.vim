@@ -218,7 +218,6 @@ endfunction
 function! s:get_atx_section_title(line_number) abort
   let line = getline(a:line_number)
   let match = matchlist(line, s:atx_title)
-  echo match
   if !empty(match)
     let level = len(match[1])
     let title = match[2]
