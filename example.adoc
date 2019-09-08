@@ -1,10 +1,3 @@
-Aussie
-
-Nudel
-
-Bauer
-
-
 Asciidoc example test file
 ==========================
 The Author <me@my.com>
@@ -20,6 +13,7 @@ It is not very long.
 
 But it spans multiple paragraphs
 
+== GOrim
 
 Highlighing (setex)
 -------------------
@@ -67,6 +61,14 @@ Why is a block without trailing dot incorrectly highlighted (it seems to be
 mistaken for a setex title)?
 ====
 
+You can link to bibliography entries like <<label1>>. But usually it
+shouldn't be possible for invalid entries like <<1invalid>>.
+
+You can add entries to the index. This is a indexterm2:[term in the index].
+And this is ((another one)). These appear in thext and in the index. To let
+them only appear in the index use these forms: indexterm:[some term]  (((some other
+term, alternative term))).
+
 ======================================================================
 An admonition block may contain complex content.
 
@@ -81,6 +83,10 @@ Another paragraph.
 We include another file here.
 
 include::included.adoc[]
+
+We can also avoid the inclusion by escaping with a backslash:
+
+\include::not-included.adoc[]
 
 
    Second section
@@ -347,3 +353,21 @@ public class A {
   private static final String S= "Hurz!"
 }
 ```
+
+
+[glossary]
+== Glossary
+
+[glossary]
+Term1:: The first term. See <<Term2>>
+Term2:: The second term.
+
+[bibliography]
+== Bibliography
+
+- [[[label1]]] Bib Entry 1
+- [[[1invalid]]] This is an invalid entry, since it starts with a number.
+- [[[label2, Reference text]]] An entry with an explicit reference text
+
+[index]
+== Index

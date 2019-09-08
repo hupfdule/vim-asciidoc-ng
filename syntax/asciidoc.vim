@@ -180,6 +180,7 @@ hi def link asciidocToDo Todo
 hi def link asciidocTriplePlusPassthrough Special
 hi def link asciidocTwoLineTitle Title
 hi def link asciidocURL Macro
+
 let b:current_syntax = "asciidoc"
 
 

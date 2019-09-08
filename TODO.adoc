@@ -13,9 +13,12 @@
   - [ ] Differentiate between asciidoc/asciidoctor/enhancedAsciidoctor?
 - [ ] Movements
   - [x] Section movement [[,]],[],][
-  - [ ] Jump to next/prev section of the same level g[[,g]],g[],g[]
+  - [ ] Jump to next/prev section of the same level (sibling) g[[,g]],g[],g[]
        (Problem: g] gibt‘s schon)
   - [ ] Jump to the next/prev section of lower/higher level [{,]},[},]{
+    [ ] jump to next block
+    [ ] jump to next specific block (like next source block)?
+    [ ] jump to next include?
 - [ ] Text objects
   - [ ] section
   - [ ] section heading
