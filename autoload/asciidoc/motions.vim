@@ -4,8 +4,10 @@
 " everything that is valid for asciidoctor.
 " FIXME: Extract such common regexes into a common autoloaded file?
 let s:atx_title = '^\(=\{1,6}\|\#\{1,6}\)\s\+\(\S.\{-}\)\(\s\+\1\)\?$'
+let s:setext_title_text = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=[^.].*'
+"let s:setext_title_text = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=\(\[.*\]\)\@!\&\([^\.].*\)$'
 let s:setext_title_underline = '[=\-~^+]\{2,}\s*$'
-let s:setext_title = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=[^.].*\n' . s:setext_title_underline
+let s:setext_title = s:setext_title_text . '\n' . s:setext_title_underline
 let s:setext_levels = ['=','-', '~', '^', '+']
 
 
@@ -191,6 +193,10 @@ function! asciidoc#motions#find_next_section_matching(pattern) abort
   return l:next
 endfunction
 
+function! asciidoc#motions#is_setext_section_title(line_number) abort
+   return !empty(asciidoc#motions#get_setext_section_title(a:line_number))
+endfunction
+
 ""
 " Find the next setext section title starting at {start_line}.
 " The possible {search_flags} are the same as for the builtin |search()|
@@ -213,8 +219,6 @@ function! s:find_next_setext_section_title(start_line, search_flags) abort
   let l:title_underline = getline(l:next_setext + 1)
   let l:title_underline = substitute(l:title_underline, '\s\+$', '', '') " Remove all whitespace from the end
   let l:title_underline_length = strlen(l:title_underline)
-  echom l:title_text . "..." . l:title_underline
-  echom l:title_text_length . " <!> " . l:title_underline_length
   if abs(l:title_text_length - l:title_underline_length) <= 1
     call setpos('.', old_pos)
     return l:next_setext
@@ -240,24 +244,36 @@ function! s:get_atx_section_title(line_number) abort
   endif
 endfunction
 
-function! s:get_setext_section_title(line_number) abort
+function! asciidoc#motions#get_setext_section_title(line_number) abort
   let line = getline(a:line_number)
   if line =~ '^' . s:setext_title_underline
     let underline = line
-    let line_number = a:line_number - 1
-    let line = trim(getline(line_number))
-    let line = substitute(line, '\s\+$', '', '') " Remove all whitespace from the end
+    let line = getline(a:line_number - 1)
+    let precedingline = getline(a:line_number - 2)
   else
-    let line_number = a:line_number
-    let underline = getline(line_number + 1)
-    let underline = substitute(underline, '\s\+$', '', '') " Remove all whitespace from the end
+    let underline = getline(a:line_number + 1)
+    let precedingline = getline(a:line_number - 1)
   endif
+
+  " Check whether the title really matches a setext title
+  if precedingline . "\n" . line !~ s:setext_title_text
+    " FIXME: This check seems to be broken.
+    " The following 3 lines match a a setext header which is incorrect:
+    " Hello World!" // <3>
+    " end
+    " ----
+    return 0
+  endif
+
+  " remove all whitespace from the end
+  let line = substitute(line, '\s\+$', '', '')
+  let underline = substitute(underline, '\s\+$', '', '')
 
   " FIXME: In the code above we compare with <1. Which should be
   " incorrect...
   if abs(len(line) - len(underline)) < 2 && (line . "\n" . underline) =~ s:setext_title
     let level = 1 + index(s:setext_levels, underline[0])
-    return {'line' : line_number, 'type' : 'setext', 'level' : level, 'title' : line}
+    return {'line' : a:line_number, 'type' : 'setext', 'level' : level, 'title' : line}
   else
     return {}
   endif
@@ -268,7 +284,42 @@ function! s:get_section_title(line_number) abort
   if !empty(atx)
     return atx
   else
-    return s:get_setext_section_title(a:line_number)
+    return asciidoc#motions#get_setext_section_title(a:line_number)
   endif
+endfunction
+
+""
+" Return the level of the section title on the given line.
+"
+" The topmost level start at 1.
+" FIXME: It should actually start at 0
+"
+" Attention! The return value is undefined if the given line number doesn't
+" contain a section title.
+function! asciidoc#motions#get_setext_section_title_level(line_number) abort
+  let line = getline(a:line_number)
+  if line =~ '^' . s:setext_title_underline
+    let underline = line
+    let line_number = a:line_number - 1
+    let line = getline(line_number)
+  else
+    let line_number = a:line_number
+    let underline = getline(line_number + 1)
+  endif
+  " FIXME: Actually level=0 would be the lowest
+  let level = 1 + index(s:setext_levels, underline[0])
+  return level
+endfunction
+
+""
+" Return whether the given line is the underline under a Setext section
+" header.
+"
+" Attention! This function assumes that the given line_number actually
+" contains a Setext section title. If it is a valid Setext underline, but
+" not acutally part of a Setext section title, it will still return 1.
+function! asciidoc#motions#is_setext_underline(line_number) abort
+  let line = getline(a:line_number)
+  return line =~# '^' . s:setext_title_underline
 endfunction
 
