@@ -73,7 +73,7 @@ syn region asciidocTable_OLD start=/^\([`.']\d*[-~_]*\)\+[-~_]\+\d*$/ end=/^$/
 syn match asciidocBlockTitle /^\.[^. \t].*[^-~_]$/ contains=asciidocQuoted.*,asciidocAttributeRef
 syn match asciidocTitleUnderline /[-=~^+]\{2,}$/ transparent contained contains=NONE
 syn match asciidocOneLineTitle /^=\{1,6}\s\+\S.*$/ contains=asciidocQuoted.*,asciidocMacroAttributes,asciidocAttributeRef,asciidocEntityRef,asciidocEmail,asciidocURL,asciidocBackslash
-syn match asciidocTwoLineTitle /\(^\s*$\n\|\%^\)\@<=[^. +/[].*\n[=\-~^+]\{2,}$/ contains=asciidocQuoted.*,asciidocMacroAttributes,asciidocAttributeRef,asciidocEntityRef,asciidocEmail,asciidocURL,asciidocBackslash,asciidocTitleUnderline
+syn match asciidocTwoLineTitle /\(^\s*$\n\|\%^\|^\[.*\]\s*$\)\@<=[^.].*\n[=\-~^+]\{2,}\s*$/ contains=asciidocQuoted.*,asciidocMacroAttributes,asciidocAttributeRef,asciidocEntityRef,asciidocEmail,asciidocURL,asciidocBackslash,asciidocTitleUnderline
 
 syn match asciidocAttributeList /^\[[^[ \t].*\]$/
 syn match asciidocQuoteBlockDelimiter /^_\{4,}$/
