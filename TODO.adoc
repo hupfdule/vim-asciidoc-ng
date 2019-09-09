@@ -15,6 +15,7 @@
   - [x] Section movement [[,]],[],][
   - [ ] Jump to next/prev section of the same level (sibling) g[[,g]],g[],g[]
        (Problem: g] gibt‘s schon)
+  - [ ] Jump to _current_ section header [.
   - [ ] Jump to the next/prev section of lower/higher level [{,]},[},]{
     [ ] jump to next block
     [ ] jump to next specific block (like next source block)?
@@ -83,6 +84,17 @@ statt
 Nudel
 ======
 
+Integrate even more plugings:
+
+- [ ] https://github.com/aecepoglu/vim-asciidoc-utils 
+      Press "enter" to add or toggle list items
+      Seems to need lua... :-(
+- [ ] https://github.com/TheNiteCoder/asciidoc.vim
+      eg. ShowSyntaxHelp
+- [ ] https://github.com/blablatros/vim-asciidoc-superfold
+      diverse Folding, but no Setext headings
+- [ ] https://github.com/jhradilek/vim-asciidoc
+      Tagbar integration (with toc, included, images, videos)
 
 Das prüft das jetzige Syntax-File nämlich nicht.
 

@@ -17,12 +17,12 @@ But it spans multiple paragraphs
 
 Highlighing (setex)
 -------------------
-
 // TODO inside comment should be highlighted.
 
 ////
 Comment blocks can also contain a TODO
 ////
+
 
 TODO as part of the text should _not_ be highlighted.
 
@@ -36,6 +36,9 @@ IMPORTANT: And this is important.
 
 CAUTION: Beware!
 
+//FIXME: The two line below are accidently identified as a Setext header.
+//       We should take the [...] into account in the regex
+//       Actually it seems to not take the underline length into account…
 [NOTE]
 ====
 Our homepage is {homepage}[here]. And this is http://asciidoctor.org[the
@@ -371,3 +374,4 @@ Term2:: The second term.
 
 [index]
 == Index
+Nudel
