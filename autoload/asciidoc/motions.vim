@@ -4,8 +4,8 @@
 " everything that is valid for asciidoctor.
 " FIXME: Extract such common regexes into a common autoloaded file?
 let s:atx_title = '^\(=\{1,6}\|\#\{1,6}\)\s\+\(\S.\{-}\)\(\s\+\1\)\?$'
-let s:setext_title_underline = '[-=~^+]\+\s*$'
-let s:setext_title = '\_^\(\S.\+\)\s*\n' . s:setext_title_underline
+let s:setext_title_underline = '[=\-~^+]\{2,}$'
+let s:setext_title = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=[^.].*\n' . s:setext_title_underline
 let s:setext_levels = ['=','-', '~', '^', '+']
 
 
