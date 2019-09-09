@@ -244,8 +244,11 @@ function! s:get_setext_section_title(line_number) abort
     let line_number = a:line_number
     let underline = getline(line_number + 1)
   endif
-  let level = 1 + index(s:setext_levels, underline[0])
-  if (line . "\n" . underline) =~ s:setext_title
+
+  " FIXME: In the code above we compare with <1. Which should be
+  " incorrect...
+  if abs(len(line) - len(underline)) < 2 && (line . "\n" . underline) =~ s:setext_title
+    let level = 1 + index(s:setext_levels, underline[0])
     return {'line' : line_number, 'type' : 'setext', 'level' : level, 'title' : line}
   else
     return {}
