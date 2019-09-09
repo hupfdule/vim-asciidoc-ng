@@ -4,7 +4,7 @@
 " everything that is valid for asciidoctor.
 " FIXME: Extract such common regexes into a common autoloaded file?
 let s:atx_title = '^\(=\{1,6}\|\#\{1,6}\)\s\+\(\S.\{-}\)\(\s\+\1\)\?$'
-let s:setext_title_underline = '[=\-~^+]\{2,}$'
+let s:setext_title_underline = '[=\-~^+]\{2,}\s*$'
 let s:setext_title = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=[^.].*\n' . s:setext_title_underline
 let s:setext_levels = ['=','-', '~', '^', '+']
 
@@ -207,8 +207,14 @@ function! s:find_next_setext_section_title(start_line, search_flags) abort
   if l:next_setext == 0
     return
   endif
-  let l:title_text_length = strlen(getline(l:next_setext))
-  let l:title_underline_length = strlen(getline(l:next_setext + 1))
+  let l:title_text = getline(l:next_setext)
+  let l:title_text = substitute(l:title_text, '\s\+$', '', '') " Remove all whitespace from the end
+  let l:title_text_length = strlen(l:title_text)
+  let l:title_underline = getline(l:next_setext + 1)
+  let l:title_underline = substitute(l:title_underline, '\s\+$', '', '') " Remove all whitespace from the end
+  let l:title_underline_length = strlen(l:title_underline)
+  echom l:title_text . "..." . l:title_underline
+  echom l:title_text_length . " <!> " . l:title_underline_length
   if abs(l:title_text_length - l:title_underline_length) <= 1
     call setpos('.', old_pos)
     return l:next_setext
@@ -239,10 +245,12 @@ function! s:get_setext_section_title(line_number) abort
   if line =~ '^' . s:setext_title_underline
     let underline = line
     let line_number = a:line_number - 1
-    let line = getline(line_number)
+    let line = trim(getline(line_number))
+    let line = substitute(line, '\s\+$', '', '') " Remove all whitespace from the end
   else
     let line_number = a:line_number
     let underline = getline(line_number + 1)
+    let underline = substitute(underline, '\s\+$', '', '') " Remove all whitespace from the end
   endif
 
   " FIXME: In the code above we compare with <1. Which should be
