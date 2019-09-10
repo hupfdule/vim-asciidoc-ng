@@ -19,6 +19,8 @@ function! asciidoc#base#follow_cursor_link(...) abort " {{{
     endif
 
     if empty(type)
+      " FIXME: This alway calls 'gf'. How about <c-w><c-f>? Can we find out
+      " what the user actually used as keybinding?
       :normal! gf
     else
       if a:0

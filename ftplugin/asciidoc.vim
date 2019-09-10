@@ -159,9 +159,18 @@ setlocal isfname-=#
     if g:asciidoc_enable_mappings
       " FIXME: Use <c-]> also in nmap? Would be more consistent, but also
       " shadows the builtin <c-]> (jump to tag)
+      " What about the other mappings. Do they make sense? Are they
+      " consistent?
       nmap <buffer> gf <Plug>(AsciidocFollowLinkUnderCursor)
       imap <buffer> <c-]> <Plug>(AsciidocFollowLinkUnderCursor)
-      " TODO: Provide default mappings for the split|vsplit|tabedit variants?
+      nmap <buffer> <c-w>f     <Plug>(AsciidocFollowLinkUnderCursorInSplit)
+      imap <buffer> <c-w>f     <Plug>(AsciidocFollowLinkUnderCursorInSplit)
+      nmap <buffer> <c-w><c-f> <Plug>(AsciidocFollowLinkUnderCursorInSplit)
+      imap <buffer> <c-w><c-f> <Plug>(AsciidocFollowLinkUnderCursorInSplit)
+      nmap <buffer> <c-w>F     <Plug>(AsciidocFollowLinkUnderCursorInVsplit)
+      imap <buffer> <c-w>F     <Plug>(AsciidocFollowLinkUnderCursorInVsplit)
+      nmap <buffer> <c-w>gf     <Plug>(AsciidocFollowLinkUnderCursorInTab)
+      imap <buffer> <c-w>gf     <Plug>(AsciidocFollowLinkUnderCursorInTab)
     endif
 
     " END Following links and cross references }}}
