@@ -95,17 +95,25 @@ endfunc " }}}
 function! asciidoc#base#follow_link(link, kind, ...) " {{{
     let link = a:link
     let kind = a:kind
-    let cmd = "echo 'what?' "
+    " FIXME: This method should also allow jumping to the target in the
+    " current file (which should also be the default). This can be
+    " accomplished by leaving the optional argument out.
+    " Still needs to refine the creating of the resulting command.
+    " Update: It already does. Param "edit" does it. However, it brings
+    " an additional error about swapfile in use, if the current file is
+    " already opened twice.
+    let cmd = ""
     if kind ==# 'link'
         "let cmd = "!open " . link . " -a " . g:asciidoc_browser
         let cmd = "!" . g:asciidoc_preview_app . " " . link
     elseif kind ==# 'xref'
         if a:0
-            for split_instr in ["edit", "split", "vsplit", "tabedit"]
-                if a:1 == split_instr
-                    let cmd = a:1 . " "
-                endif
-            endfor
+            if a:1 ==# 'split' || a:1 ==# 'vsplit' || a:1 ==# 'tabedit'
+              let cmd = a:1 . " % | "
+            else
+              echohl ErrorMsg | echomsg 'Invalid command "' . a:1 . '"' | echohl None
+              return
+            endif
         endif
         let file = ""
         if link =~ '#'
@@ -118,12 +126,12 @@ function! asciidoc#base#follow_link(link, kind, ...) " {{{
             if filereadable(file)
                 let cmd .= file
                 if !empty(anchor)
-                    let cmd .= '| /\[\[' . anchor . ']]'
+                    let cmd .= '/\[\[' . anchor . ']]'
                 endif
             else
                 let yn = confirm("File " . file . " does not exist. Edit it anyway?", "&Yes\n&No", 0, "Question")
                 if yn == 1
-                    let cmd .= file . '| normal! i[[' . anchor . ']]0'
+                    let cmd .= file . 'normal! i[[' . anchor . ']]0'
                 else
                     let cmd = ''
                 endif
@@ -141,7 +149,7 @@ function! asciidoc#base#follow_link(link, kind, ...) " {{{
                for l:pattern in [l:target_pattern, l:relaxed_pattern]
                  let target_line = asciidoc#motions#find_next_section_matching(l:pattern)
                  if target_line !=# 0
-                   let cmd .= '| normal! ' . target_line . 'G'
+                   let cmd .= 'normal! ' . target_line . 'G'
                    break
                  endif
                endfor
@@ -382,7 +390,7 @@ function! asciidoc#base#soft_linebreak() abort "{{{
     let save_reg = @"
     let save_search = @/
     if syntax_name =~? "table"
-        normal! o| 
+        normal! o|
     elseif syntax_name =~? "list"
         let @" = ""
         normal! lD

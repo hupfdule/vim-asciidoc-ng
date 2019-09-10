@@ -107,6 +107,8 @@ setlocal isfname-=#
     " TODO: Allow folding of code blocks
     setlocal foldexpr=asciidoc#folding#foldexpr(v:lnum)
     setlocal foldmethod=expr
+    " FIXME: foldlevel 1 is the sanest for asciidoc, but we should not
+    "        override user settings
     setlocal foldlevel=1
 " END Folding }}}
 
@@ -144,15 +146,22 @@ setlocal isfname-=#
 
     " Following links and cross references --------------------------------- {{{
 
-    command -buffer -nargs=? AsciidocFollowLinkUnderCursor call asciidoc#base#follow_cursor_link(<f-args>)
-    nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursor) :AsciidocFollowLinkUnderCursor<cr>
-    inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursor) <c-o>:AsciidocFollowLinkUnderCursor<cr>
+    command -buffer -nargs=? AsciidocFollowLinkUnderCursor          call asciidoc#base#follow_cursor_link(<f-args>)
+    nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursor)              :AsciidocFollowLinkUnderCursor<cr>
+    inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursor)         <c-o>:AsciidocFollowLinkUnderCursor<cr>
+    nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInSplit)       :AsciidocFollowLinkUnderCursor split<cr>
+    inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInSplit)  <c-o>:AsciidocFollowLinkUnderCursor split<cr>
+    nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInVsplit)      :AsciidocFollowLinkUnderCursor vsplit<cr>
+    inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInVsplit) <c-o>:AsciidocFollowLinkUnderCursor vsplit<cr>
+    nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInTab)         :AsciidocFollowLinkUnderCursor tabedit<cr>
+    inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInTab)    <c-o>:AsciidocFollowLinkUnderCursor tabedit<cr>
 
     if g:asciidoc_enable_mappings
       " FIXME: Use <c-]> also in nmap? Would be more consistent, but also
       " shadows the builtin <c-]> (jump to tag)
       nmap <buffer> gf <Plug>(AsciidocFollowLinkUnderCursor)
       imap <buffer> <c-]> <Plug>(AsciidocFollowLinkUnderCursor)
+      " TODO: Provide default mappings for the split|vsplit|tabedit variants?
     endif
 
     " END Following links and cross references }}}
