@@ -105,36 +105,108 @@ setlocal isfname-=#
 
 " Commands =============================================================== {{{
 
-  " Navigation =========================================================== {{{
+  " Navigation ----------------------------------------------------------- {{{
 
-  " Section jumps
-  " FIXME: Should we allow arguments to jump to the x-most section from here?
-  "        (Accept a count)
-  command -buffer          AsciidocPrevSection    execute 'normal!' . asciidoc#motions#jump_to_prior_section_title()
-  command -buffer          AsciidocPrevSectionEnd execute 'normal!' . asciidoc#motions#jump_to_prior_section_end()
-  command -buffer          AsciidocNextSection    execute 'normal!' . asciidoc#motions#jump_to_next_section_title()
-  command -buffer          AsciidocNextSectionEnd execute 'normal!' . asciidoc#motions#jump_to_next_section_end()
+    " Section jumps ........................................................ {{{
 
-  " Following links and cross references
-  command -buffer -nargs=? AdocFollowLinkUnderCursor call asciidoc#base#follow_cursor_link(<f-args>)
+    " FIXME: Should we allow arguments to jump to the x-most section from here?
+    "        (Accept a count)
+    command -buffer          AsciidocPrevSection    execute 'normal!' . asciidoc#motions#jump_to_prior_section_title()
+    command -buffer          AsciidocPrevSectionEnd execute 'normal!' . asciidoc#motions#jump_to_prior_section_end()
+    command -buffer          AsciidocNextSection    execute 'normal!' . asciidoc#motions#jump_to_next_section_title()
+    command -buffer          AsciidocNextSectionEnd execute 'normal!' . asciidoc#motions#jump_to_next_section_end()
+    nnoremap <buffer> <Plug>(AsciidocPrevSection)    :AsciidocPrevSection<cr>
+    xnoremap <buffer> <Plug>(AsciidocPrevSection)    :AsciidocPrevSection<cr>
+    nnoremap <buffer> <Plug>(AsciidocPrevSectionEnd) :AsciidocPrevSectionEnd<cr>
+    xnoremap <buffer> <Plug>(AsciidocPrevSectionEnd) :AsciidocPrevSectionEnd<cr>
+    nnoremap <buffer> <Plug>(AsciidocNextSection)    :AsciidocNextSection<cr>
+    xnoremap <buffer> <Plug>(AsciidocNextSection)    :AsciidocNextSection<cr>
+    nnoremap <buffer> <Plug>(AsciidocNextSectionEnd) :AsciidocNextSectionEnd<cr>
+    xnoremap <buffer> <Plug>(AsciidocNextSectionEnd) :AsciidocNextSectionEnd<cr>
+
+    if g:asciidoc_enable_mappings
+      map <buffer> [[ <Plug>(AsciidocPrevSection)
+      map <buffer> [] <Plug>(AsciidocPrevSectionEnd)
+      map <buffer> ]] <Plug>(AsciidocNextSection)
+      " FIXME: This should be placed on the last empty line. Otherwise it
+      " lands on the anchors of the section. The same for []
+      map <buffer> ][ <Plug>(AsciidocNextSectionEnd)
+    endif
+
+    " END Section jump }}}
+
+    " Following links and cross references --------------------------------- {{{
+
+    command -buffer -nargs=? AsciidocFollowLinkUnderCursor call asciidoc#base#follow_cursor_link(<f-args>)
+    nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursor) :AsciidocFollowLinkUnderCursor<cr>
+    inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursor) <c-o>:AsciidocFollowLinkUnderCursor<cr>
+
+    if g:asciidoc_enable_mappings
+      " FIXME: Use <c-]> also in nmap? Would be more consistent, but also
+      " shadows the builtin <c-]> (jump to tag)
+      nmap <buffer> gf <Plug>(AsciidocFollowLinkUnderCursor)
+      imap <buffer> <c-]> <Plug>(AsciidocFollowLinkUnderCursor)
+    endif
+
+    " END Following links and cross references }}}
+
   " END Navigation }}}
 
-  " Editing ============================================================== {{{
-  " FIXME: Should accept a range
-  command -buffer -nargs=1 AsciidocSentencePerLine call asciidoc#editing#sentence_per_line(<f-args>)
-  nnoremap <buffer> <Plug>(AsciidocSentencePerLine) :AsciidocSentencePerLine n<cr>
-  xnoremap <buffer> <Plug>(AsciidocSentencePerLine) :AsciidocSentencePerLine v<cr>
-  "if g:asciidoc_enable_mappings
-  if 1
-    nnoremap <buffer> <leader>. <Plug>(AsciidocSentencePerLine)
-    xnoremap <buffer> <leader>. <Plug>(AsciidocSentencePerLine)
-  endif
+  " Editing -------------------------------------------------------------- {{{
 
-  command -buffer -nargs=1 AsciidocSectionLevel call asciidoc#motions#set_section_title_level(<f-args>)
+    " Sentence per line .................................................. {{{
+
+    " FIXME: Should accept a range
+    command -buffer -nargs=1 AsciidocSentencePerLine call asciidoc#editing#sentence_per_line(<f-args>)
+    nnoremap <buffer> <Plug>(AsciidocSentencePerLine) :AsciidocSentencePerLine n<cr>
+    xnoremap <buffer> <Plug>(AsciidocSentencePerLine) :AsciidocSentencePerLine v<cr>
+
+    if g:asciidoc_enable_mappings
+      nmap <buffer> <leader>. <Plug>(AsciidocSentencePerLine)
+      xmap <buffer> <leader>. <Plug>(AsciidocSentencePerLine)
+    endif
+
+    " END Sentence per line }}}
+
+    " Set section title level ............................................ {{{
+
+    command -buffer -nargs=1 AsciidocSectionLevel call asciidoc#motions#set_section_title_level(<f-args>)
+    nnoremap <buffer> <Plug>(AsciidocSectionLevel0) :AsciidocSectionLevel 1<cr>
+    inoremap <buffer> <Plug>(AsciidocSectionLevel0) <c-o>:AsciidocSectionLevel 1<cr>
+    nnoremap <buffer> <Plug>(AsciidocSectionLevel1) :AsciidocSectionLevel 2<cr>
+    inoremap <buffer> <Plug>(AsciidocSectionLevel1) <c-o>:AsciidocSectionLevel 2<cr>
+    nnoremap <buffer> <Plug>(AsciidocSectionLevel2) :AsciidocSectionLevel 3<cr>
+    inoremap <buffer> <Plug>(AsciidocSectionLevel2) <c-o>:AsciidocSectionLevel 3<cr>
+    nnoremap <buffer> <Plug>(AsciidocSectionLevel3) :AsciidocSectionLevel 4<cr>
+    inoremap <buffer> <Plug>(AsciidocSectionLevel3) <c-o>:AsciidocSectionLevel 4<cr>
+    nnoremap <buffer> <Plug>(AsciidocSectionLevel4) :AsciidocSectionLevel 5<cr>
+    inoremap <buffer> <Plug>(AsciidocSectionLevel4) <c-o>:AsciidocSectionLevel 5<cr>
+    nnoremap <buffer> <Plug>(AsciidocSectionLevel5) :AsciidocSectionLevel 6<cr>
+    inoremap <buffer> <Plug>(AsciidocSectionLevel5) <c-o>:AsciidocSectionLevel 6<cr>
+
+    if g:asciidoc_enable_mappings
+      nmap <buffer> <leader>0 <Plug>(AsciidocSectionLevel0)
+      imap <buffer> <leader>0 <Plug>(AsciidocSectionLevel0)
+      nmap <buffer> <leader>1 <Plug>(AsciidocSectionLevel1)
+      imap <buffer> <leader>1 <Plug>(AsciidocSectionLevel1)
+      nmap <buffer> <leader>2 <Plug>(AsciidocSectionLevel2)
+      imap <buffer> <leader>2 <Plug>(AsciidocSectionLevel2)
+      nmap <buffer> <leader>3 <Plug>(AsciidocSectionLevel3)
+      imap <buffer> <leader>3 <Plug>(AsciidocSectionLevel3)
+      nmap <buffer> <leader>4 <Plug>(AsciidocSectionLevel4)
+      imap <buffer> <leader>4 <Plug>(AsciidocSectionLevel4)
+      nmap <buffer> <leader>5 <Plug>(AsciidocSectionLevel5)
+      imap <buffer> <leader>5 <Plug>(AsciidocSectionLevel5)
+    endif
+
+    " END Set section title level }}}
+
   " END Editing }}}
 
 " END Commands }}}
 
+" FIXME: Do we need to separate mappings? I think it is better to map them
+" where we define the commands (above)
 " Mappings =============================================================== {{{
 " END Mappings }}}
 
