@@ -23,7 +23,6 @@ function! asciidoc#folding#foldexpr(lnum)
         " FIXME: Wir _müssen_ den Beginn der Sektion ">" angeben.
         let l:setext_level = asciidoc#motions#get_setext_section_title_level(a:lnum)
         " FIXME: this function never returns -1…
-        echom "setext level: " . l:setext_level
         if l:setext_level != -1
           let l:is_underline = asciidoc#motions#is_setext_underline(a:lnum)
           if l:is_underline
