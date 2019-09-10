@@ -52,6 +52,10 @@ endfunction
 " FIXME: Which levels are valid? What is the topmost level? 0 or 1?
 " Therefore do we need to add +1 to the {level}?
 " Maybe change the expected level number?
+" Yes. It makes problem in other places. 0 should be topmost, 5 the lowest
+" possible
+" FIXME: When level 6 is selected in Setext style (which doesn't support
+" it), fallback to ATX style.
 " TODO: Provide function to increment/decrement current section.
 function! asciidoc#motions#set_section_title_level(level) abort
   let line = line('.')
@@ -262,6 +266,11 @@ function! asciidoc#motions#get_setext_section_title(line_number) abort
     " Hello World!" // <3>
     " end
     " ----
+    " Actually it matches any block that it directly adjacent to some other
+    " line
+    " Also this one is taken as section header:
+    " [Sektion 2.5]
+    " -------------
     return 0
   endif
 
