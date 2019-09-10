@@ -1,21 +1,19 @@
-" Vim autoload file
-" vim-ft-asciidoc/autoload/asciidoc.vim
-
-" Foldexpr function {{{
-" From https://github.com/mjakl/vim-asciidoc/
-" Removed conditional fold options.
-" Fixed to avoid matching every line starting with `=`, and to skip title lines
-" within literal et. al. blocks.
+""
+" Return the fold level of the given line.
+"
+" Currently only allows folding of section headings.
+"
+" TODO: Extend to support folding of
+"         - document header
+"         - blocks
+"
+" TODO: At the moment this function incorrectly identifies some code blocks
+"       as section titles if they are preceded by any non-empty line.
+"
+"
+" Based on https://github.com/jjaderberg/vim-ft-asciidoc which itself is
+" derived from https://github.com/mjakl/vim-asciidoc
 function! asciidoc#folding#foldexpr(lnum)
-    let l0 = getline(a:lnum)
-    if l0 =~ '^=\{1,5}\s\+\S.*$' && synIDattr(synID(a:lnum, 1, 1), "name") =~ "asciidoc.*Title"
-        return '>'.matchend(l0, '^=\+')
-    else
-        return '='
-    endif
-endfunc " }}}
-
-function! asciidoc#folding#foldexpr2(lnum)
     let l0 = getline(a:lnum)
     if l0 =~ '^=\{1,5}\s\+\S.*$' && synIDattr(synID(a:lnum, 1, 1), "name") =~ "asciidoc.*Title"
         " ATX style titles

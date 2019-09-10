@@ -101,6 +101,13 @@ setlocal isfname-=#
 " END Settings }}}
 
 " Folding ================================================================ {{{
+    " Fixme: These are default folding settings. They should be refined
+    " with settings.
+    " TODO: Allow folding of document header
+    " TODO: Allow folding of code blocks
+    setlocal foldexpr=asciidoc#folding#foldexpr(v:lnum)
+    setlocal foldmethod=expr
+    setlocal foldlevel=1
 " END Folding }}}
 
 " Commands =============================================================== {{{
