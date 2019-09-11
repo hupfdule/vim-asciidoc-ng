@@ -226,6 +226,82 @@ setlocal isfname-=#
 
     " END Set section title level }}}
 
+    " Emphasize text (surround) .......................................... {{{
+
+    command -buffer -nargs=1 AsciidocSurround call asciidoc#editing#format_text(<f-args>)
+    ""
+    " Provide possible completions for quoted text attributes
+    " See https://www.methods.co.nz/asciidoc/userguide.html#X96
+    " This quoted text attribute syntax is deprecated in asciidoctor.
+    " However, there is no reason not to support it
+    function! s:asciidocQuotedAttr(ArgLead, CmdLine, CursorPos)
+      return "big\nsmall\nunderline\noverline\nline-through\n" .
+            \ "white\nsilver\ngray\nblack\nred\nmaroon\nyellow\nolive\n" .
+            \ "lime\ngreen\naqua\nteal\nblue\nnavy\nfuchsia\npurple" .
+            \ "white-background\nsilver-background\ngray-background\n" .
+            \ "black-background\nred-background\nmaroon-background\n" .
+            \ "yellow-background\nolive-background\nlime-background\n" .
+            \ "green-background\naqua-background\nteal-background\n" .
+            \ "blue-background\nnavy-background\nfuchsia-background\n" .
+            \ "purple-background"
+    endfunction
+    command -buffer -nargs=1 -complete=custom,s:asciidocQuotedAttr AsciidocSurroundAttr
+          \ :normal <Esc>`>a#<Esc>`<i[<args>]#<Esc>
+    " Provide a mapping with autocompletion
+    " FIXME: This is likely not the best selection of keys
+    vnoremap <buffer> <LocalLeader>tt :<c-u>AsciidocSurroundAttr<space>
+    nnoremap <buffer> <LocalLeader>tt viw:<c-u>AsciidocSurroundAttr<space>
+    " Provide default mappings for the most common attributes
+    " FIXME: Refine key strokes
+    " line through
+    vnoremap <buffer> <LocalLeader>t- :<c-u>AsciidocSurroundAttr line-through<cr>
+    nnoremap <buffer> <LocalLeader>t- viw:<c-u>AsciidocSurroundAttr line-through<cr>
+    " underline
+    vnoremap <buffer> <LocalLeader>t_ :<c-u>AsciidocSurroundAttr underline<cr>
+    nnoremap <buffer> <LocalLeader>t_ viw:<c-u>AsciidocSurroundAttr underline<cr>
+
+    " surround with text styles
+    nnoremap <buffer> <Plug>(AsciidocSurround*) :AsciidocSurround *<cr>
+    vnoremap <buffer> <Plug>(AsciidocSurround*) :AsciidocSurround *<cr>
+    nnoremap <buffer> <Plug>(AsciidocSurround_) :AsciidocSurround _<cr>
+    vnoremap <buffer> <Plug>(AsciidocSurround_) :AsciidocSurround _<cr>
+    nnoremap <buffer> <Plug>(AsciidocSurround`) :AsciidocSurround `<cr>
+    vnoremap <buffer> <Plug>(AsciidocSurround`) :AsciidocSurround `<cr>
+    nnoremap <buffer> <Plug>(AsciidocSurround^) :AsciidocSurround ^<cr>
+    vnoremap <buffer> <Plug>(AsciidocSurround^) :AsciidocSurround ^<cr>
+    nnoremap <buffer> <Plug>(AsciidocSurround_) :AsciidocSurround _<cr>
+    vnoremap <buffer> <Plug>(AsciidocSurround_) :AsciidocSurround _<cr>
+    nnoremap <buffer> <Plug>(AsciidocSurround+) :AsciidocSurround +<cr>
+    vnoremap <buffer> <Plug>(AsciidocSurround+) :AsciidocSurround +<cr>
+
+    " FIXME: Refine key strokes
+
+    " strong
+    nnoremap <buffer> <LocalLeader>ts viw<Esc>:AsciidocSurround *<CR>
+    vnoremap <buffer> <LocalLeader>ts <Esc>:AsciidocSurround *<CR>
+
+    " emphasis
+    nnoremap <buffer> <LocalLeader>te viw<Esc>:AsciidocSurround _<CR>
+    vnoremap <buffer> <LocalLeader>te <Esc>:AsciidocSurround _<CR>
+
+    " code
+    nnoremap <buffer> <LocalLeader>tc viw<Esc>:AsciidocSurround `<CR>
+    vnoremap <buffer> <LocalLeader>tc <Esc>:AsciidocSurround `<CR>
+
+    " superscript
+    nnoremap <buffer> <LocalLeader>tk viw<Esc>:AsciidocSurround ^<CR>
+    vnoremap <buffer> <LocalLeader>tk <Esc>:AsciidocSurround ^<CR>
+
+    " subscript
+    nnoremap <buffer> <LocalLeader>tj viw<Esc>:AsciidocSurround ~<CR>
+    vnoremap <buffer> <LocalLeader>tj <Esc>:AsciidocSurround ~<CR>
+
+    " passthrough
+    nnoremap <buffer> <LocalLeader>tp viw<Esc>:AsciidocSurround +<CR>
+    vnoremap <buffer> <LocalLeader>tp <Esc>:AsciidocSurround +<CR>
+
+    " END Emphasize text (surround) }}}
+
   " END Editing }}}
 
 " END Commands }}}
