@@ -1,6 +1,15 @@
 " Vim autoload file
 " vim-ft-asciidoc/autoload/base.vim
 
+let s:macro_patterns = {
+            \ 'include': '\f*\%#\f*',
+            \ 'image': '\f*\%#\f*',
+            \ 'kbd': '\S*\%#\S*',
+            \ 'menu': '\S*\%#\S*',
+            \ 'btn': '\S*\%#\S*',
+            \ }
+
+
 function! asciidoc#base#follow_cursor_link(...) abort " {{{
     let [type, link] = asciidoc#base#get_cursor_link()
     if link =~ '{[^}]*}'
@@ -170,6 +179,40 @@ function! asciidoc#base#follow_link(link, kind, ...) " {{{
     return cmd
 endfunc " }}}
 
+""
+" Converts the current word or the selection into the attributes of a macro
+" without target.
+"
+" For example if the text 'Ctrl+\]' is selected in the following line:
+"
+"   Press Ctrl+\] to jump to a tag definition.
+"
+" calling this function as asciidoc#base#insert_macro_attrib('v', 'inline',
+" 'kbd') would result in:
+"
+"   Press kbd:[Ctrl+\]] to jump to a tag definition.
+"
+" The cursor will be placed inside the brackets at the end of the
+" attributes, but insert mode will not be started automatically.
+"
+" {mode} The vim mode in which to operate. May be either 'n' for normal
+"        mode or 'v' for visual mode.
+" {type} Whether to generate an inline macro (single colon) or a block
+"        macro (double colon). May be either 'inline' or 'block'.
+" {name} The name of the macro (the part before the colon(s), actually the
+"        'target').
+"        For example 'image' or 'include'.
+"
+" FIXME: Should this leave the user in insert mode afterwards?
+" FIXME: It seems to have whitespace problems sometimes. Sometimes it adds
+"        an additional space before the macro, sometimes it removes the
+"        space after the macro and sometimes it does both. Also sometimes
+"        it adds a space after the macro.
+" FIXME: Use omnicompletion? Auto start completion menu?
+" FIXME: Allow to operate on motions
+" FIXME: Do not throw an error on unescaped ], but instead escape it.
+" FIXME: Placing the cursor at the end of the attribute list my not be the
+"        expected behaviour.
 function! asciidoc#base#insert_macro_attribs(mode, type, name) abort " {{{
     " This first part (..else) is kind of dumb. It's a convenience, but is it really
     " worth it to make the function harder to read?
@@ -190,7 +233,7 @@ function! asciidoc#base#insert_macro_attribs(mode, type, name) abort " {{{
     let save_search = @/
     let viz_eol = a:mode != 'n' && col("'>") < (col("$") - 1)
     if a:mode == 'n'
-        let @/ = get(g:asciidoc_patterns, a:name, '\w*\%#\w*')
+        let @/ = get(s:macro_patterns, a:name, '\w*\%#\w*')
         execute 'normal! gn"ad'
     elseif a:mode == 'v'
         execute 'normal! gv"ad'
@@ -213,6 +256,37 @@ function! asciidoc#base#insert_macro_attribs(mode, type, name) abort " {{{
     let @/ = save_search
 endfunc " }}}
 
+""
+" Converts the current word or the selection into the target of a macro.
+"
+" For example if the cursor in somewhere inside the word 'icon.png'
+" in the following line:
+"
+"   See this nice icon.png inline image.
+"
+" calling this function as asciidoc#base#insert_macro_target('n', 'inline',
+" 'image') would result in:
+"
+"   See this nice image:icon.png[] inline image.
+"
+" The cursor will be placed inside the brackets, but insert mode will not
+" be started automatically.
+"
+" {mode} The vim mode in which to operate. May be either 'n' for normal
+"        mode or 'v' for visual mode.
+" {type} Whether to generate an inline macro (single colon) or a block
+"        macro (double colon). May be either 'inline' or 'block'.
+" {name} The name of the macro (the part before the colon(s), actually the
+"        'target').
+"        For example 'image' or 'include'.
+"
+" FIXME: Should this leave the user in insert mode afterwards?
+" FIXME: It seems to have whitespace problems sometimes. Sometimes it adds
+"        an additional space before the macro, sometimes it removes the
+"        space after the macro and sometimes it does both. Also sometimes
+"        it adds a space after the macro.
+" FIXME: Use omnicompletion? Auto start completion menu?
+" FIXME: Allow to operate on motions
 function! asciidoc#base#insert_macro_target(mode, type, name) abort " {{{
     " This first part (..else) is kind of dumb. It's a convenience, but is it really
     " worth it to make the function harder to read?
@@ -226,14 +300,13 @@ function! asciidoc#base#insert_macro_target(mode, type, name) abort " {{{
         echoerr "invalid macro type (" . a:type . ")"
         return -1
     endif " }}}
-    let name = a:name
     let attribs = []
     let save_reg = getreg('a', 1, 1)
     let save_reg_type = getregtype('a')
     let save_search = @/
     let viz_eol = col("'>") < (col("$") - 1)
     if a:mode == 'n'
-        let @/ = get(g:asciidoc_patterns, a:name, '\w*\%#\w*')
+        let @/ = get(s:macro_patterns, a:name, '\w*\%#\w*')
         execute 'normal! gn"ad'
     elseif a:mode == 'v'
         execute 'normal! gv"ad'
@@ -242,7 +315,7 @@ function! asciidoc#base#insert_macro_target(mode, type, name) abort " {{{
     endif
     call setreg('a', '', 'ac')
     let target = @a
-    let @a = <SID>insert_macro(type, name, @a, attribs)
+    let @a = <SID>insert_macro(type, a:name, @a, attribs)
     if viz_eol
         normal! "aP
     else
@@ -387,6 +460,29 @@ function! s:escape_linkname(unsub) abort " {{{
     return sub
 endfunc " }}}
 
+" FIXME: This method does nothing useful for lists. What is it expected to
+" do? 
+" Ah! It does work for the first level of numbered list. It does not work
+" for all other levels of numbered lists. It also does not work for all the
+" levels of bullet lists.
+" Therefore this needs the be massively modified to really work with lists. 
+" It should:
+"  - work on every level
+"  - use the same number/bullet style as the the previous item
+"  - based on a global settings (g:asciidoc_list_number_style_increasing?)
+"    it should either use the next number (2 after 1, b after a, etc.) or
+"    the same.
+" FIXME: We will also need a function + mapping to increase / decrease the
+" level of
+"  - the current item
+"  - the selected item range
+" FIXME: It inserts the | automatically in tables. That is nice, but maybe
+" should only be done if a certain global property is set to 1. 
+" or not? If mapped to <s-cr> the user can differentiate. That sounds nice.
+" But! It doesn't work with CLI vim! See https://stackoverflow.com/questions/16359878
+" and https://vi.stackexchange.com/questions/13328
+" It does work if the terminal supports differentiation. Not really nice,
+" but a solution for some people.
 function! asciidoc#base#soft_linebreak() abort "{{{
     let syntax_name = synIDattr(synID(line('.'), col('.'), 1), "name")
     let save_reg = @"
@@ -404,6 +500,7 @@ function! asciidoc#base#soft_linebreak() abort "{{{
     else
         if g:asciidoc_debug_level > 0
             echo "Don't know what to do with syntax_name (" . syntax_name . ")"
+            normal! "<cr>"
         endif
     endif
     let @/ = save_search

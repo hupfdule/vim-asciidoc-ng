@@ -70,6 +70,15 @@ if !exists('g:asciidoc_title_style_atx')
   let g:asciidoc_title_style_atx = 'asymmetric'
 endif
 
+""
+" Whether to auto-align tables while modifying them in insert mode.
+" (default = 0)
+"
+" This option only applies if the 'godlygeek/tabular' plugin is installed.
+if !exists('g:asciidoc_table_autoalign')
+  let g:asciidoc_table_autoalign = 0
+endif
+
 " END Options }}}
 
 " Settings =============================================================== {{{
@@ -302,9 +311,249 @@ setlocal isfname-=#
 
     " END Emphasize text (surround) }}}
 
+    " Insert macros ...................................................... {{{
+
+    command! -buffer -nargs=+ AsciidocToMacroTarget call asciidoc#base#insert_macro_target(<f-args>)
+    command! -buffer -nargs=+ AsciidocToMacroAttribute call asciidoc#base#insert_macro_attribs(<f-args>)
+
+    " Image
+    " FIXME: Provide a sophisticated function for insert mode with
+    " omni-completion that takes the :imagesdir: document attribute into account.
+    inoremap <buffer> <LocalLeader>img image:[]<Left>
+    nnoremap <buffer> <LocalLeader>img :AdocInsertMacroVisualTarget n inline image<CR>
+    vnoremap <buffer> <LocalLeader>img :<C-U>AdocInsertMacroVisualTarget v inline image<CR>
+
+    " Include
+    nnoremap <buffer> <LocalLeader>inc :AdocInsertMacroVisualTarget n block include<CR>
+    vnoremap <buffer> <LocalLeader>inc :<C-U>AdocInsertMacroVisualTarget v block include<CR>
+
+    " Link
+    nnoremap <buffer> <LocalLeader>link :AdocInsertMacroVisualTarget n inline link<CR>
+    vnoremap <buffer> <LocalLeader>link :<C-U>AdocInsertMacroVisualTarget v inline link<CR>
+
+    " kbd (Asciidoctor experimental)
+    " FIXME: Emit warning when this is used without the :experimental:
+    " document attribute?
+    inoremap <buffer> <LocalLeader>kbd kbd:[]<Left>
+    nnoremap <buffer> <LocalLeader>kbd :AdocInsertMacroVisualAttribs n inline kbd<CR>
+    vnoremap <buffer> <LocalLeader>kbd :<C-U>AdocInsertMacroVisualAttribs v inline kbd<CR>
+
+    " menu (Asciidoctor experimental)
+    " FIXME: Emit warning when this is used without the :experimental:
+    " document attribute?
+    inoremap <buffer> <LocalLeader>menu menu:[]<Left>
+    nnoremap <buffer> <LocalLeader>menu :AdocInsertMacroVisualAttribs n inline menu<CR>
+    vnoremap <buffer> <LocalLeader>menu :<C-U>AdocInsertMacroVisualAttribs v inline menu<CR>
+
+    " btn (Asciidoctor experimental)
+    " FIXME: Emit warning when this is used without the :experimental:
+    " document attribute?
+    inoremap <buffer> <LocalLeader>btn btn:[]<Left>
+    nnoremap <buffer> <LocalLeader>btn :AdocInsertMacroVisualAttribs n inline btn<CR>
+    vnoremap <buffer> <LocalLeader>btn :<C-U>AdocInsertMacroVisualAttribs v inline btn<CR>
+    " END Insert macros }}}
+
+    " Insert blocks ...................................................... {{{
+    " FIXME: The number of separator chars should be configurable (default
+    " to 4) g:asciidoc_block_separator_length =  75?
+    " FIXME: Provide a mapping for a block with empty metadata (eg. to
+    " create the 'music' block, that has no mapping on its own).
+
+    " code block
+    inoremap <buffer> <LocalLeader>code <Esc>:AdocInsertParagraph i ---- source<CR>
+    nnoremap <buffer> <LocalLeader>code :AdocInsertParagraph n ---- source<CR>
+    vnoremap <buffer> <LocalLeader>code :<C-U>AdocInsertParagraph v ---- source<CR>
+
+    " comment block
+    inoremap <buffer> <LocalLeader>comment <Esc>:AdocInsertParagraph i //// <CR>
+    nnoremap <buffer> <LocalLeader>comment :AdocInsertParagraph n //// <CR>
+    vnoremap <buffer> <LocalLeader>comment :<C-U>AdocInsertParagraph v //// <CR>
+
+    " example block
+    inoremap <buffer> <LocalLeader>example <Esc>:AdocInsertParagraph i ====<CR>
+    nnoremap <buffer> <LocalLeader>example :AdocInsertParagraph n ====<CR>
+    vnoremap <buffer> <LocalLeader>example :<C-U>AdocInsertParagraph v ====<CR>
+
+    " literal block
+    inoremap <buffer> <LocalLeader>literal <Esc>:AdocInsertParagraph i ....<CR>
+    nnoremap <buffer> <LocalLeader>literal :AdocInsertParagraph n ....<CR>
+    vnoremap <buffer> <LocalLeader>literal :<C-U>AdocInsertParagraph v ....<CR>
+
+    " open block
+    inoremap <buffer> <LocalLeader>open <Esc>:AdocInsertParagraph i --<CR>
+    nnoremap <buffer> <LocalLeader>open :AdocInsertParagraph n --<CR>
+    vnoremap <buffer> <LocalLeader>open :<C-U>AdocInsertParagraph v --<CR>
+
+    " passthrough block
+    inoremap <buffer> <LocalLeader>passthrough <Esc>:AdocInsertParagraph i ++++<CR>
+    nnoremap <buffer> <LocalLeader>passthrough :AdocInsertParagraph n ++++<CR>
+    vnoremap <buffer> <LocalLeader>passthrough :<C-U>AdocInsertParagraph v ++++<CR>
+
+    " quote block
+    inoremap <buffer> <LocalLeader>quote <Esc>:AdocInsertParagraph i ____ quote author source<CR>
+    nnoremap <buffer> <LocalLeader>quote :AdocInsertParagraph n ____ quote author source<CR>
+    vnoremap <buffer> <LocalLeader>quote :<C-U>AdocInsertParagraph v ____ quote author source<CR>
+
+    " sidebar block
+    inoremap <buffer> <LocalLeader>sidebar <Esc>:AdocInsertParagraph i ****<CR>
+    nnoremap <buffer> <LocalLeader>sidebar :AdocInsertParagraph n ****<CR>
+    vnoremap <buffer> <LocalLeader>sidebar :<C-U>AdocInsertParagraph v ****<CR>
+
+    " verse block
+    inoremap <buffer> <LocalLeader>verse <Esc>:AdocInsertParagraph i ____ verse author source<CR>
+    nnoremap <buffer> <LocalLeader>verse :AdocInsertParagraph n ____ verse author source<CR>
+    vnoremap <buffer> <LocalLeader>verse :<C-U>AdocInsertParagraph v ____ verse author source<CR>
+
+    " Admonitions
+    " caution
+    inoremap <buffer> <LocalLeader>caution <Esc>:AdocInsertParagraph i -- CAUTION<CR>
+    nnoremap <buffer> <LocalLeader>caution :AdocInsertParagraph n -- CAUTION<CR>
+    vnoremap <buffer> <LocalLeader>caution :<C-U>AdocInsertParagraph v -- CAUTION<CR>
+
+    " important
+    inoremap <buffer> <LocalLeader>important <Esc>:AdocInsertParagraph i -- IMPORTANT<CR>
+    nnoremap <buffer> <LocalLeader>important :AdocInsertParagraph n -- IMPORTANT<CR>
+    vnoremap <buffer> <LocalLeader>important :<C-U>AdocInsertParagraph v -- IMPORTANT<CR>
+
+    " note
+    inoremap <buffer> <LocalLeader>note <Esc>:AdocInsertParagraph i -- NOTE<CR>
+    nnoremap <buffer> <LocalLeader>note :AdocInsertParagraph n -- NOTE<CR>
+    vnoremap <buffer> <LocalLeader>note :<C-U>AdocInsertParagraph v -- NOTE<CR>
+
+    " tip
+    inoremap <buffer> <LocalLeader>tip <Esc>:AdocInsertParagraph i -- TIP<CR>
+    nnoremap <buffer> <LocalLeader>tip :AdocInsertParagraph n -- TIP<CR>
+    vnoremap <buffer> <LocalLeader>tip :<C-U>AdocInsertParagraph v -- TIP<CR>
+
+    " warning
+    inoremap <buffer> <LocalLeader>warning <Esc>:AdocInsertParagraph i -- WARNING<CR>
+    nnoremap <buffer> <LocalLeader>warning :AdocInsertParagraph n -- WARNING<CR>
+    vnoremap <buffer> <LocalLeader>warning :<C-U>AdocInsertParagraph v -- WARNING<CR>
+    " Admonitions end
+
+    " END Insert blocks }}}
+
+    " Insert tables ...................................................... {{{
+
+    command! -buffer -nargs=1 AdocInsertTable call asciidoc#base#insert_table(<f-args>)
+
+    inoremap <buffer> <LocalLeader>table <Esc>:AdocInsertTable i<CR>
+    nnoremap <buffer> <LocalLeader>table :AdocInsertTable n<CR>
+    vnoremap <buffer> <LocalLeader>table :<C-U>AdocInsertTable v<CR>
+    " Table text objects
+    " FIXME: Is this any different than other blocks? I don't think so and
+    " I don't think that would be necessary. We could easily support
+    " text-objects for any block. Maybe even differentiate _and_ have a
+    " generic one like 'ib' for "in block" (generic) and 'i=' for "in block
+    " delimited by =".
+    " FIXME: More interesting text objects would be "table cell", "table
+    " row" and "table column". But the former two may not be applicable in
+    " all situations, because they are not necessarily in a continuous text
+    " block.
+    vnoremap <buffer> <silent> <LocalLeader>it :<C-U>call asciidoc#table#text_object(1, 1)<CR>
+    onoremap <buffer> <silent> <LocalLeader>it :<C-U>call asciidoc#table#text_object(1, 0)<CR>
+    vnoremap <buffer> <silent> <LocalLeader>at :<C-U>call asciidoc#table#text_object(0, 1)<CR>
+    onoremap <buffer> <silent> <LocalLeader>at :<C-U>call asciidoc#table#text_object(0, 0)<CR>
+    " Table attributes
+    " FIXME: Only one of the below mappings actually inserts text into the
+    " metadata (e.g. [cols=""]). If the other is used afterwards, it just
+    " puts the cursor into the brackets, but doesn't insert anything.
+    nnoremap <buffer> <silent> <LocalLeader>cols :call asciidoc#table#insert_attributes('cols')<CR>
+    nnoremap <buffer> <silent> <LocalLeader>opts :call asciidoc#table#insert_attributes('options')<CR>
+
+    " Support for Tabular plugin . . . . . . . . . . . . . . . . . . . . . {{{
+    " TODO: We should also support vim-easyalign and maybe vim-lion
+    if exists(':Tabularize')
+        " Use <Leader>| to realign tables with the Tabuliarize plugin
+        nnoremap <buffer> <LocalLeader><Bar> :Tabularize /<Bar>\(===\)\@!<CR> " we need a negative lookahead to avoid breaking the block delimiters
+        vnoremap <buffer> <LocalLeader><Bar> :Tabularize /<Bar>\(===\)\@!<CR> " we need a negative lookahead to avoid breaking the block delimiters
+
+        " Realign table when entering a |
+        if g:asciidoc_table_autoalign == 1
+          inoremap <buffer> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
+          function! s:align()
+              if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# '^\s*|' || getline(line('.')+1) =~# '^\s*|')
+                  let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
+                  let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
+                  Tabularize /|\(=\)\@!
+                  normal! 0
+                  call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
+              endif
+          endfunction
+        endif
+    endif
+    " END Support for Tabular plugin }}}
+
+
+    " END Insert tables }}}
+
+    " Insert xref ........................................................ {{{
+    " FIXME: When used in normal mode, but nothing is selected, the result
+    " is: <<,  >> with the cursor positioned after the comma. Why are there
+    " two spaces after the comma? The comma shouldn't be there in the first
+    " place, when no target has been inserted. Instead it should be <<>>
+    " with the cursor in the middle.
+    " FIXME: When used in normal mode with the cursor over an existing
+    " word or with a visual selection, this word is used as the target _and_ as the link text. Not
+    " very useful.
+    " FIXME: We need an insert mode mapping and especially an omnifunc that
+    " populates a menu with the possible values! That would be the most
+    " helpful.
+
+    command! -buffer -nargs=1 AdocInsertXref call asciidoc#base#create_xref(<f-args>)
+    vnoremap <buffer> <LocalLeader>xr :<C-U>AdocInsertXref v<CR>
+    nnoremap <buffer> <LocalLeader>xr :AdocInsertXref n<CR>
+
+    " END Insert xref }}}
+
+    " Toggle section heading style ....................................... {{{
+
+    " FIXME: Provide a visual mode mapping? How should that work?
+    inoremap <buffer> <Plug>(AsciidocToggleSectionHeaderStyle) <c-o>:call asciidoc#editing#toggle_title()<cr>
+    nnoremap <buffer> <Plug>(AsciidocToggleSectionHeaderStyle) :call asciidoc#editing#toggle_title()<cr>
+
+    imap <buffer> <LocalLeader>tt <Plug>(AsciidocToggleSectionHeaderStyle)
+    nmap <buffer> <LocalLeader>tt <Plug>(AsciidocToggleSectionHeaderStyle)
+
+    " END Toggle section heading style }}}
+
   " END Editing }}}
 
 " END Commands }}}
+
+" Text objects =========================================================== {{{
+
+  " Experimental --------------------------------------------------------- {{{
+  " FIXME: These are really experimental. The dialog asking for the type of
+  " block should not appear. Instead it should 'i=' for an example block,
+  " 'i*' for a sidebar block, etc. 'ib' should then select any block.
+  nnoremap <buffer> <LocalLeader>bl :set opfunc=asciidoc#experimental#block_operator<CR>g@
+
+  xnoremap <buffer> <silent> <LocalLeader>ib :<C-U>call asciidoc#experimental#text_object_block(1, 1)<CR>
+  onoremap <buffer> <silent> <LocalLeader>ib :call asciidoc#experimental#text_object_block(1, 0)<CR>
+  xnoremap <buffer> <silent> <LocalLeader>ab :<C-U>call asciidoc#experimental#text_object_block(0, 1)<CR>
+  onoremap <buffer> <silent> <LocalLeader>ab :call asciidoc#experimental#text_object_block(0, 0)<CR>
+
+  " FIXME: These are really experimental. They are totally broken for
+  " numbered lists. Bullet lists only work, it they don't use the '-'
+  " bullet at all.
+  " Interestingly it _does_ work with list continuation ('+' in the first
+  " column)
+  " FIXME: The difference betwen il and al is unclear (actually not
+  " implemented)
+  xnoremap <buffer> <silent> <LocalLeader>il :<C-U>call asciidoc#experimental#text_object_list_item(1, 1)<CR>
+  onoremap <buffer> <silent> <LocalLeader>il :call asciidoc#experimental#text_object_list_item(1, 0)<CR>
+  xnoremap <buffer> <silent> <LocalLeader>al :<C-U>call asciidoc#experimental#text_object_list_item(0, 1)<CR>
+  onoremap <buffer> <silent> <LocalLeader>al :call asciidoc#experimental#text_object_list_item(0, 0)<CR>
+
+  " FIXME: These are really experimental. The dialog asking for the type of
+  " block should not appear. The same applies as for 'ib', 'ab', etc.
+  nnoremap <buffer> <silent> <LocalLeader>csb :call asciidoc#experimental#change_surround_block()<CR>
+  nnoremap <buffer> <silent> <LocalLeader>dsb :call asciidoc#experimental#delete_surround_block(1)<CR>
+
+  " END Experimental }}}
+
+" END Text objects }}}
 
 " FIXME: Do we need to separate mappings? I think it is better to map them
 " where we define the commands (above)
