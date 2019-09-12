@@ -20,7 +20,7 @@ ib   inner block
 ab   a block
      The text in the current block with the surrounding block delimiters.
      But without any decorators like labels.
-aB   a Block
+aB   a Block (alternative: Ab)
      The text in the current block with the surrounding block delimiters
      and also any decorators like labels.
 

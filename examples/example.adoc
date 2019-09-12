@@ -15,6 +15,15 @@ But it spans multiple paragraphs
 
 == GOrim
 
+Mein *fetter* Text.
+
+Mein [.big]*großer* Text.
+
+Mein [.blue]*blauer* Text.
+Mein [.blue]_blauer_ Text.
+Mein [.blue]`blauer` Text.
+Mein [.blue]blauer Text.
+
 Highlighing (setex)
 -------------------
 // TODO inside comment should be highlighted.

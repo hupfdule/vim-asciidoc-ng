@@ -50,6 +50,13 @@
         delimiters length is more than 2 chars different than the last
         content line.
   - [ ] Prettify whole file (all blocks)
+  - [ ] Intelligent newline behaviour
+        - Normal <cr> should start at the correct column number for
+          continuing the current block (or list item, or …)
+        - Some other mapping (like <s-cr>) or the same if <s-cr> is not
+          possisble should then create the next list item, table row, etc.
+        - How about continuation in lists with a '+' in the first column?
+  - [ ] Support for checkbox inserttion/removal/toggle
 * [ ] Follow cross references
   - [x] follow explicit references
   - [ ] follow extern links (for edit or for display?)
@@ -73,6 +80,8 @@ Für Blöcke in Asciidoc die regexes von Markdown mit verwenden, die per \z und 
 dass zwei Elemente absolut gleich sein sollen. Damit kann man prüfen, dass die Einleitung und Ausleitung
 von Blöcken absolut gleich sind.
 Also
+
+
 
 =========
 Inhalt
