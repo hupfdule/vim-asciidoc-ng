@@ -529,11 +529,28 @@ set cpo&vim
 
   " Experimental --------------------------------------------------------- {{{
 
+    " FIXME: This operator should convert the the next motion into a block.
+    " However, when used with e.g. the 'w' motion, it always starts at the
+    " beginning of the line instead of the cursor position.
+    "
+    "   Fuisset maecenas fusce bonorum voluptatibus doctus tristique.
+    "
+    " With the cursor somewhere inside 'fusce' and calling '<localleader>blw+'
+    " turns it into
+    "
+    " ++++
+    " Fuisset maecenas fusce 
+    " ++++
+    " bonorum voluptatibus doctus tristique.
+    "
+    " Also using it on a list item converts the whole item into a block.
+    " Including the bullet. I think that is a problem with the 'il' text
+    " object. It should _exclude_ the bullet.
+    nnoremap <buffer> <LocalLeader>bl :set opfunc=asciidoc#experimental#block_operator<CR>g@
+
     " FIXME: These are really experimental. The dialog asking for the type of
     " block should not appear. Instead it should 'i=' for an example block,
     " 'i*' for a sidebar block, etc. 'ib' should then select any block.
-    nnoremap <buffer> <LocalLeader>bl :set opfunc=asciidoc#experimental#block_operator<CR>g@
-
     xnoremap <buffer> <silent> <LocalLeader>ib :<C-U>call asciidoc#experimental#text_object_block(1, 1)<CR>
     onoremap <buffer> <silent> <LocalLeader>ib :call asciidoc#experimental#text_object_block(1, 0)<CR>
     xnoremap <buffer> <silent> <LocalLeader>ab :<C-U>call asciidoc#experimental#text_object_block(0, 1)<CR>
