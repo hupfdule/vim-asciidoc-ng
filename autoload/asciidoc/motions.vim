@@ -3,6 +3,14 @@
 " headings), but is it worth the hassle? At the moment this regex matches
 " everything that is valid for asciidoctor.
 " FIXME: Extract such common regexes into a common autoloaded file?
+let s:atx_title_complex = '^\(=\{1,6}\|\#\{1,6}\)'                             " leading section markers (mandatory)
+                \ '\s\+'                                               " whitespace (mandatory)
+                \ '\(\(\[\[[A-Za-z:_][A-Za-z0-9\.\-]\{-\}\]\]\)*\)'    " secondary anchors (optional)
+                \ '\s*'                                                " whitespace (optional)
+                \ '\(\S.\{-\}\)'                                       " the actual title text
+                \ '\s*'                                                " whitespace (optional)
+                \ '\(\([[\[A-Za-z:_\]\[A-Za-z0-9\.\-\]\{-\}]]\)*\)'    " secondary anchors (optional)
+                \ '\(\s\+\1\)\?$'                                      " trailing section markers (optional)
 let s:atx_title = '^\(=\{1,6}\|\#\{1,6}\)\s\+\(\S.\{-}\)\(\s\+\1\)\?$'
 let s:setext_title_text = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=[^.].*'
 "let s:setext_title_text = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=\(\[.*\]\)\@!\&\([^\.].*\)$'
@@ -59,7 +67,7 @@ endfunction
 " TODO: Provide function to increment/decrement current section.
 function! asciidoc#motions#set_section_title_level(level) abort
   let line = line('.')
-  let section_title = s:get_section_title(line)
+  let section_title = asciidoc#motions#get_section_title(line)
   if !empty(section_title)
     if section_title.type == 'atx'
       call asciidoc#motions#set_atx_section_title(section_title.line, a:level, section_title.title, section_title.symmetric)
@@ -163,6 +171,24 @@ function! asciidoc#motions#jump_to_next_section_end() abort
 endfunction
 
 ""
+" Find the next section after the given {startline}.
+" The given {searchflags} are the same as for the builtint search()
+" function.
+"
+" Returns the line number of the next title (the upper line for setext
+" titles) or 0 if no section title can be found after the given line.
+" This function does not wrap at the end of the file.
+function! asciidoc#motions#find_next_section_heading(start_line, search_flags) abort
+  let l:old_pos = getpos('.')
+  call setpos('.', [0, a:start_line, 0, 0])
+  let l:next_atx = search(s:atx_title, a:search_flags)
+  let l:next_setext = s:find_next_setext_section_title(a:start_line, a:search_flags)
+  let l:next = min(filter([l:next_atx, l:next_setext], 'v:val != 0'))
+  call setpos('.', l:old_pos)
+  return l:next
+endfunction
+
+""
 " Find the next section whose title matches the given regex {pattern}.
 "
 " Returns the line number of the found title (the upper line for setext titles)
@@ -242,6 +268,9 @@ function! s:get_atx_section_title(line_number) abort
     let level = len(match[1])
     let title = match[2]
     let symmetric = len(match[3]) != 0
+    "TODO: To not include secondary anchors in the title (like in
+    "== [[secondary]] My title
+    "TODO Include the anchor and any secondary anchors in the dict
     return {'line' : a:line_number, 'type' : 'atx', 'symmetric' : symmetric, 'level' : level, 'title' : title}
   else
     return {}
@@ -271,6 +300,9 @@ function! asciidoc#motions#get_setext_section_title(line_number) abort
     " Also this one is taken as section header:
     " [Sektion 2.5]
     " -------------
+    " AHA: Problem ist das '\%^', das in der preceding line matchen soll.
+    "      Da wir hier nur einen String haben, matcht '\%^' offenbar immer,
+    "      da das immer der Anfang der "Datei" ist.
     return 0
   endif
 
@@ -288,7 +320,7 @@ function! asciidoc#motions#get_setext_section_title(line_number) abort
   endif
 endfunction
 
-function! s:get_section_title(line_number) abort
+function! asciidoc#motions#get_section_title(line_number) abort
   let atx = s:get_atx_section_title(a:line_number)
   if !empty(atx)
     return atx

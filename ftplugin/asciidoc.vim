@@ -124,6 +124,10 @@ set cpo&vim
 
 " END Folding }}}
 
+" Completion ============================================================= {{{
+set omnifunc=asciidoc#completion#CompleteXrefTarget
+" END Completion }}}
+
 " Commands =============================================================== {{{
 
   " Navigation ----------------------------------------------------------- {{{
