@@ -112,7 +112,7 @@ set cpo&vim
     compiler asciidoctor
   elseif executable('asciidoc')
     compiler asciidoc
-  else 
+  else
     echo 'Neither asciidoctor nor asciidoc found in path. Please set the compiler directly.'
   endif
 " END Settings }}}
@@ -292,8 +292,8 @@ set omnifunc=asciidoc#completion#CompleteXrefTarget
       vnoremap <buffer> <Plug>(AsciidocSurround`) :AsciidocSurround `<cr>
       nnoremap <buffer> <Plug>(AsciidocSurround^) :AsciidocSurround ^<cr>
       vnoremap <buffer> <Plug>(AsciidocSurround^) :AsciidocSurround ^<cr>
-      nnoremap <buffer> <Plug>(AsciidocSurround_) :AsciidocSurround _<cr>
-      vnoremap <buffer> <Plug>(AsciidocSurround_) :AsciidocSurround _<cr>
+      nnoremap <buffer> <Plug>(AsciidocSurround~) :AsciidocSurround ~<cr>
+      vnoremap <buffer> <Plug>(AsciidocSurround~) :AsciidocSurround ~<cr>
       nnoremap <buffer> <Plug>(AsciidocSurround+) :AsciidocSurround +<cr>
       vnoremap <buffer> <Plug>(AsciidocSurround+) :AsciidocSurround +<cr>
 
@@ -365,10 +365,13 @@ set omnifunc=asciidoc#completion#CompleteXrefTarget
       inoremap <buffer> <LocalLeader>btn btn:[]<Left>
       nnoremap <buffer> <LocalLeader>btn :AdocInsertMacroVisualAttribs n inline btn<CR>
       vnoremap <buffer> <LocalLeader>btn :<C-U>AdocInsertMacroVisualAttribs v inline btn<CR>
-      
+
     " END Insert macros }}}
 
     " Insert blocks ...................................................... {{{
+
+      command! -buffer -nargs=+ AdocInsertParagraph call asciidoc#base#insert_paragraph(<f-args>)
+
       " FIXME: The number of separator chars should be configurable (default
       " to 4) g:asciidoc_block_separator_length =  75?
       " FIXME: Provide a mapping for a block with empty metadata (eg. to
@@ -527,6 +530,7 @@ set omnifunc=asciidoc#completion#CompleteXrefTarget
       inoremap <buffer> <Plug>(AsciidocToggleSectionHeaderStyle) <c-o>:call asciidoc#editing#toggle_title()<cr>
       nnoremap <buffer> <Plug>(AsciidocToggleSectionHeaderStyle) :call asciidoc#editing#toggle_title()<cr>
 
+      " TODO: Provide a mapping to toggle between atx sync/async?
       imap <buffer> <LocalLeader>tt <Plug>(AsciidocToggleSectionHeaderStyle)
       nmap <buffer> <LocalLeader>tt <Plug>(AsciidocToggleSectionHeaderStyle)
 
@@ -550,7 +554,7 @@ set omnifunc=asciidoc#completion#CompleteXrefTarget
     " turns it into
     "
     " ++++
-    " Fuisset maecenas fusce 
+    " Fuisset maecenas fusce
     " ++++
     " bonorum voluptatibus doctus tristique.
     "

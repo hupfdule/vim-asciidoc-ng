@@ -80,6 +80,10 @@ endfunc " }}}
 " FIXME: The detection of SETEXT headers is fragile. It doesn't check the
 " length of the title text and the underline (even that would not be 100%
 " correct). It should use s:find_next_setext_section_title in motions.vim
+" FIXME: When calling this function on the underline of a Setext header,
+" the underline gets another underline.
+" FIXME: We need a way to _remove_ the heading indicators (make a heading
+" to a normal text).
 function! asciidoc#editing#toggle_title() abort "{{{
     let save_pos = getcurpos()
     " Find the last title. (Should really check that we aren't on a title already).
