@@ -1,8 +1,119 @@
-== Syntax highlighting
+Asciidoc Plugin for Vim
+=======================
+Marco Herrn <marco@mherrn.de>
+2019-09-17
+:experimental:
+:icons: font
+
+////
+// Some abstract describing the project.
+////
+
+
+Introduction
+------------
+
+////
+Why this plugin?
+What does it provide?
+ - syntax highlighting
+   handy functions
+
+Short overview of
+ - mappings
+ - commands
+////
+
+=== Mappings
+
+// TODO: Categorize / Group in "Navigation", "Editing", etc.?
+//       Maybe even more
+// TODO: Set links to the relevant sections in the asciidoctor user guide
+.Default mappings
+[cols="m,,", options="header"]
+|===
+| Mapping                  | Command                       | Functionality
+
+| ]]                       | AsciidocNextSection           | Jump to the next section heading
+| ][                       | AsciidocNextSectionEnd        | Jump to the next section end
+| [[                       | AsciidocPrevSection           | Jump to the previous section heading
+| ]]                       | AsciidocPrevSectionEnd        | Jump to the previous section end
+| gf                       | AsciidocFollowLinkUnderCursor | Follow links and cross references (See <<Following Links>> for alternative mappings)
+| <localleader>.           | AsciidocSentencePerLine       | Reformat text to one sentence per line
+| <localleader>0           | AsciidocSectionLevel0         | Convert the current section header or the current line into a section 0 heading
+| …                        | …                             | …
+| <localleader>5           | AsciidocSectionLevel5         | Convert the current section header or the current line into a section 5 heading
+| <localleader>tt          | ???                           | Toggle heading style between Atx and Setext
+| <localleader>ts          | AsciidocSurround *            | Surround some text with asterisks to mark it as *strong*
+| <localleader>te          | AsciidocSurround _            | Surround some text with asterisks to mark it as _emphasized_
+| <localleader>tc          | AsciidocSurround `            | Surround some text with asterisks to mark it as `monospace`
+| <localleader>tk          | AsciidocSurround ^            | Surround some text with asterisks to mark it as ^superscript^
+| <localleader>tj          | AsciidocSurround ~            | Surround some text with asterisks to mark it as ~subscript~
+| <localleader>tp          | AsciidocSurround +            | Surround some text with asterisks to mark it as +passthrough+
+| <localleader>img         | ???                           | Insert `image:[]` macro
+| <localleader>inc         | ???                           | Insert `include::[]` macro
+| <localleader>link        | ???                           | Insert `link:[]` macro
+| <localleader>kbd         | ???                           | Insert `kbd:[]` macro
+| <localleader>menu        | ???                           | Insert `menu:[]` macro
+| <localleader>btn         | ???                           | Insert `btn:[]` macro
+| <localleader>code        | ???                           | Insert a code block
+| <localleader>comment     | ???                           | Insert a comment block
+| <localleader>example     | ???                           | Insert a example block
+| <localleader>literal     | ???                           | Insert a literal block
+| <localleader>open        | ???                           | Insert a open block
+| <localleader>passthrough | ???                           | Insert a passthrough block
+| <localleader>quote       | ???                           | Insert a quote block
+| <localleader>sidebar     | ???                           | Insert a sidebar block
+| <localleader>verse       | ???                           | Insert a verse block
+| <localleader>caution     | ???                           | Insert a caution admonition block
+| <localleader>important   | ???                           | Insert a important admonition block
+| <localleader>note        | ???                           | Insert a note admonition block
+| <localleader>tip         | ???                           | Insert a tip admonition block
+| <localleader>warning     | ???                           | Insert a warning admonition block
+| <localleader>table       | ???                           | Insert a table block
+| <localleader>xr          | ??                            | Insert cross reference
+|===
+
+
+
+.Optional mappings
+
+Configuration
+-------------
+
+////
+What option exist, What do they to?
+////
+
+Commands
+--------
+
+////
+Detailled description of all commands
+////
+
+Text objects
+------------
+
+Syntax highlighting
+-------------------
+
+////
+More detailed explanation of the syntax highlighting
+////
+
 
 A good syntax highlighting fulfills two purposes:
 
 - Make the source easier to read by highlighting certain structuring elements
 - Give hints about valid syntax elements
 
+Compiler
+--------
 
+Related projects
+----------------
+
+////
+Inspirations / Integrated projects / Other interesting projects
+////
