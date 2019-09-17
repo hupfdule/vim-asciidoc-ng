@@ -135,14 +135,20 @@ function! asciidoc#base#follow_link(link, kind, ...) " {{{
                 let file = expand("%:p:h") . "/" . file
             endif
             if filereadable(file)
+                if empty(cmd)
+                  let cmd = 'edit '
+                endif
                 let cmd .= file
                 if !empty(anchor)
-                    let cmd .= '/\[\[' . anchor . ']]'
+                    let cmd .= '| /\[\[' . anchor . ']]'
                 endif
             else
                 let yn = confirm("File " . file . " does not exist. Edit it anyway?", "&Yes\n&No", 0, "Question")
                 if yn == 1
-                    let cmd .= file . 'normal! i[[' . anchor . ']]0'
+                    if empty(cmd)
+                      let cmd = 'edit '
+                    endif
+                    let cmd .= file . ' | normal! i[[' . anchor . ']]0'
                 else
                     let cmd = ''
                 endif
