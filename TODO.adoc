@@ -57,6 +57,11 @@
           possisble should then create the next list item, table row, etc.
         - How about continuation in lists with a '+' in the first column?
   - [ ] Support for checkbox inserttion/removal/toggle
+  - [ ] Command to create a table that asks for (or accepts as parameter) columns and rows
+        - maybe even a command to exchange rows and columns (only on empty
+          tables or even with content?)
+  - [ ] Function (and mapping) to display all the mappings (and commands)
+        of this plugin.
 * [ ] Follow cross references
   - [x] follow explicit references
   - [ ] follow extern links (for edit or for display?)
