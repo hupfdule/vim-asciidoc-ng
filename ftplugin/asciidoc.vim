@@ -108,6 +108,13 @@ set cpo&vim
   " Remove '#' from isfname to let 'gf' correctly handle cross references to external files
   setlocal isfname-=#
 
+  if executable('asciidoctor')
+    compiler asciidoctor
+  elseif executable('asciidoc')
+    compiler asciidoc
+  else 
+    echo 'Neither asciidoctor nor asciidoc found in path. Please set the compiler directly.'
+  endif
 " END Settings }}}
 
 " Folding ================================================================ {{{

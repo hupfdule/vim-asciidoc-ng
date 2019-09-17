@@ -12,14 +12,14 @@ endif
 " errorformat stolen from syntastic
 
 let &l:errorformat = ''
-      \. '%Easciidoc: %tRROR: %f: line %l: %m,'
-      \. '%Easciidoc: %tRROR: %f: %m,'
-      \. '%Easciidoc: FAILED: %f: line %l: %m,'
-      \. '%Easciidoc: FAILED: %f: %m,'
-      \. '%Wasciidoc: %tARNING: %f: line %l: %m,'
-      \. '%Wasciidoc: %tARNING: %f: %m,'
-      \. '%Wasciidoc: DEPRECATED: %f: line %l: %m,'
-      \. '%Wasciidoc: DEPRECATED: %f: %m'
+      \ . '%Easciidoctor: %tRROR: %f: line %l: %m,'
+      \ . '%Easciidoctor: %tRROR: %f: %m,'
+      \ . '%Easciidoctor: FAILED: %f: line %l: %m,'
+      \ . '%Easciidoctor: FAILED: %f: %m,'
+      \ . '%Wasciidoctor: %tARNING: %f: line %l: %m,'
+      \ . '%Wasciidoctor: %tARNING: %f: %m,'
+      \ . '%Wasciidoctor: DEPRECATED: %f: line %l: %m,'
+      \ . '%Wasciidoctor: DEPRECATED: %f: %m'
 
 function! s:set_makeprg() abort
   let &l:makeprg = ''
