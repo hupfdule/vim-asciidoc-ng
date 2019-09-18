@@ -334,37 +334,38 @@ set omnifunc=asciidoc#completion#CompleteXrefTarget
       " FIXME: Provide a sophisticated function for insert mode with
       " omni-completion that takes the :imagesdir: document attribute into account.
       inoremap <buffer> <LocalLeader>img image:[]<Left>
-      nnoremap <buffer> <LocalLeader>img :AdocInsertMacroVisualTarget n inline image<CR>
-      vnoremap <buffer> <LocalLeader>img :<C-U>AdocInsertMacroVisualTarget v inline image<CR>
+      nnoremap <buffer> <LocalLeader>img :AsciidocToMacroTarget n inline image<CR>
+      vnoremap <buffer> <LocalLeader>img :<C-U>AsciidocToMacroTarget v inline image<CR>
 
       " Include
-      nnoremap <buffer> <LocalLeader>inc :AdocInsertMacroVisualTarget n block include<CR>
-      vnoremap <buffer> <LocalLeader>inc :<C-U>AdocInsertMacroVisualTarget v block include<CR>
+      nnoremap <buffer> <LocalLeader>inc :AsciidocToMacroTarget n block include<CR>
+      vnoremap <buffer> <LocalLeader>inc :<C-U>AsciidocToMacroTarget v block include<CR>
 
       " Link
-      nnoremap <buffer> <LocalLeader>link :AdocInsertMacroVisualTarget n inline link<CR>
-      vnoremap <buffer> <LocalLeader>link :<C-U>AdocInsertMacroVisualTarget v inline link<CR>
+      " FIXME: This is broken when called on an empty line. It then creates: link:%20[]
+      nnoremap <buffer> <LocalLeader>link :AsciidocToMacroTarget n inline link<CR>
+      vnoremap <buffer> <LocalLeader>link :<C-U>AsciidocToMacroTarget v inline link<CR>
 
       " kbd (Asciidoctor experimental)
       " FIXME: Emit warning when this is used without the :experimental:
       " document attribute?
       inoremap <buffer> <LocalLeader>kbd kbd:[]<Left>
-      nnoremap <buffer> <LocalLeader>kbd :AdocInsertMacroVisualAttribs n inline kbd<CR>
-      vnoremap <buffer> <LocalLeader>kbd :<C-U>AdocInsertMacroVisualAttribs v inline kbd<CR>
+      nnoremap <buffer> <LocalLeader>kbd :AsciidocToMacroAttribute n inline kbd<CR>
+      vnoremap <buffer> <LocalLeader>kbd :<C-U>AsciidocToMacroAttribute v inline kbd<CR>
 
       " menu (Asciidoctor experimental)
       " FIXME: Emit warning when this is used without the :experimental:
       " document attribute?
       inoremap <buffer> <LocalLeader>menu menu:[]<Left>
-      nnoremap <buffer> <LocalLeader>menu :AdocInsertMacroVisualAttribs n inline menu<CR>
-      vnoremap <buffer> <LocalLeader>menu :<C-U>AdocInsertMacroVisualAttribs v inline menu<CR>
+      nnoremap <buffer> <LocalLeader>menu :AsciidocToMacroAttribute n inline menu<CR>
+      vnoremap <buffer> <LocalLeader>menu :<C-U>AsciidocToMacroAttribute v inline menu<CR>
 
       " btn (Asciidoctor experimental)
       " FIXME: Emit warning when this is used without the :experimental:
       " document attribute?
       inoremap <buffer> <LocalLeader>btn btn:[]<Left>
-      nnoremap <buffer> <LocalLeader>btn :AdocInsertMacroVisualAttribs n inline btn<CR>
-      vnoremap <buffer> <LocalLeader>btn :<C-U>AdocInsertMacroVisualAttribs v inline btn<CR>
+      nnoremap <buffer> <LocalLeader>btn :AsciidocToMacroAttribute n inline btn<CR>
+      vnoremap <buffer> <LocalLeader>btn :<C-U>AsciidocToMacroAttribute v inline btn<CR>
 
     " END Insert macros }}}
 
