@@ -36,7 +36,7 @@ set cpo&vim
   endif
 
   ""
-  " Whether to enable concealing for markup (default 1).
+  " Whether to enable concealing for markup (default 0).
   " If set to 1 the |conceallevel| must also be set.
   " If set to 0 the |conceallevel| has no effect.
   if !exists('g:asciidoc_enable_conceal')
