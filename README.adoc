@@ -3,6 +3,7 @@ Asciidoc Plugin for Vim
 Marco Herrn <marco@mherrn.de>
 2019-09-17
 :experimental:
+:toc: left
 :icons: font
 
 ////
@@ -24,7 +25,8 @@ Short overview of
  - commands
 ////
 
-=== Mappings
+Mappings
+--------
 
 // TODO: Categorize / Group in "Navigation", "Editing", etc.?
 //       Maybe even more
@@ -38,7 +40,12 @@ Short overview of
 | ][                       | AsciidocNextSectionEnd        | Jump to the next section end
 | [[                       | AsciidocPrevSection           | Jump to the previous section heading
 | ]]                       | AsciidocPrevSectionEnd        | Jump to the previous section end
+| ???                      | AsciidocNextSiblingSection    | Jump to the next section heading of the same level as the current one
+| ???                      | AsciidocPrevSiblingSection    | Jump to the previous section heading of the same level as the current one
+| ???                      | AsciidocFirstSubSection       | Jump to the first subsection heading of the current one
+| ???                      | AsciidocParentSection         | Jump to the section heading of the parent section of the current one
 | gf                       | AsciidocFollowLinkUnderCursor | Follow links and cross references (See <<Following Links>> for alternative mappings)
+| gx                       | AsciidocOpenLinkUnderCursor   | Open links in external application
 | <localleader>.           | AsciidocSentencePerLine       | Reformat text to one sentence per line
 | <localleader>0           | AsciidocSectionLevel0         | Convert the current section header or the current line into a section 0 heading
 | …                        | …                             | …
@@ -50,6 +57,9 @@ Short overview of
 | <localleader>tk          | AsciidocSurround ^            | Surround some text with asterisks to mark it as ^superscript^
 | <localleader>tj          | AsciidocSurround ~            | Surround some text with asterisks to mark it as ~subscript~
 | <localleader>tp          | AsciidocSurround +            | Surround some text with asterisks to mark it as +passthrough+
+| ???                      | IndentListItem                | Indents list items
+| ???                      | OutdentListItem               | Outdents list items
+| ???                      | ToggleCheckListItem           | Toggle check list items
 | <localleader>img         | ???                           | Insert `image:[]` macro
 | <localleader>inc         | ???                           | Insert `include::[]` macro
 | <localleader>link        | ???                           | Insert `link:[]` macro
@@ -76,10 +86,8 @@ Short overview of
 
 
 
-.Optional mappings
-
-Configuration
--------------
+Settings
+--------
 
 ////
 What option exist, What do they to?
@@ -92,8 +100,23 @@ Commands
 Detailled description of all commands
 ////
 
+`:ApplyHeadingStyle [style]`::
+  `[style]` may be any of `setext`, `atx`, `syncatx` +
+  Apply a certain heading style on all section headings in the current buffer.
+  If no style is given, use the default style defined in g:asciidoc_title_style.
+
+
 Text objects
 ------------
+
+- block
+  * ib (inner block)
+  * ab (a block)
+- table
+- section
+  * is (inner section)
+  * as (a section)
+- list
 
 Syntax highlighting
 -------------------
@@ -111,9 +134,44 @@ A good syntax highlighting fulfills two purposes:
 Compiler
 --------
 
+Folding
+-------
+
+
+Known Shortcomings
+------------------
+
+- Imperfect Sytax highlighting
+  Due to the bad decision to use the same characters for Setext underlines
+  as well as block delimiters and vims restricted syntax highlighting it is
+  not always possible to differentiate between Setext section headers and the
+  end delimiters of block elements. Therefore some blocks will be incorrectly
+  highlighted.
+// TODO: Screenshot?
+
 Related projects
 ----------------
+
+=== Inspirations
+
+//TODO What is included?
+- https://github.com/dahu/vim-asciidoc[dahu/vim-asciidoc]
+- https://github.com/jjaderberg/vim-ft-asciidoc[jjaderberg/vim-ft-asciidoc]
+- https://github.com/dagwieers/asciidoc-vim[dagwieers/asciidoc-vim]
+- https://github.com/habamax/vim-asciidoctor[habamax/vim-sciidoctor]
+- https://github.com/plasticboy/vim-markdown[plasticboy/vim-markdown] / https://github.com/gabrielelana/vim-markdown[gabrielelana/vim-markdown / https://github.com/vim-pandoc/vim-pandoc[vim-pandoc/vim-pandoc]
+
+=== Related Projects
+
+// TODO Write some more about each
+- https://github.com/machakann/vim-sandwich[machakann/vim-sandwich] / https://github.com/tpope/vim-surround[tpope/vim-surround]
+- https://github.com/godlygeek/tabular[godlygeek/tabular] / https://github.com/junegunn/vim-easy-align[junegunn/vim-easy-align]
+- https://github.com/hupfule/tagbar[hupfdule/tagbar] / https://github.com/vim-voom/VOoM[vim-voom/VOoM]
+- https://github.com/konfekt/fastfold[konfekt/fastfold]
+
 
 ////
 Inspirations / Integrated projects / Other interesting projects
 ////
+
+

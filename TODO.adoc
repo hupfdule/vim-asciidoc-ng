@@ -87,6 +87,15 @@ von Blöcken absolut gleich sind.
 Also
 
 
+Formatierung für List items:
+ - <CR> wiederholt das bullet der vorhergehenden Zeile und rückt
+   entsprechend ein
+ - Wenn die vorhergehende Zeile kein bullet enthält, rücke nur ein
+ - <CR> bei einem leeren Bullet löscht das Bullet, der Cursor bleibt wo er
+   ist
+ - <CR> auf einer leeren Zeile (in einer Liste) löscht die vorangegangenen
+   Leerzeichen und macht einen normalen Zeilenumbruch
+
 
 =========
 Inhalt
