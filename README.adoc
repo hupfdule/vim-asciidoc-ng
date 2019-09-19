@@ -110,12 +110,17 @@ Text objects
 ------------
 
 - block
-  * ib (inner block)
+  * ib (in block)
   * ab (a block)
+  * Ab (a block)
 - table
+  * it (in table)
+  * at (a table)
+  * At (a table)
 - section
   * is (inner section)
   * as (a section)
+  * As (a section)
 - list
 
 Syntax highlighting
