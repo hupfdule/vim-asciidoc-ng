@@ -7,16 +7,16 @@ let s:secondary_anchors = '\(\[\[[A-Za-z_:][A-Za-z_:0-9\-\.]*\]\]\)*'
 " instead.
 let s:atx_title_line = s:secondary_anchors . '\s*\(.*\)\ze\s*' . s:secondary_anchors
 
-function! asciidoc#completion#CompleteXrefTarget(findstart, base) abort
+function! asciidoc#completion#omnicomplete(findstart, base) abort
   if a:findstart
     " locate the position after the "<<"
     let l:line = getline('.')
     let l:start = col('.') - 1
-    echo 'A ' . l:start
+    let b:completion_type = ''
     while l:start > 0
       " FIXME: Wir könnten auch noch nach andere Completions erlauben
-      echo l:line[l:start - 1] . l:line[l:start - 2]
       if l:line[l:start - 1] ==# '<' && l:line[l:start - 2] ==# '<'
+        let b:completion_type = 'xref'
         break
       else
         let l:start -= 1
@@ -24,15 +24,24 @@ function! asciidoc#completion#CompleteXrefTarget(findstart, base) abort
     endwhile
     " TODO: We should return some other value, if we cannot detect what to
     " omnicomplete. Or do some default?
-    return l:start
+    if empty(b:completion_type)
+      echo "Don't know what to complete."
+      return -3
+    else
+      return l:start
+    endif
   else
     " TODO: Hier muss jetzt gesucht werden.
-    echom a:base
-    " TODO: It would be nice to provide some way of "fuzzy" matching. But
-    " the problem is that it would insert the full entry after selection
-    " and the "fuzzy term" would have vanished.
-    let l:all_section_headers = s:getAllSectionHeaders()
-    return filter(l:all_section_headers, {idx, val -> stridx(val['word'], a:base) == 0 })
+    if b:completion_type ==# 'xref'
+      " TODO: It would be nice to provide some way of "fuzzy" matching. But
+      " the problem is that it would insert the full entry after selection
+      " and the "fuzzy term" would have vanished.
+      let l:all_section_headers = s:getAllSectionHeaders()
+      return filter(l:all_section_headers, {idx, val -> stridx(val['word'], a:base) == 0 })
+    else
+      " FIXME: Throw an exception instead?
+      echoerr 'Invalid completion type: ' . b:completion_type
+    endif
   endif
 endfunction
 

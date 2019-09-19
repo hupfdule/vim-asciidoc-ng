@@ -10,6 +10,12 @@ Marco Herrn <marco@mherrn.de>
 // Some abstract describing the project.
 ////
 
+[WARNING]
+--
+*ATTENTION!* This is work in progress. This plugin is not stable yet. It is
+already very usable, but be aware that some of the functionality described here
+may not be implemented or doesn't work reliably.
+--
 
 Introduction
 ------------
@@ -40,10 +46,10 @@ Mappings
 | ][                       | AsciidocNextSectionEnd        | Jump to the next section end
 | [[                       | AsciidocPrevSection           | Jump to the previous section heading
 | ]]                       | AsciidocPrevSectionEnd        | Jump to the previous section end
-| ???                      | AsciidocNextSiblingSection    | Jump to the next section heading of the same level as the current one
-| ???                      | AsciidocPrevSiblingSection    | Jump to the previous section heading of the same level as the current one
-| ???                      | AsciidocFirstSubSection       | Jump to the first subsection heading of the current one
-| ???                      | AsciidocParentSection         | Jump to the section heading of the parent section of the current one
+| ]}                       | AsciidocNextSiblingSection    | Jump to the next section heading of the same level as the current one
+| [{                       | AsciidocPrevSiblingSection    | Jump to the previous section heading of the same level as the current one
+| ]> (]j?)                 | AsciidocFirstSubSection       | Jump to the first subsection heading of the current one
+| [< (]k?)                 | AsciidocParentSection         | Jump to the section heading of the parent section of the current one
 | gf                       | AsciidocFollowLinkUnderCursor | Follow links and cross references (See <<Following Links>> for alternative mappings)
 | gx                       | AsciidocOpenLinkUnderCursor   | Open links in external application
 | <localleader>.           | AsciidocSentencePerLine       | Reformat text to one sentence per line
@@ -122,6 +128,16 @@ Text objects
   * as (a section)
   * As (a section)
 - list
+
+Completion
+----------
+
+This plugin provides https://vimhelp.org/insert.txt.html#compl-omni[Omni
+completion] for entering cross references. At the moment this only completes
+section headings in the current file, but will probably be extended to support named
+anchors and cross references to other files.
+
+// TODO: Screenshot or screencast
 
 Syntax highlighting
 -------------------

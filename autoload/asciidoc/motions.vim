@@ -203,17 +203,18 @@ function! asciidoc#motions#find_next_section_matching(pattern) abort
   " search for a section header matching the given {pattern}
   let l:next = 1 " initialize with 1 to loop at least one iteration
   while l:next !=# 0
-    let l:next_atx = search(s:atx_title, 'Wn')
-    let l:next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
+    let l:next_atx = search(s:atx_title, 'Wcn')
+    let l:next_setext = s:find_next_setext_section_title(line('.'), 'Wcn')
     let l:next = min(filter([l:next_atx, l:next_setext], 'v:val != 0'))
 
     if l:next !=# 0
-      call setpos('.', [0, l:next, 0, 0])
-      let l:section_title = trim(getline('.'), ' \t\f=')
+      let l:section_title = trim(getline(l:next), ' \t\f=')
       if l:section_title =~# a:pattern
         " if we found a matching section header, we can stop
         break
       endif
+      " Proceed to the next line for the next search
+      call setpos('.', [0, l:next + 1, 0, 0])
     endif
   endwhile
 

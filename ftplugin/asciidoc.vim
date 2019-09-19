@@ -132,7 +132,7 @@ set cpo&vim
 " END Folding }}}
 
 " Completion ============================================================= {{{
-set omnifunc=asciidoc#completion#CompleteXrefTarget
+set omnifunc=asciidoc#completion#omnicomplete
 " END Completion }}}
 
 " Commands =============================================================== {{{
