@@ -352,6 +352,18 @@ function! asciidoc#base#create_xref(mode) abort " {{{
     endif
 endfunc " }}}
 
+""
+" FIXME: This comment is not valid yet. Implementaion needs to be changed.
+"        Also the varargs will not work with delim-count
+" Insert a block delimited with the given delimiter char.
+"
+" {mode} The mode this function was called in. May be either 'i' for insert
+"        mode, 'n' for normal mode or 'v' visual mode.
+" {delim} The delimiter to use for surrounding.
+" [delim-count] How many delimiter chars to use. May be either 'textwidth'
+"        to respect the current value of the |textwidth| vim setting or a positive
+"        number indicating the number of characters to use. If omitted the value
+"        of g:asciidoc_block_delimiter_length is used.
 function! asciidoc#base#insert_paragraph(mode, delim, ...) abort " {{{
     let delim = a:delim
     if a:mode == 'i' || a:mode == 'n'
@@ -467,11 +479,11 @@ function! s:escape_linkname(unsub) abort " {{{
 endfunc " }}}
 
 " FIXME: This method does nothing useful for lists. What is it expected to
-" do? 
+" do?
 " Ah! It does work for the first level of numbered list. It does not work
 " for all other levels of numbered lists. It also does not work for all the
 " levels of bullet lists.
-" Therefore this needs the be massively modified to really work with lists. 
+" Therefore this needs the be massively modified to really work with lists.
 " It should:
 "  - work on every level
 "  - use the same number/bullet style as the the previous item
@@ -483,7 +495,7 @@ endfunc " }}}
 "  - the current item
 "  - the selected item range
 " FIXME: It inserts the | automatically in tables. That is nice, but maybe
-" should only be done if a certain global property is set to 1. 
+" should only be done if a certain global property is set to 1.
 " or not? If mapped to <s-cr> the user can differentiate. That sounds nice.
 " But! It doesn't work with CLI vim! See https://stackoverflow.com/questions/16359878
 " and https://vi.stackexchange.com/questions/13328
