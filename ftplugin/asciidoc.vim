@@ -143,10 +143,10 @@ set omnifunc=asciidoc#completion#CompleteXrefTarget
 
       " FIXME: Should we allow arguments to jump to the x-most section from here?
       "        (Accept a count)
-      command -buffer          AsciidocPrevSection    execute 'normal!' . asciidoc#motions#jump_to_prior_section_title()
-      command -buffer          AsciidocPrevSectionEnd execute 'normal!' . asciidoc#motions#jump_to_prior_section_end()
-      command -buffer          AsciidocNextSection    execute 'normal!' . asciidoc#motions#jump_to_next_section_title()
-      command -buffer          AsciidocNextSectionEnd execute 'normal!' . asciidoc#motions#jump_to_next_section_end()
+      command -buffer -count=1 AsciidocPrevSection    execute 'normal!' . asciidoc#motions#jump_to_prior_section_title()
+      command -buffer -count=1 AsciidocPrevSectionEnd execute 'normal!' . asciidoc#motions#jump_to_prior_section_end()
+      command -buffer -count=1 AsciidocNextSection    execute 'normal!' . asciidoc#motions#jump_to_next_section_title()
+      command -buffer -count=1 AsciidocNextSectionEnd execute 'normal!' . asciidoc#motions#jump_to_next_section_end()
       nnoremap <buffer> <Plug>(AsciidocPrevSection)    :AsciidocPrevSection<cr>
       xnoremap <buffer> <Plug>(AsciidocPrevSection)    :AsciidocPrevSection<cr>
       nnoremap <buffer> <Plug>(AsciidocPrevSectionEnd) :AsciidocPrevSectionEnd<cr>
@@ -425,29 +425,29 @@ set omnifunc=asciidoc#completion#CompleteXrefTarget
 
       " Admonitions
       " caution
-      inoremap <buffer> <LocalLeader>caution <Esc>:AdocInsertParagraph i -- CAUTION<CR>
-      nnoremap <buffer> <LocalLeader>caution :AdocInsertParagraph n -- CAUTION<CR>
-      vnoremap <buffer> <LocalLeader>caution :<C-U>AdocInsertParagraph v -- CAUTION<CR>
+      inoremap <buffer> <LocalLeader>caution <Esc>:AdocInsertParagraph i ==== CAUTION<CR>
+      nnoremap <buffer> <LocalLeader>caution :AdocInsertParagraph n ==== CAUTION<CR>
+      vnoremap <buffer> <LocalLeader>caution :<C-U>AdocInsertParagraph v ==== CAUTION<CR>
 
       " important
-      inoremap <buffer> <LocalLeader>important <Esc>:AdocInsertParagraph i -- IMPORTANT<CR>
-      nnoremap <buffer> <LocalLeader>important :AdocInsertParagraph n -- IMPORTANT<CR>
-      vnoremap <buffer> <LocalLeader>important :<C-U>AdocInsertParagraph v -- IMPORTANT<CR>
+      inoremap <buffer> <LocalLeader>important <Esc>:AdocInsertParagraph i ==== IMPORTANT<CR>
+      nnoremap <buffer> <LocalLeader>important :AdocInsertParagraph n ==== IMPORTANT<CR>
+      vnoremap <buffer> <LocalLeader>important :<C-U>AdocInsertParagraph v ==== IMPORTANT<CR>
 
       " note
-      inoremap <buffer> <LocalLeader>note <Esc>:AdocInsertParagraph i -- NOTE<CR>
-      nnoremap <buffer> <LocalLeader>note :AdocInsertParagraph n -- NOTE<CR>
-      vnoremap <buffer> <LocalLeader>note :<C-U>AdocInsertParagraph v -- NOTE<CR>
+      inoremap <buffer> <LocalLeader>note <Esc>:AdocInsertParagraph i ==== NOTE<CR>
+      nnoremap <buffer> <LocalLeader>note :AdocInsertParagraph n ==== NOTE<CR>
+      vnoremap <buffer> <LocalLeader>note :<C-U>AdocInsertParagraph v ==== NOTE<CR>
 
       " tip
-      inoremap <buffer> <LocalLeader>tip <Esc>:AdocInsertParagraph i -- TIP<CR>
-      nnoremap <buffer> <LocalLeader>tip :AdocInsertParagraph n -- TIP<CR>
-      vnoremap <buffer> <LocalLeader>tip :<C-U>AdocInsertParagraph v -- TIP<CR>
+      inoremap <buffer> <LocalLeader>tip <Esc>:AdocInsertParagraph i ==== TIP<CR>
+      nnoremap <buffer> <LocalLeader>tip :AdocInsertParagraph n ==== TIP<CR>
+      vnoremap <buffer> <LocalLeader>tip :<C-U>AdocInsertParagraph v ==== TIP<CR>
 
       " warning
-      inoremap <buffer> <LocalLeader>warning <Esc>:AdocInsertParagraph i -- WARNING<CR>
-      nnoremap <buffer> <LocalLeader>warning :AdocInsertParagraph n -- WARNING<CR>
-      vnoremap <buffer> <LocalLeader>warning :<C-U>AdocInsertParagraph v -- WARNING<CR>
+      inoremap <buffer> <LocalLeader>warning <Esc>:AdocInsertParagraph i ==== WARNING<CR>
+      nnoremap <buffer> <LocalLeader>warning :AdocInsertParagraph n ==== WARNING<CR>
+      vnoremap <buffer> <LocalLeader>warning :<C-U>AdocInsertParagraph v ==== WARNING<CR>
       " Admonitions end
 
     " END Insert blocks }}}
@@ -542,7 +542,19 @@ set omnifunc=asciidoc#completion#CompleteXrefTarget
 " END Commands }}}
 
 " Text objects =========================================================== {{{
+  xnoremap <buffer> <silent> <LocalLeader>it :<C-U>call asciidoc#table#text_object_table(0, 1)<CR>
+  onoremap <buffer> <silent> <LocalLeader>it :<C-U>call asciidoc#table#text_object_table(0, 0)<CR>
+  xnoremap <buffer> <silent> <LocalLeader>at :<C-U>call asciidoc#table#text_object_table(1, 1)<CR>
+  onoremap <buffer> <silent> <LocalLeader>at :<C-U>call asciidoc#table#text_object_table(1, 0)<CR>
+  xnoremap <buffer> <silent> <LocalLeader>At :<C-U>call asciidoc#table#text_object_table(2, 1)<CR>
+  onoremap <buffer> <silent> <LocalLeader>At :<C-U>call asciidoc#table#text_object_table(2, 0)<CR>
 
+  xnoremap <buffer> <silent> <LocalLeader>ib :<C-U>call asciidoc#textobjects#delimited_block(0, 1)<CR>
+  onoremap <buffer> <silent> <LocalLeader>ib :<C-U>call asciidoc#textobjects#delimited_block(0, 0)<CR>
+  xnoremap <buffer> <silent> <LocalLeader>ab :<C-U>call asciidoc#textobjects#delimited_block(1, 1)<CR>
+  onoremap <buffer> <silent> <LocalLeader>ab :<C-U>call asciidoc#textobjects#delimited_block(1, 0)<CR>
+  xnoremap <buffer> <silent> <LocalLeader>Ab :<C-U>call asciidoc#textobjects#delimited_block(2, 1)<CR>
+  onoremap <buffer> <silent> <LocalLeader>Ab :<C-U>call asciidoc#textobjects#delimited_block(2, 0)<CR>
   " Experimental --------------------------------------------------------- {{{
 
     " FIXME: This operator should convert the the next motion into a block.
@@ -567,10 +579,57 @@ set omnifunc=asciidoc#completion#CompleteXrefTarget
     " FIXME: These are really experimental. The dialog asking for the type of
     " block should not appear. Instead it should 'i=' for an example block,
     " 'i*' for a sidebar block, etc. 'ib' should then select any block.
-    xnoremap <buffer> <silent> <LocalLeader>ib :<C-U>call asciidoc#experimental#text_object_block(1, 1)<CR>
-    onoremap <buffer> <silent> <LocalLeader>ib :call asciidoc#experimental#text_object_block(1, 0)<CR>
-    xnoremap <buffer> <silent> <LocalLeader>ab :<C-U>call asciidoc#experimental#text_object_block(0, 1)<CR>
-    onoremap <buffer> <silent> <LocalLeader>ab :call asciidoc#experimental#text_object_block(0, 0)<CR>
+"    xnoremap <buffer> <silent> <LocalLeader>ib :<C-U>call asciidoc#experimental#text_object_block(1, 1)<CR>
+"    onoremap <buffer> <silent> <LocalLeader>ib :call asciidoc#experimental#text_object_block(1, 0)<CR>
+"    xnoremap <buffer> <silent> <LocalLeader>ab :<C-U>call asciidoc#experimental#text_object_block(0, 1)<CR>
+"    onoremap <buffer> <silent> <LocalLeader>ab :call asciidoc#experimental#text_object_block(0, 0)<CR>
+
+    " FIXME: These are really experimental. They are totally broken for
+    " numbered lists. Bullet lists only work, it they don't use the '-'
+    " bullet at all.
+    " Interestingly it _does_ work with list continuation ('+' in the first
+    " column)
+    " FIXME: The difference betwen il and al is unclear (actually not
+    " implemented)
+    xnoremap <buffer> <silent> <LocalLeader>il :<C-U>call asciidoc#experimental#text_object_list_item(1, 1)<CR>
+    onoremap <buffer> <silent> <LocalLeader>il :call asciidoc#experimental#text_object_list_item(1, 0)<CR>
+    xnoremap <buffer> <silent> <LocalLeader>al :<C-U>call asciidoc#experimental#text_object_list_item(0, 1)<CR>
+    onoremap <buffer> <silent> <LocalLeader>al :call asciidoc#experimental#text_object_list_item(0, 0)<CR>
+
+    " FIXME: These are really experimental. The dialog asking for the type of
+    " block should not appear. The same applies as for 'ib', 'ab', etc.
+    nnoremap <buffer> <silent> <LocalLeader>csb :call asciidoc#experimental#change_surround_block()<CR>
+    nnoremap <buffer> <silent> <LocalLeader>dsb :call asciidoc#experimental#delete_surround_block(1)<CR>
+
+  " END Experimental }}}
+  " Experimental --------------------------------------------------------- {{{
+
+    " FIXME: This operator should convert the the next motion into a block.
+    " However, when used with e.g. the 'w' motion, it always starts at the
+    " beginning of the line instead of the cursor position.
+    "
+    "   Fuisset maecenas fusce bonorum voluptatibus doctus tristique.
+    "
+    " With the cursor somewhere inside 'fusce' and calling '<localleader>blw+'
+    " turns it into
+    "
+    " ++++
+    " Fuisset maecenas fusce
+    " ++++
+    " bonorum voluptatibus doctus tristique.
+    "
+    " Also using it on a list item converts the whole item into a block.
+    " Including the bullet. I think that is a problem with the 'il' text
+    " object. It should _exclude_ the bullet.
+    nnoremap <buffer> <LocalLeader>bl :set opfunc=asciidoc#experimental#block_operator<CR>g@
+
+    " FIXME: These are really experimental. The dialog asking for the type of
+    " block should not appear. Instead it should 'i=' for an example block,
+    " 'i*' for a sidebar block, etc. 'ib' should then select any block.
+    xnoremap <buffer> <silent> <LocalLeader><LocalLeader>ib :<C-U>call asciidoc#experimental#text_object_block(1, 1)<CR>
+    onoremap <buffer> <silent> <LocalLeader><LocalLeader>ib :call asciidoc#experimental#text_object_block(1, 0)<CR>
+    xnoremap <buffer> <silent> <LocalLeader><LocalLeader>ab :<C-U>call asciidoc#experimental#text_object_block(0, 1)<CR>
+    onoremap <buffer> <silent> <LocalLeader><LocalLeader>ab :call asciidoc#experimental#text_object_block(0, 0)<CR>
 
     " FIXME: These are really experimental. They are totally broken for
     " numbered lists. Bullet lists only work, it they don't use the '-'

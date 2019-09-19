@@ -1,38 +1,45 @@
-" Vim autoload file
-" vim-ft-asciidoc/autoload/base.vim
+""
+" Text object for asciidoc tables.
+"
+" {scope}: 0 to include everything _between_ the table delimiters
+"          1 to include everything _including_ the table delimiters
+"          2 to include everything _including_ the table delimiters and the
+"            prepended attributes and caption
+" {visual}: whether this method was called from visual mode (this parameter
+"           is actually not used).
+function! asciidoc#table#text_object_table(scope, visual) abort
+  " FIXME: How to handle the case when this is called _between_ two tables?
+  "        How to detect this this abort early?
+  "        We need to know some patterns then that are definitely invalid
+  "        inside tables.
+  let bot = search('^|===', 'Wn')
+  " If no bottom delimiter can be found, do nothing
+  if bot ==# 0
+    return
+  endif
+  " If no top delimiter can be found, do nothing
+  let top = search('^|===', 'Wbn')
+  if top ==# 0
+    return
+  endif
 
-function! asciidoc#table#insert_attributes(kind) abort " {{{
-    call search("^|===", 'b')
-    let line = getline(line('.') - 1)
-    if line =~ '^\[[^\]]*]'
-        if line =~ a:kind . '="'
-            call search(a:kind . '="\zs.', 'b')
-        else
-            call search('^\[[^\]]*\zs]', 'b')
-        endif
-    else
-        execute "normal! O[" . a:kind . "=\"\"]\<Esc>h"
-        startinsert
+  if a:scope ==# 0
+    " Exclude table delimiters
+    let top = top + 1
+    let bot = bot - 1
+  elseif a:scope ==# 2
+    " Include attributes and caption
+    call cursor(top, 0)
+    " FIXME: This should be refined to only find lines not matching
+    " '^\..*$' and not matching '^\[.*\]\s*$'.
+    let prev_non_header = search('^[^\.\[]\|^\s*$', 'Wbn', top - 3)
+    if prev_non_header
+      let top = prev_non_header + 1
     endif
-endfunc " }}}
+  endif
 
-function! asciidoc#table#text_object(inner, visual) abort "{{{
-    let bot = search('^|===', 'W')
-    if 0 > bot
-        return
-    endif
-    if a:inner
-        let bot = bot - 1
-        normal! k
-    elseif getline(bot + 1) =~ '^$'
-        let bot = bot + 1
-    endif
-    let top = search('^|===', 'bW')
-    if a:inner
-        normal! j
-    endif
-    normal! V
-    call cursor(bot, 0)
-    normal! $
-    echo [top, bot]
-endfunc "}}}
+  call cursor(top, 0)
+  normal! V
+  call cursor(bot, 0)
+  normal! $
+endfunction
