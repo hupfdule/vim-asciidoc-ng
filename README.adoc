@@ -115,6 +115,8 @@ Detailled description of all commands
 Text objects
 ------------
 
+// FIXME: All of these mappings would shadow existing useful text objects.
+//        What are good alternatives? Prepending them with <localleader> is _not_ useful
 - block
   * ib (in block)
   * ab (a block)
