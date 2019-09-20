@@ -18,6 +18,15 @@ endfunction
 "
 " FIXME: This only works for "*" and "." bullets. All other (valid)
 " characters are ignored. This needs to be changed.
+" It should support
+"  - bullets as '-' characters (depending on some
+"    g:asciidoc_bulletted_list_formats = ['-', '*'] variable)
+"    Attention! While it works in other cases, this makes only sense if '-'
+"    is the first level and '*' is used for all subsequent levels.
+"  - "real" numbered lists (e.g. 1., a., i), A., I)) depending on some g:
+"    g:asciidoc_numbered_list_formats = ['1.', 'a.', 'i)', 'A.', 'I)', '.'] variable
+"  - use indentation to visually clarify the structure (based on some
+"    g:asciidoc_list_item_indentation = 1 setting)
 function! asciidoc#lists#dent_list(in_out) range abort
   let old_search = @/
   if a:in_out == 'in'
@@ -35,6 +44,9 @@ endfunction
 " prefix as the current one and the same style.
 " If the current list item is an ordered list item its number will be
 " increased (unless g:asciidoc_list_number_style_increasing is 0).
+"
+" Attention! This function currently only works with single-line list
+" items.
 "
 " FIXME: We will also need a function + mapping to increase / decrease the
 " level of
