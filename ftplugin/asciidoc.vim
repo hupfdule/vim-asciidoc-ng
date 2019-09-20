@@ -537,6 +537,16 @@ set cpo&vim
 
     " END Toggle section heading style }}}
 
+    " Append list item ................................................... {{{
+
+      inoremap <buffer> <Plug>(AsciidocAppendListItem) <c-o>:call asciidoc#base#soft_linebreak()<cr>
+      nnoremap <buffer> <Plug>(AsciidocAppendListItem) :call asciidoc#base#soft_linebreak()<cr>
+
+      imap <buffer> <s-cr> <Plug>(AsciidocAppendListItem)
+      nmap <buffer> <s-cr> <Plug>(AsciidocAppendListItem)
+
+    " END Append list item }}}
+
   " END Editing }}}
 
 " END Commands }}}
