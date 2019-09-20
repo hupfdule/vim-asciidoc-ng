@@ -79,6 +79,13 @@ set cpo&vim
     let g:asciidoc_table_autoalign = 0
   endif
 
+  ""
+  " Whether the numbering of ordered lists will be increasing when
+  " auto-formatting lists or appending list items. (default = 1)
+  if !exists('g:asciidoc_list_number_style_increasing')
+    let g:asciidoc_list_number_style_increasing = 1
+  endif
+
 " END Options }}}
 
 " Settings =============================================================== {{{
@@ -539,8 +546,8 @@ set cpo&vim
 
     " Append list item ................................................... {{{
 
-      inoremap <buffer> <Plug>(AsciidocAppendListItem) <c-o>:call asciidoc#base#soft_linebreak()<cr>
-      nnoremap <buffer> <Plug>(AsciidocAppendListItem) :call asciidoc#base#soft_linebreak()<cr>
+      inoremap <buffer> <Plug>(AsciidocAppendListItem) <c-o>:call asciidoc#lists#append_list_item()<cr>
+      nnoremap <buffer> <Plug>(AsciidocAppendListItem) :call asciidoc#lists#append_list_item()<cr>
 
       imap <buffer> <s-cr> <Plug>(AsciidocAppendListItem)
       nmap <buffer> <s-cr> <Plug>(AsciidocAppendListItem)
