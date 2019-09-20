@@ -59,6 +59,7 @@ endfunction
 " <s-cr> can still be the default mapping. We should document the problems
 " with CLI vim and mention that this cn be changed. We provide a
 " <Plug>-mapping anyway.
+" Damn! It doesn't even work in gvim!
 " FIXME: This doesn't work if called on a multi-line list item.
 "        However this should be possible.
 function! asciidoc#lists#append_list_item() abort "{{{
