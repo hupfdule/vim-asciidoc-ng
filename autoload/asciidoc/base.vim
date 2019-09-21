@@ -1,51 +1,59 @@
-" Vim autoload file
-" vim-ft-asciidoc/autoload/base.vim
 
+" Pattern definitions {{{2
 let s:macro_patterns = {
             \ 'include': '\f*\%#\f*',
-            \ 'image': '\f*\%#\f*',
-            \ 'kbd': '\S*\%#\S*',
-            \ 'menu': '\S*\%#\S*',
-            \ 'btn': '\S*\%#\S*',
+            \ 'image'  : '\f*\%#\f*',
+            \ 'kbd'    : '\S*\%#\S*',
+            \ 'menu'   : '\S*\%#\S*',
+            \ 'btn'    : '\S*\%#\S*',
             \ }
 
-let g:list_prefix_pattern  = ''
-let g:list_prefix_pattern .= '^\s*\%('                        " optional leading space
-let g:list_prefix_pattern .= '\([\*\.]\+\)'                   " bulleted or numbered lists with increasing number of * or .
-let g:list_prefix_pattern .= '\|'                             " or
-let g:list_prefix_pattern .= '\(\-\)'                         " a single hyphen for a bulleted list
-let g:list_prefix_pattern .= '\|'                             " or
-let g:list_prefix_pattern .= '\('
-let g:list_prefix_pattern .=   '\%([0-9]\+\.\)'               " decimal numbered list (1.)
-let g:list_prefix_pattern .=   '\|'
-let g:list_prefix_pattern .=   '\%([a-z]\+\.\)'               " lowercase alpha numbered list (a.)
-let g:list_prefix_pattern .=   '\|'
-let g:list_prefix_pattern .=   '\%([A-Z]\+\.\)'               " uppercase alpha numbered list (A.)
-let g:list_prefix_pattern .=   '\|'
-let g:list_prefix_pattern .=   '\%([ivx]\+)\)'                " lowercase roman numbered list (i))
-let g:list_prefix_pattern .=   '\|'
-let g:list_prefix_pattern .=   '\%([IVX]\+)\)'                " uppercase roman numbered list (I))
-let g:list_prefix_pattern .= '\)'
-let g:list_prefix_pattern .= '\)\s\+'                         " mandatory trailing whitespace
+let s:list_prefix_pattern  = ''
+let s:list_prefix_pattern .= '^\s*\%('                        " optional leading space
+let s:list_prefix_pattern .= '\([\*\.]\+\)'                   " bulleted or numbered lists with increasing number of * or .
+let s:list_prefix_pattern .= '\|'                             " or
+let s:list_prefix_pattern .= '\(\-\)'                         " a single hyphen for a bulleted list
+let s:list_prefix_pattern .= '\|'                             " or
+let s:list_prefix_pattern .= '\('
+let s:list_prefix_pattern .=   '\%([0-9]\+\.\)'               " decimal numbered list (1.)
+let s:list_prefix_pattern .=   '\|'
+let s:list_prefix_pattern .=   '\%([a-z]\+\.\)'               " lowercase alpha numbered list (a.)
+let s:list_prefix_pattern .=   '\|'
+let s:list_prefix_pattern .=   '\%([A-Z]\+\.\)'               " uppercase alpha numbered list (A.)
+let s:list_prefix_pattern .=   '\|'
+let s:list_prefix_pattern .=   '\%([ivx]\+)\)'                " lowercase roman numbered list (i))
+let s:list_prefix_pattern .=   '\|'
+let s:list_prefix_pattern .=   '\%([IVX]\+)\)'                " uppercase roman numbered list (I))
+let s:list_prefix_pattern .= '\)'
+let s:list_prefix_pattern .= '\)\s\+'                         " mandatory trailing whitespace
 
 " A single-line ordered list item (or the first line of a multi-line one)
-let g:ordered_list_item_pattern  = ''
-let g:ordered_list_item_pattern .= '^\(\s*\)'                 " optional leading whitespace
-let g:ordered_list_item_pattern .= '\('
-let g:ordered_list_item_pattern .=   '[0-9]\+\.\@='           " arabic numbers
-let g:ordered_list_item_pattern .=   '\|'
-let g:ordered_list_item_pattern .=   '[a-z]\+\.\@='           " lowercase alpha letters
-let g:ordered_list_item_pattern .=   '\|'
-let g:ordered_list_item_pattern .=   '[A-Z]\+\.\@='           " uppercase alpha letters
-let g:ordered_list_item_pattern .=   '\|'
-let g:ordered_list_item_pattern .=   '[ivx]\+)\@='            " lowercase roman numbers
-let g:ordered_list_item_pattern .=   '\|'
-let g:ordered_list_item_pattern .=   '[IVX]\+)\@='            " uppercase roman numbers
-let g:ordered_list_item_pattern .= '\)'
-let g:ordered_list_item_pattern .= '\([\.\)]\)'               " either . or )
-let g:ordered_list_item_pattern .= '\(\s\+.*\)$'              " the remainder of the line (with mandatory white space)
+let s:ordered_list_item_pattern  = ''
+let s:ordered_list_item_pattern .= '^\(\s*\)'                 " optional leading whitespace
+let s:ordered_list_item_pattern .= '\('
+let s:ordered_list_item_pattern .=   '[0-9]\+\.\@='           " arabic numbers
+let s:ordered_list_item_pattern .=   '\|'
+let s:ordered_list_item_pattern .=   '[a-z]\+\.\@='           " lowercase alpha letters
+let s:ordered_list_item_pattern .=   '\|'
+let s:ordered_list_item_pattern .=   '[A-Z]\+\.\@='           " uppercase alpha letters
+let s:ordered_list_item_pattern .=   '\|'
+let s:ordered_list_item_pattern .=   '[ivx]\+)\@='            " lowercase roman numbers
+let s:ordered_list_item_pattern .=   '\|'
+let s:ordered_list_item_pattern .=   '[IVX]\+)\@='            " uppercase roman numbers
+let s:ordered_list_item_pattern .= '\)'
+let s:ordered_list_item_pattern .= '\([\.\)]\)'               " either . or )
+let s:ordered_list_item_pattern .= '\(\s\+.*\)$'              " the remainder of the line (with mandatory white space)
+" }}}2
 
-function! asciidoc#base#follow_cursor_link(...) abort " {{{
+
+"" {{{2
+" Follow the link at the cursor position.
+"
+" @param [edit_cmd] The command to prepend to the actual jump.
+"                   May be any of 'split', 'vsplit', 'tabedit'.
+"                   May also be omitted.
+" @returns the command that was executed
+function! asciidoc#base#follow_cursor_link(...) abort " {{{1
     let [type, link] = asciidoc#base#get_cursor_link()
     if link =~ '{[^}]*}'
         let link = asciidoc#base#expand_attributes(link)
@@ -75,24 +83,46 @@ function! asciidoc#base#follow_cursor_link(...) abort " {{{
     endif
 endfunc " }}}
 
-function! asciidoc#base#get_attribute(name) " {{{
-" Get a single attribute value by name.
-" Returns attribute name if no value was found.
+"" {{{2
+" Get a single document attribute value from the current document by {name}.
+"
+" @param {name} the name of the attribute whose value to return
+" @returns the value of the attribute with the given {name} or the
+"          attribute name itself if no value was found.
+function! asciidoc#base#get_attribute(name) " {{{1
     let res = get(asciidoc#base#parse_attributes(1), a:name, a:name)
     return res
 endfunc " }}}
 
-function! asciidoc#base#strip(s) abort " {{{
+"" {{{2
+" Remove leading and trailing whitespace from the given string {s}.
+"
+" @param {s} the string to trim
+" @returns the given string {s} with leading and trailing whitespace removed
+" FIXME: Why not use the builtin trim() function?
+function! asciidoc#base#strip(s) abort " {{{1
     return substitute(a:s, '^\s*\(.\{-}\)\s*$', '\1', '')
 endfunc " }}}
 
-function! asciidoc#base#parse_attributes(refresh) " {{{
+"" {{{2
 " Parse document attributes from current buffer.
+"
+" This function caches the parsed document attributes and therefore returns
+" the same result even after the document attributes have actually changed
+" already.
+"
+" @param {refresh} If 1 reparse the document attributes even if already
+"                  loaded into the cache
+function! asciidoc#base#parse_attributes(refresh) " {{{1
     " Todo: use `search` instead
     if (exists('b:document_attributes') && !a:refresh)
         return b:document_attributes
     endif
     let b:document_attributes = {}
+    " FIXME: This reads the whole document. Is that correct? Document
+    " attributes should only be specified in the document header.
+    " If we can reduce this method to operate only on the document header
+    " maybe we don't even need the cache and {refresh} parameter.
     let lines = getline(1, '$')
     let line_count = 0
     for line in lines
@@ -106,13 +136,32 @@ function! asciidoc#base#parse_attributes(refresh) " {{{
     return b:document_attributes
 endfunc " }}}
 
-function! asciidoc#base#expand_attributes(s) " {{{
-" Expand attributes in a string.
+"" {{{2
+" Expand document attributes in the given string {s}.
+"
+" @param {s} the string with possible references to document attributes
+" @returns the given string {s} with all references to document attributes
+" replaced by the actual values of those attributes
+function! asciidoc#base#expand_attributes(s) " {{{1
     let res = substitute(a:s, '{\([^}]*\)}', '\=asciidoc#base#get_attribute(submatch(1))', 'g')
     return res
 endfunc " }}}
 
-function! asciidoc#base#get_cursor_link() abort "{{{
+"" {{{2
+" Find a possible xref or link at the current cursor position.
+"
+" The returned link (if found) contains all asciidoc decorators. An xref
+" will be returned with the surrounding '<<' and '>>' characters and a link
+" will be returned with the leading 'link:' and the trailing link text.
+"
+" @returns a list with the type of the found link (either 'xref' or 'link')
+"          and the actual link.
+"          If no xref or link was found at the current cursor position both
+"          values will be an empty string.
+"
+" FIXME: Return an empty list instead of a list with empty strings in case
+"        nothing was found?
+function! asciidoc#base#get_cursor_link() abort "{{{1
     " The pattern approach is taken from  https://vi.stackexchange.com/a/21112/21417
     let patterns = {
                 \ 'xref': '\(.*\%#\)\@=\s*<<\([^>]\|>[^>]\)*>>\(\%#.*\)\@<=',
@@ -138,7 +187,20 @@ function! asciidoc#base#get_cursor_link() abort "{{{
     return [link_type, link]
 endfunc " }}}
 
-function! asciidoc#base#follow_link(link, kind, ...) " {{{
+"" {{{2
+" Follow the given {link} of the given {kind}.
+" The optional parameter [edit_cmd] specifies how to jump to the link
+" target.
+"
+" @param [edit_cmd] The command to prepend to the actual jump.
+"                   May be any of 'split', 'vsplit', 'tabedit'.
+"                   May also be omitted.
+" @returns the command that was executed
+"
+" FIXME: This function should _not_ open anything in the browser. That
+" should be done by a different function. This function should always open
+" the link target in the vim editor for editing.
+function! asciidoc#base#follow_link(link, kind, ...) " {{{1
     let link = a:link
     let kind = a:kind
     " FIXME: This method should also allow jumping to the target in the
@@ -220,7 +282,7 @@ function! asciidoc#base#follow_link(link, kind, ...) " {{{
     return cmd
 endfunc " }}}
 
-""
+"" {{{2
 " Converts the current word or the selection into the attributes of a macro
 " without target.
 "
@@ -254,7 +316,7 @@ endfunc " }}}
 " FIXME: Do not throw an error on unescaped ], but instead escape it.
 " FIXME: Placing the cursor at the end of the attribute list my not be the
 "        expected behaviour.
-function! asciidoc#base#insert_macro_attribs(mode, type, name) abort " {{{
+function! asciidoc#base#insert_macro_attribs(mode, type, name) abort " {{{1
     " This first part (..else) is kind of dumb. It's a convenience, but is it really
     " worth it to make the function harder to read?
     let inline = ['i', 'in', 'inl', 'inli', 'inlin', 'inline'] " {{{
@@ -297,7 +359,7 @@ function! asciidoc#base#insert_macro_attribs(mode, type, name) abort " {{{
     let @/ = save_search
 endfunc " }}}
 
-""
+"" {{{2
 " Converts the current word or the selection into the target of a macro.
 "
 " For example if the cursor in somewhere inside the word 'icon.png'
@@ -328,7 +390,7 @@ endfunc " }}}
 "        it adds a space after the macro.
 " FIXME: Use omnicompletion? Auto start completion menu?
 " FIXME: Allow to operate on motions
-function! asciidoc#base#insert_macro_target(mode, type, name) abort " {{{
+function! asciidoc#base#insert_macro_target(mode, type, name) abort " {{{1
     " This first part (..else) is kind of dumb. It's a convenience, but is it really
     " worth it to make the function harder to read?
     let inline = ['i', 'in', 'inl', 'inli', 'inlin', 'inline'] " {{{
@@ -366,9 +428,18 @@ function! asciidoc#base#insert_macro_target(mode, type, name) abort " {{{
     let @/ = save_search
 endfunc " }}}
 
-function! asciidoc#base#create_xref(mode) abort " {{{
-" The function uses a normal mode command to wrap text in <<,>>.
-" It operates either on the word under the cursor or on a visual selection.
+"" {{{2
+" Wrap the current word (in normal mode) or the selected text (in visual
+" mode) with '<<' and ',>>' to convert it to an xref.
+"
+" The selected text will be used both as the ID and the reftext. The cursor
+" will be placed after the comma.
+"
+" @param the mode to operate in. May be one of 'n', 'v', and 'V'
+"
+" FIXME: Check whether this needs refinement. Really use the same text as
+" ID and label? Preselect e.g. the label to make it easier to replace it?
+function! asciidoc#base#create_xref(mode) abort " {{{1
     if a:mode == 'v'
         let mode = visualmode()
         if mode == 'v'
@@ -387,31 +458,50 @@ function! asciidoc#base#create_xref(mode) abort " {{{
     endif
 endfunc " }}}
 
-""
-" FIXME: This comment is not valid yet. Implementaion needs to be changed.
-"        Also the varargs will not work with delim-count
+"" {{{2
 " Insert a block delimited with the given delimiter char.
 "
+" This function respects the option 'g:asciidoc_block_delimiter_length' to
+" decide how many {delim} chars will be used for the delimiters.
+"
 " {mode} The mode this function was called in. May be either 'i' for insert
-"        mode, 'n' for normal mode or 'v' visual mode.
-" {delim} The delimiter to use for surrounding.
-" [delim-count] How many delimiter chars to use. May be either 'textwidth'
-"        to respect the current value of the |textwidth| vim setting or a positive
-"        number indicating the number of characters to use. If omitted the value
-"        of g:asciidoc_block_delimiter_length is used.
-function! asciidoc#base#insert_paragraph(mode, delim, ...) abort " {{{
-    let delim = a:delim
-    if a:mode == 'i' || a:mode == 'n'
-        let line_before = line('.') - 1
-        let line_after = line('.')
-        let append_before = getline(line('.') - 1) == "" ? [delim] : ["", delim]
-        let append_after = getline(line('.') + 1) == "" ? [delim] : [delim, ""]
-    elseif a:mode == 'v'
-        let line_before = line("'<") - 1
-        let line_after = line("'>")
-        let append_before = getline(line("'<'") - 1) == "" ? [delim] : ["", delim]
-        let append_after = getline(line("'>") + 1) == "" ? [delim] : [delim, ""]
+"        mode, 'n' for normal mode or 'v' for visual mode.
+" {delim} The delimiter to use for surrounding. Needs to be a single char.
+" [attributes] a list of attributes to prepend to the block
+"
+" FIXME: Why are all attributes except the first one preselected?
+function! asciidoc#base#insert_paragraph(mode, delim, ...) range abort " {{{1
+    let l:delim_count = get(g:, 'asciidoc_block_delimiter_length', 4)
+    if l:delim_count ==# 'textwidth'
+      let l:delim_count = &textwidth
     endif
+    let l:delim = repeat(a:delim, l:delim_count)
+    let line_before = a:firstline - 1
+    let line_after = a:lastline
+    if a:mode == 'i' || a:mode == 'n'
+        let append_before = getline(line('.') - 1) == "" ? [l:delim] : ["", l:delim]
+        let append_after = getline(line('.') + 1) == "" ? [l:delim] : [l:delim, ""]
+    elseif a:mode == 'v'
+        let append_before = getline(line("'<") - 1) == "" ? [l:delim] : ["", l:delim]
+        let append_after = getline(line("'>") + 1) == "" ? [l:delim] : [l:delim, ""]
+    endif
+
+    " Break around the visual selection if necessary
+    if a:mode ==# 'v' && visualmode() ==# 'v'
+      normal! g$
+      let eol = getpos('.')
+      call cursor(getpos("'>")[1:])
+      if getpos('.')[2] < eol[2]
+        execute "normal! a\<cr>\<esc>"
+        let line_after = line_after + 1
+      endif
+      call cursor(getpos("'<")[1:])
+      if getpos('.')[2] > 1
+        execute "normal! i\<cr>\<esc>"
+        let line_before = line_before + 1
+      endif
+    endif
+
     call append(line_after, append_after)
     call append(line_before, append_before)
     if a:0
@@ -429,12 +519,11 @@ function! asciidoc#base#insert_paragraph(mode, delim, ...) abort " {{{
             let cmd .= "2j0"
         endif
         execute cmd
-        " if len(a:000) == 1 | startinsert | endif
         if a:mode == 'i' | startinsert | endif
     endif
 endfunc " }}}
 
-function! asciidoc#base#insert_table(mode) abort " {{{
+function! asciidoc#base#insert_table(mode) abort " {{{1
     if a:mode == 'i'
         execute "normal! i|===\<CR>|\<CR>|===\<Up>"
     elseif a:mode == 'n'

@@ -86,6 +86,15 @@ set cpo&vim
     let g:asciidoc_list_number_style_increasing = 1
   endif
 
+  ""
+  " The length of block delimiters. May be either 'textwidth' to respect
+  " the current value of the |textwidth| vim setting or a positive number
+  " indicating the number of characters to use. (default = 4)
+  "
+  if !exists('g:asciidoc_block_delimiter_length')
+    let g:asciidoc_block_delimiter_length = 4
+  endif
+
 " END Options }}}
 
 " Settings =============================================================== {{{
@@ -386,75 +395,76 @@ set cpo&vim
       " create the 'music' block, that has no mapping on its own).
 
       " code block
-      inoremap <buffer> <LocalLeader>code <Esc>:AdocInsertParagraph i ---- source<CR>
-      nnoremap <buffer> <LocalLeader>code :AdocInsertParagraph n ---- source<CR>
-      vnoremap <buffer> <LocalLeader>code :<C-U>AdocInsertParagraph v ---- source<CR>
+      inoremap <buffer> <LocalLeader>code <Esc>:AdocInsertParagraph i - source<CR>
+      nnoremap <buffer> <LocalLeader>code :AdocInsertParagraph n - source<CR>
+      vnoremap <buffer> <LocalLeader>code :<C-U>AdocInsertParagraph v - source<CR>
 
       " comment block
-      inoremap <buffer> <LocalLeader>comment <Esc>:AdocInsertParagraph i //// <CR>
-      nnoremap <buffer> <LocalLeader>comment :AdocInsertParagraph n //// <CR>
-      vnoremap <buffer> <LocalLeader>comment :<C-U>AdocInsertParagraph v //// <CR>
+      inoremap <buffer> <LocalLeader>comment <Esc>:AdocInsertParagraph i / <CR>
+      nnoremap <buffer> <LocalLeader>comment :AdocInsertParagraph n / <CR>
+      vnoremap <buffer> <LocalLeader>comment :<C-U>AdocInsertParagraph v / <CR>
 
       " example block
-      inoremap <buffer> <LocalLeader>example <Esc>:AdocInsertParagraph i ====<CR>
-      nnoremap <buffer> <LocalLeader>example :AdocInsertParagraph n ====<CR>
-      vnoremap <buffer> <LocalLeader>example :<C-U>AdocInsertParagraph v ====<CR>
+      inoremap <buffer> <LocalLeader>example <Esc>:AdocInsertParagraph i = <CR>
+      nnoremap <buffer> <LocalLeader>example :AdocInsertParagraph n =CR>
+      vnoremap <buffer> <LocalLeader>example :<C-U>AdocInsertParagraph v = <CR>
 
       " literal block
-      inoremap <buffer> <LocalLeader>literal <Esc>:AdocInsertParagraph i ....<CR>
-      nnoremap <buffer> <LocalLeader>literal :AdocInsertParagraph n ....<CR>
-      vnoremap <buffer> <LocalLeader>literal :<C-U>AdocInsertParagraph v ....<CR>
+      inoremap <buffer> <LocalLeader>literal <Esc>:AdocInsertParagraph i . <CR>
+      nnoremap <buffer> <LocalLeader>literal :AdocInsertParagraph n .CR>
+      vnoremap <buffer> <LocalLeader>literal :<C-U>AdocInsertParagraph v . <CR>
 
       " open block
+      " FIXME: Open blocks don't work anymore with this function
       inoremap <buffer> <LocalLeader>open <Esc>:AdocInsertParagraph i --<CR>
       nnoremap <buffer> <LocalLeader>open :AdocInsertParagraph n --<CR>
       vnoremap <buffer> <LocalLeader>open :<C-U>AdocInsertParagraph v --<CR>
 
       " passthrough block
-      inoremap <buffer> <LocalLeader>passthrough <Esc>:AdocInsertParagraph i ++++<CR>
-      nnoremap <buffer> <LocalLeader>passthrough :AdocInsertParagraph n ++++<CR>
-      vnoremap <buffer> <LocalLeader>passthrough :<C-U>AdocInsertParagraph v ++++<CR>
+      inoremap <buffer> <LocalLeader>passthrough <Esc>:AdocInsertParagraph i + <CR>
+      nnoremap <buffer> <LocalLeader>passthrough :AdocInsertParagraph n + <CR>
+      vnoremap <buffer> <LocalLeader>passthrough :<C-U>AdocInsertParagraph v + <CR>
 
       " quote block
-      inoremap <buffer> <LocalLeader>quote <Esc>:AdocInsertParagraph i ____ quote author source<CR>
-      nnoremap <buffer> <LocalLeader>quote :AdocInsertParagraph n ____ quote author source<CR>
-      vnoremap <buffer> <LocalLeader>quote :<C-U>AdocInsertParagraph v ____ quote author source<CR>
+      inoremap <buffer> <LocalLeader>quote <Esc>:AdocInsertParagraph i _ quote author source<CR>
+      nnoremap <buffer> <LocalLeader>quote :AdocInsertParagraph n _ quote author source<CR>
+      vnoremap <buffer> <LocalLeader>quote :<C-U>AdocInsertParagraph v _ quote author source<CR>
 
       " sidebar block
-      inoremap <buffer> <LocalLeader>sidebar <Esc>:AdocInsertParagraph i ****<CR>
-      nnoremap <buffer> <LocalLeader>sidebar :AdocInsertParagraph n ****<CR>
-      vnoremap <buffer> <LocalLeader>sidebar :<C-U>AdocInsertParagraph v ****<CR>
+      inoremap <buffer> <LocalLeader>sidebar <Esc>:AdocInsertParagraph i * <CR>
+      nnoremap <buffer> <LocalLeader>sidebar :AdocInsertParagraph n * <CR>
+      vnoremap <buffer> <LocalLeader>sidebar :<C-U>AdocInsertParagraph v * <CR>
 
       " verse block
-      inoremap <buffer> <LocalLeader>verse <Esc>:AdocInsertParagraph i ____ verse author source<CR>
-      nnoremap <buffer> <LocalLeader>verse :AdocInsertParagraph n ____ verse author source<CR>
-      vnoremap <buffer> <LocalLeader>verse :<C-U>AdocInsertParagraph v ____ verse author source<CR>
+      inoremap <buffer> <LocalLeader>verse <Esc>:AdocInsertParagraph i _ verse author source<CR>
+      nnoremap <buffer> <LocalLeader>verse :AdocInsertParagraph n _ verse author source<CR>
+      vnoremap <buffer> <LocalLeader>verse :<C-U>AdocInsertParagraph v _ verse author source<CR>
 
       " Admonitions
       " caution
-      inoremap <buffer> <LocalLeader>caution <Esc>:AdocInsertParagraph i ==== CAUTION<CR>
-      nnoremap <buffer> <LocalLeader>caution :AdocInsertParagraph n ==== CAUTION<CR>
-      vnoremap <buffer> <LocalLeader>caution :<C-U>AdocInsertParagraph v ==== CAUTION<CR>
+      inoremap <buffer> <LocalLeader>caution <Esc>:AdocInsertParagraph i = CAUTION<CR>
+      nnoremap <buffer> <LocalLeader>caution :AdocInsertParagraph n = CAUTION<CR>
+      vnoremap <buffer> <LocalLeader>caution :<C-U>AdocInsertParagraph v = CAUTION<CR>
 
       " important
-      inoremap <buffer> <LocalLeader>important <Esc>:AdocInsertParagraph i ==== IMPORTANT<CR>
-      nnoremap <buffer> <LocalLeader>important :AdocInsertParagraph n ==== IMPORTANT<CR>
-      vnoremap <buffer> <LocalLeader>important :<C-U>AdocInsertParagraph v ==== IMPORTANT<CR>
+      inoremap <buffer> <LocalLeader>important <Esc>:AdocInsertParagraph i = IMPORTANT<CR>
+      nnoremap <buffer> <LocalLeader>important :AdocInsertParagraph n = IMPORTANT<CR>
+      vnoremap <buffer> <LocalLeader>important :<C-U>AdocInsertParagraph v = IMPORTANT<CR>
 
       " note
-      inoremap <buffer> <LocalLeader>note <Esc>:AdocInsertParagraph i ==== NOTE<CR>
-      nnoremap <buffer> <LocalLeader>note :AdocInsertParagraph n ==== NOTE<CR>
-      vnoremap <buffer> <LocalLeader>note :<C-U>AdocInsertParagraph v ==== NOTE<CR>
+      inoremap <buffer> <LocalLeader>note <Esc>:AdocInsertParagraph i = NOTE<CR>
+      nnoremap <buffer> <LocalLeader>note :AdocInsertParagraph n = NOTE<CR>
+      vnoremap <buffer> <LocalLeader>note :<C-U>AdocInsertParagraph v = NOTE<CR>
 
       " tip
-      inoremap <buffer> <LocalLeader>tip <Esc>:AdocInsertParagraph i ==== TIP<CR>
-      nnoremap <buffer> <LocalLeader>tip :AdocInsertParagraph n ==== TIP<CR>
-      vnoremap <buffer> <LocalLeader>tip :<C-U>AdocInsertParagraph v ==== TIP<CR>
+      inoremap <buffer> <LocalLeader>tip <Esc>:AdocInsertParagraph i = TIP<CR>
+      nnoremap <buffer> <LocalLeader>tip :AdocInsertParagraph n = TIP<CR>
+      vnoremap <buffer> <LocalLeader>tip :<C-U>AdocInsertParagraph v = TIP<CR>
 
       " warning
-      inoremap <buffer> <LocalLeader>warning <Esc>:AdocInsertParagraph i ==== WARNING<CR>
-      nnoremap <buffer> <LocalLeader>warning :AdocInsertParagraph n ==== WARNING<CR>
-      vnoremap <buffer> <LocalLeader>warning :<C-U>AdocInsertParagraph v ==== WARNING<CR>
+      inoremap <buffer> <LocalLeader>warning <Esc>:AdocInsertParagraph i = WARNING<CR>
+      nnoremap <buffer> <LocalLeader>warning :AdocInsertParagraph n = WARNING<CR>
+      vnoremap <buffer> <LocalLeader>warning :<C-U>AdocInsertParagraph v = WARNING<CR>
       " Admonitions end
 
     " END Insert blocks }}}
