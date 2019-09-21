@@ -523,6 +523,10 @@ function! asciidoc#base#insert_paragraph(mode, delim, ...) range abort " {{{1
     endif
 endfunc " }}}
 
+" FIXME: In insert mode when cursor is not on first column it will be inserted at the
+" cursor column. This leads to an invalid table.
+" FIXME: In visual mode always full lines are put into the table, even if
+" not the whole line is selected. What is the expected behaviour?
 function! asciidoc#base#insert_table(mode) abort " {{{1
     if a:mode == 'i'
         execute "normal! i|===\<CR>|\<CR>|===\<Up>"
