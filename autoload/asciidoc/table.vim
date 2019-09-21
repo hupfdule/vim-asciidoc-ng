@@ -12,14 +12,15 @@ function! asciidoc#table#text_object_table(scope, visual) abort
   "        How to detect this this abort early?
   "        We need to know some patterns then that are definitely invalid
   "        inside tables.
-  let bot = search('^|===', 'Wn')
-  " If no bottom delimiter can be found, do nothing
-  if bot ==# 0
-    return
-  endif
   " If no top delimiter can be found, do nothing
   let top = search('^|===', 'Wbn')
   if top ==# 0
+    return
+  endif
+
+  " If no bottom delimiter can be found, do nothing
+  let bot = search('^|===', 'Wn')
+  if bot ==# 0
     return
   endif
 
