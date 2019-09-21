@@ -262,7 +262,7 @@ function! s:find_next_setext_section_title(start_line, search_flags) abort
   endif
 endfunction
 
-function! s:get_atx_section_title(line_number) abort
+function! asciidoc#motions#get_atx_section_title(line_number) abort
   let line = getline(a:line_number)
   let match = matchlist(line, s:atx_title)
   if !empty(match)
@@ -322,7 +322,7 @@ function! asciidoc#motions#get_setext_section_title(line_number) abort
 endfunction
 
 function! asciidoc#motions#get_section_title(line_number) abort
-  let atx = s:get_atx_section_title(a:line_number)
+  let atx = asciidoc#motions#get_atx_section_title(a:line_number)
   if !empty(atx)
     return atx
   else
