@@ -3,14 +3,15 @@
 " headings), but is it worth the hassle? At the moment this regex matches
 " everything that is valid for asciidoctor.
 " FIXME: Extract such common regexes into a common autoloaded file?
-let s:atx_title_complex = '^\(=\{1,6}\|\#\{1,6}\)'                             " leading section markers (mandatory)
-                \ '\s\+'                                               " whitespace (mandatory)
-                \ '\(\(\[\[[A-Za-z:_][A-Za-z0-9\.\-]\{-\}\]\]\)*\)'    " secondary anchors (optional)
-                \ '\s*'                                                " whitespace (optional)
-                \ '\(\S.\{-\}\)'                                       " the actual title text
-                \ '\s*'                                                " whitespace (optional)
-                \ '\(\([[\[A-Za-z:_\]\[A-Za-z0-9\.\-\]\{-\}]]\)*\)'    " secondary anchors (optional)
-                \ '\(\s\+\1\)\?$'                                      " trailing section markers (optional)
+let s:atx_title_complex  = ''
+let s:atx_title_complex += '^\(=\{1,6}\|\#\{1,6}\)'                             " leading section markers (mandatory)
+let s:atx_title_complex += '\s\+'                                               " whitespace (mandatory)
+let s:atx_title_complex += '\(\(\[\[[A-Za-z:_][A-Za-z0-9\.\-]\{-\}\]\]\)*\)'    " secondary anchors (optional)
+let s:atx_title_complex += '\s*'                                                " whitespace (optional)
+let s:atx_title_complex += '\(\S.\{-\}\)'                                       " the actual title text
+let s:atx_title_complex += '\s*'                                                " whitespace (optional)
+let s:atx_title_complex += '\(\([[\[A-Za-z:_\]\[A-Za-z0-9\.\-\]\{-\}]]\)*\)'    " secondary anchors (optional)
+let s:atx_title_complex += '\(\s\+\1\)\?$'                                      " trailing section markers (optional)
 let s:atx_title = '^\(=\{1,6}\|\#\{1,6}\)\s\+\(\S.\{-}\)\(\s\+\1\)\?$'
 let s:setext_title_text = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=[^.].*'
 "let s:setext_title_text = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=\(\[.*\]\)\@!\&\([^\.].*\)$'
