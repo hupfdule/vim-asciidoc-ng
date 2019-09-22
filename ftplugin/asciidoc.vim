@@ -473,7 +473,7 @@ set cpo&vim
 
       command! -buffer -nargs=1 AdocInsertTable call asciidoc#base#insert_table(<f-args>)
 
-      inoremap <buffer> <LocalLeader>table <Esc>:AdocInsertTable i<CR>
+      inoremap <buffer> <LocalLeader>table <C-O>:AdocInsertTable i<CR>
       nnoremap <buffer> <LocalLeader>table :AdocInsertTable n<CR>
       vnoremap <buffer> <LocalLeader>table :<C-U>AdocInsertTable v<CR>
       " Table text objects

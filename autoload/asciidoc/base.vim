@@ -523,13 +523,43 @@ function! asciidoc#base#insert_paragraph(mode, delim, ...) range abort " {{{1
     endif
 endfunc " }}}
 
-" FIXME: In insert mode when cursor is not on first column it will be inserted at the
-" cursor column. This leads to an invalid table.
+"" {{{2
+" Insert a new table at the current cursor position.
+"
+" The given {mode} must be 'i' for insert mode, 'n' for normal mode or 'v'
+" for visual mode.
+"
+" In insert mode it inserts a new empty table at the cursor position,
+" breaking the current line if necessary.
+"
+" In normal mode it inserts a new table with the current line in the only
+" cell.
+"
+" In visual mode it inserts a new table with the selection lines in the
+" only cell.
+"
 " FIXME: In visual mode always full lines are put into the table, even if
 " not the whole line is selected. What is the expected behaviour?
+" Should it break the lines at the selection boundaries like in insert mode?
+" Probably yes.
 function! asciidoc#base#insert_table(mode) abort " {{{1
     if a:mode == 'i'
-        execute "normal! i|===\<CR>|\<CR>|===\<Up>"
+        let l:line = getline(line('.'))
+        let l:cur_pos = getpos('.')
+        let l:before = strcharpart(l:line, 0, l:cur_pos[2] - 1)
+        let l:after  = strcharpart(l:line, l:cur_pos[2] - 1)
+
+        " Break line if necessary
+        if !empty(trim(l:before))
+          echo "i<cr>"
+          execute "normal! i\<cr>\<esc>"
+        endif
+
+        if !empty(trim(l:after))
+          execute 'normal! O'
+        endif
+
+        execute "normal! i\<CR>|===\<CR>|\<CR>|===\<CR>\<Up>\<Up>"
     elseif a:mode == 'n'
         execute "normal! O|===\<Esc>"
         if getline(line('.') - 1) !~ '^$'
@@ -556,7 +586,21 @@ function! asciidoc#base#insert_table(mode) abort " {{{1
     endif
 endfunc " }}}
 
-function! s:insert_macro(type, name, target, attribs) abort " {{{
+"" {{{2
+" Create a new macro string.
+"
+" @param {type} may be either 'inline' or 'block'
+" @param {name} the name of the macro (the part before the colon(s))
+" @param {target} the target of the macro (the part after the colon(s))
+" @param {attribs} a list of attibutes to put into the brackets after the
+"        macro
+" @returns a string containg the macro
+"
+" FIXME: The name is wrong. It does not insert anything. Change it to
+"        something like s:create_macro()
+" FIXME: Instead of throwing an error on invalid attributes, just silently
+"        escape the ']'?
+function! s:insert_macro(type, name, target, attribs) abort " {{{1
     let name = a:name
     if a:type == "block"
         let colon = "::"
@@ -581,13 +625,28 @@ function! s:insert_macro(type, name, target, attribs) abort " {{{
     return macro
 endfunc " }}}
 
-function! s:validate_macro_name(name) abort " {{{
+"" {{{2
+" Check whether the given string {name} is a valid macro name.
+"
+" This is the case if it does not start with a dash and only contains
+" letters, digits and dashes.
+"
+" @param {name} the string to check
+" @returns 1 if the given {name} is valid macro name, otherwise 0
+function! s:validate_macro_name(name) abort " {{{1
     " may not start with a dash
     " may not include any char other than letters, digits and dashes
     return a:name !~ '^-' && a:name !~ '[^-[:alnum:]]'
 endfunc " }}}
 
-function! s:validate_macro_attribs(attribs) abort " {{{
+"" {{{2
+" Check whether the given list of strings are valid macro attributes.
+"
+" This is the case if they don't contain a closing bracket character: ']'
+"
+" @param {attribs} the list of strings to check
+" @returns 1 if the given {attribs} are valid macro attributes, otherwise 0
+function! s:validate_macro_attribs(attribs) abort " {{{1
     " Attribute may not contain an unescaped `]`.
     for attrib in a:attribs
         if string(attrib) =~ '[^\\]\]'
@@ -597,8 +656,17 @@ function! s:validate_macro_attribs(attribs) abort " {{{
     return a:attribs
 endfunc " }}}
 
-function! s:escape_linkname(unsub) abort " {{{
-    let sub = a:unsub
+"" {{{2
+" Escape the given string {s} to be used as a link name.
+"
+" This removes all linebreaks, leading and trailing whitespace and
+" punctuation characters and replaces all the remaining whitespace and
+" punctuation characters with dashes.
+"
+" @param {s} the string to escape
+" @returns the escaped string
+function! s:escape_linkname(s) abort " {{{1
+    let sub = a:s
     let sub = substitute(sub, '\n', '', 'g')
     let sub = substitute(sub, '^[ \t\\.,!?;:/]\+', '', 'g')
     let sub = substitute(sub, '[ \t\\.,!?;:/]\+$', '', 'g')
@@ -606,11 +674,26 @@ function! s:escape_linkname(unsub) abort " {{{
     return sub
 endfunc " }}}
 
-function! s:escape_macro_target(target) abort " {{{
+"" {{{2
+" Escape the given string {target} to be used as a macro target.
+"
+" This replaces all spaces with '%20'.
+"
+" @param {target} the string to escape
+" @returns the escaped string
+function! s:escape_macro_target(target) abort " {{{1
     return substitute(a:target, ' ', '%20', 'g')
 endfunc " }}}
 
-function! asciidoc#base#custom_jump(motion, visual) range " {{{
+"" {{{2
+" Execute the given {motion}.
+"
+" This function takes an optional count and does not store the motion in
+" the history.
+"
+" FIXME: This function is currently unused. It was used by jjaderberg for
+" section movements, but we have new functions for that purpose.
+function! asciidoc#base#custom_jump(motion, visual) range " {{{1
     let cnt = v:count1
     let save_search = @/
     mark '
