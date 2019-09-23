@@ -127,25 +127,25 @@ endfunc " }}}
 "" {{{2
 " Toggle section title style of the current section between ATX and SETEXT
 " style.
-" FIXME: ATX style only uses asymmetric syntax. It should support symmetric
-" syntax, too (based on the config variable).
-" FIXME: The detection of SETEXT headers is fragile. It doesn't check the
-" length of the title text and the underline (even that would not be 100%
-" correct). It should use s:find_next_setext_section_title in motions.vim
-" FIXME: When calling this function on the underline of a Setext header,
-" the underline gets another underline.
+"
+" This changes the style of the section the cursor is positioned in. The
+" cursor may be anywhere inside the section or the actual heading.
+"
 " FIXME: We need a way to _remove_ the heading indicators (make a heading
 " to a normal text).
 function! asciidoc#editing#toggle_title() abort "{{{1
     let save_pos = getcurpos()
-    " Find the last title. (Should really check that we aren't on a title already).
-    let setext = '^[^. +/].*[^.]\n[-=~^+]\{3,}$'
-    let atx = '^=\{1,6} \w.*$'
-    let title_line = search('\(' . atx . '\|' . setext . '\)', 'bcW')
+    let title_line = asciidoc#motions#find_next_section_heading(line('.'), 'bcW')
     if title_line ==# 0
       " Don't do anything if no title for the current section is found.
       return
     endif
+
+    " jump to the title
+    execute 'normal! ' . title_line . 'G'
+    echo line('.')
+    echo getline(line('.'))
+
     " Find out which kind of title it is. Make the search land on the _text_
     " for SETEXT and we can rely on a '=' at column one means it's ATX.
     let save_reg = @"
@@ -158,14 +158,20 @@ function! asciidoc#editing#toggle_title() abort "{{{1
             execute "normal! $" . repeat('h', len(lead)) . "d$"
         endif
         let ix = split(@")[0]
-        let char = g:atx_to_setext[ix]
-        call append(line('.'), repeat(char, len(getline(line('.')))))
-        " Adjust the cursor position since SETEXT titles consume 1 line
-        " more than ATX.
-        " _Except_ the current cursor pos is on the title text.
-        " We want to stay there then.
-        if save_pos[1] !=# title_line
-          let save_pos[1] += 1
+        if has_key(g:atx_to_setext, ix)
+          let char = g:atx_to_setext[ix]
+          call append(line('.'), repeat(char, len(getline(line('.')))))
+          " Adjust the cursor position since SETEXT titles consume 1 line
+          " more than ATX.
+          " _Except_ the current cursor pos is on the title text.
+          " We want to stay there then.
+          if save_pos[1] !=# title_line
+            let save_pos[1] += 1
+          endif
+        else
+          " Reset if this level doesn't exist in Setext
+          echohl ErrorMsg | echo "Unsupported heading level for Setext" | echohl None
+          call setline(line('.'), ix . " " . getline(line('.')))
         endif
     else
         " Do the deed: SETEXT to ATX
