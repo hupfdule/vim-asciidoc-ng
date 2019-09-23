@@ -1,3 +1,4 @@
+" Pattern definitions {{{2
 " TODO: We could differentiate wheter to support markdown headings, 1 char
 " heading (only asciidoctor) or plain asciidoc headings (at least 2 char
 " headings), but is it worth the hassle? At the moment this regex matches
@@ -19,25 +20,26 @@ let s:setext_title_underline = '[=\-~^+]\{2,}\s*$'
 let s:setext_title = s:setext_title_text . '\n' . s:setext_title_underline
 let s:setext_levels = ['=','-', '~', '^', '+']
 
+" }}}
 
-""
+"" {{{2
 " Change the line specified by {line_number} into an atx section header
 " of the given {level} with the given {title} either {symmetric} or not.
 "
 " FIXME: This function is not a motion, but depends on script-local
 " functions in this script. This should be refactored again.
-function! asciidoc#motions#set_atx_section_title(line_number, level, title, symmetric) abort
+function! asciidoc#motions#set_atx_section_title(line_number, level, title, symmetric) abort " {{{1
   let level_marks = repeat('=', a:level)
   call setline(a:line_number, level_marks . ' ' . a:title . (a:symmetric ? (' ' . level_marks) : ''))
-endfunction
+endfunction " }}}
 
-""
+"" {{{2
 " Change the line specified by {line_number} into a setext section header
 " of the given {level} with the given {title}.
 "
 " FIXME: This function is not a motion, but depends on script-local
 " functions in this script. This should be refactored again.
-function! asciidoc#motions#set_setext_section_title(line_number, level, title) abort
+function! asciidoc#motions#set_setext_section_title(line_number, level, title) abort " {{{1
   let line_number = a:line_number + 1
   let level_marks = repeat(s:setext_levels[a:level - 1], len(a:title))
   if getline(line_number) =~ '^$'
@@ -45,9 +47,9 @@ function! asciidoc#motions#set_setext_section_title(line_number, level, title) a
   else
     call setline(line_number, level_marks)
   endif
-endfunction
+endfunction " }}}
 
-""
+"" {{{2
 " Change the current line into a section header of the given level.
 " If the current line already is a valid section header its style
 " (atx/setext and symmetric/asymmetric) is retained. Otherwise the default
@@ -66,7 +68,7 @@ endfunction
 " FIXME: When level 6 is selected in Setext style (which doesn't support
 " it), fallback to ATX style.
 " TODO: Provide function to increment/decrement current section.
-function! asciidoc#motions#set_section_title_level(level) abort
+function! asciidoc#motions#set_section_title_level(level) abort " {{{1
   let line = line('.')
   let section_title = asciidoc#motions#get_section_title(line)
   if !empty(section_title)
@@ -83,14 +85,14 @@ function! asciidoc#motions#set_section_title_level(level) abort
       call asciidoc#motions#set_setext_section_title(line, a:level, title)
     endif
   endif
-endfunction
+endfunction " }}}
 
-""
+"" {{{2
 " Jumps to the title of the current section.
 " If the cursor already is at the title of the current section,
 " jump to the title of the previous section.
 " If the cursor is at the title of the first section, do nothing.
-function! asciidoc#motions#jump_to_prior_section_title() abort
+function! asciidoc#motions#jump_to_prior_section_title() abort " {{{1
   let old_pos = getpos('.')
   let pos = old_pos
   let pos[2] = 0
@@ -103,13 +105,13 @@ function! asciidoc#motions#jump_to_prior_section_title() abort
     return
   endif
   return prior . 'G'
-endfunction
+endfunction " }}}
 
-""
+"" {{{2
 " Jumps to the title of the next section.
 " If the cursor already is at the title of the last section,
 " do nothing.
-function! asciidoc#motions#jump_to_next_section_title() abort
+function! asciidoc#motions#jump_to_next_section_title() abort " {{{1
   let next_atx = search(s:atx_title, 'Wn')
   let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
   let next = min(filter([next_atx, next_setext], 'v:val != 0'))
@@ -117,13 +119,13 @@ function! asciidoc#motions#jump_to_next_section_title() abort
     return
   endif
   return next . 'G'
-endfunction
+endfunction " }}}
 
-""
+"" {{{2
 " Jumps to the last non-empty line of the previous section.
 " If the cursor already is at the end of the first section,
 " do nothing.
-function! asciidoc#motions#jump_to_prior_section_end() abort
+function! asciidoc#motions#jump_to_prior_section_end() abort " {{{1
   let old_pos = getpos('.')
   let pos = old_pos
   let pos[2] = 0
@@ -137,14 +139,14 @@ function! asciidoc#motions#jump_to_prior_section_end() abort
     return
   endif
   return prior - 1 . 'G'
-endfunction
+endfunction " }}}
 
-""
+"" {{{2
 " Jumps to the last non-empty line of the current section.
 " If the cursor already is at the end of the current section,
 " jump to the end of the next section.
 " If the cursor is at the end of the last section, do nothing.
-function! asciidoc#motions#jump_to_next_section_end() abort
+function! asciidoc#motions#jump_to_next_section_end() abort " {{{1
   let old_pos = getpos('.')
   let next_atx = search(s:atx_title, 'Wn')
   let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
@@ -169,14 +171,14 @@ function! asciidoc#motions#jump_to_next_section_end() abort
   else
     return next - 1 . 'G'
   endif
-endfunction
+endfunction " }}}
 
-""
+"" {{{2
 " Jumps to the title of the previous section of the same level as the
 " current one..
 " If the cursor is at the title of the first section of that level, do
 " nothing.
-function! asciidoc#motions#jump_to_prior_sibling_section_title() abort
+function! asciidoc#motions#jump_to_prior_sibling_section_title() abort " {{{1
   let old_pos = getpos('.')
   let pos = old_pos
   let pos[2] = 0
@@ -211,9 +213,9 @@ function! asciidoc#motions#jump_to_prior_sibling_section_title() abort
     return
   endif
   return prev_sibling_line . 'G'
-endfunction
+endfunction " }}}
 
-""
+"" {{{2
 " Jumps to the title of the next section of the same level as the
 " current one..
 " If the cursor is at the title of the last section of that level, do
@@ -222,7 +224,7 @@ endfunction
 " FIXME: This is nearly identical to #jump_to_prev_... Only the
 " search_flags include no 'b'. Therefore we can combine these into a single
 " function.
-function! asciidoc#motions#jump_to_next_sibling_section_title() abort
+function! asciidoc#motions#jump_to_next_sibling_section_title() abort " {{{1
   let old_pos = getpos('.')
   let pos = old_pos
   let pos[2] = 0
@@ -257,9 +259,9 @@ function! asciidoc#motions#jump_to_next_sibling_section_title() abort
     return
   endif
   return next_sibling_line . 'G'
-endfunction
+endfunction " }}}
 
-""
+"" {{{2
 " Find the next section after the given {startline}.
 " The given {searchflags} are the same as for the builtint search()
 " function.
@@ -267,7 +269,7 @@ endfunction
 " Returns the line number of the next title (the upper line for setext
 " titles) or 0 if no section title can be found after the given line.
 " This function does not wrap at the end of the file.
-function! asciidoc#motions#find_next_section_heading(start_line, search_flags) abort
+function! asciidoc#motions#find_next_section_heading(start_line, search_flags) abort " {{{1
   let l:old_pos = getpos('.')
   call setpos('.', [0, a:start_line, 0, 0])
   let l:next_atx = search(s:atx_title, a:search_flags)
@@ -279,14 +281,14 @@ function! asciidoc#motions#find_next_section_heading(start_line, search_flags) a
   endif
   call setpos('.', l:old_pos)
   return l:next
-endfunction
+endfunction " }}}
 
-""
+"" {{{2
 " Find the next section whose title matches the given regex {pattern}.
 "
 " Returns the line number of the found title (the upper line for setext titles)
 " or 0 if no matching section title could be found in the whole document.
-function! asciidoc#motions#find_next_section_matching(pattern) abort
+function! asciidoc#motions#find_next_section_matching(pattern) abort " {{{1
   " Remember current cursor position
   let l:old_pos = getpos('.')
 
@@ -315,17 +317,17 @@ function! asciidoc#motions#find_next_section_matching(pattern) abort
   call setpos('.', l:old_pos)
 
   return l:next
-endfunction
+endfunction " }}}
 
-function! asciidoc#motions#is_atx_section_title(line_number) abort
+function! asciidoc#motions#is_atx_section_title(line_number) abort " {{{1
    return !empty(asciidoc#motions#get_atx_section_title(a:line_number))
-endfunction
+endfunction " }}}
 
-function! asciidoc#motions#is_setext_section_title(line_number) abort
+function! asciidoc#motions#is_setext_section_title(line_number) abort " {{{1
    return !empty(asciidoc#motions#get_setext_section_title(a:line_number))
-endfunction
+endfunction " }}}
 
-""
+"" {{{2
 " Find the next setext section title starting at {start_line}.
 " The possible {search_flags} are the same as for the builtin |search()|
 " function. Therefore it is possible to search backwords (adding 'b' to the
@@ -334,7 +336,7 @@ endfunction
 "
 " Returns the line number of the the upper line of the next setext section
 " title or 0 if no further setext section title could be found.
-function! s:find_next_setext_section_title(start_line, search_flags) abort
+function! s:find_next_setext_section_title(start_line, search_flags) abort " {{{1
   let l:old_pos = getpos('.')
   call setpos('.', [0, a:start_line, 0, 0])
   let l:next_setext = search(s:setext_title, a:search_flags)
@@ -357,9 +359,9 @@ function! s:find_next_setext_section_title(start_line, search_flags) abort
       return s:find_next_setext_section_title(l:next_setext + 2, a:search_flags)
     endif
   endif
-endfunction
+endfunction " }}}
 
-function! asciidoc#motions#get_atx_section_title(line_number) abort
+function! asciidoc#motions#get_atx_section_title(line_number) abort " {{{1
   let line = getline(a:line_number)
   let match = matchlist(line, s:atx_title)
   if !empty(match)
@@ -373,9 +375,9 @@ function! asciidoc#motions#get_atx_section_title(line_number) abort
   else
     return {}
   endif
-endfunction
+endfunction " }}}
 
-function! asciidoc#motions#get_setext_section_title(line_number) abort
+function! asciidoc#motions#get_setext_section_title(line_number) abort " {{{1
   let line = getline(a:line_number)
   if line =~ '^' . s:setext_title_underline
     let underline = line
@@ -416,18 +418,18 @@ function! asciidoc#motions#get_setext_section_title(line_number) abort
   else
     return {}
   endif
-endfunction
+endfunction " }}}
 
-function! asciidoc#motions#get_section_title(line_number) abort
+function! asciidoc#motions#get_section_title(line_number) abort " {{{1
   let atx = asciidoc#motions#get_atx_section_title(a:line_number)
   if !empty(atx)
     return atx
   else
     return asciidoc#motions#get_setext_section_title(a:line_number)
   endif
-endfunction
+endfunction " }}}
 
-""
+"" {{{2
 " Return the level of the section title on the given line.
 "
 " The topmost level start at 1.
@@ -435,7 +437,7 @@ endfunction
 "
 " Attention! The return value is undefined if the given line number doesn't
 " contain a section title.
-function! asciidoc#motions#get_setext_section_title_level(line_number) abort
+function! asciidoc#motions#get_setext_section_title_level(line_number) abort " {{{1
   let line = getline(a:line_number)
   if line =~ '^' . s:setext_title_underline
     let underline = line
@@ -448,17 +450,18 @@ function! asciidoc#motions#get_setext_section_title_level(line_number) abort
   " FIXME: Actually level=0 would be the lowest
   let level = 1 + index(s:setext_levels, underline[0])
   return level
-endfunction
+endfunction " }}}
 
-""
+"" {{{2
 " Return whether the given line is the underline under a Setext section
 " header.
 "
 " Attention! This function assumes that the given line_number actually
 " contains a Setext section title. If it is a valid Setext underline, but
 " not acutally part of a Setext section title, it will still return 1.
-function! asciidoc#motions#is_setext_underline(line_number) abort
+function! asciidoc#motions#is_setext_underline(line_number) abort " {{{1
   let line = getline(a:line_number)
   return line =~# '^' . s:setext_title_underline
-endfunction
+endfunction " }}}
 
+" vim: set foldmethod=marker :
