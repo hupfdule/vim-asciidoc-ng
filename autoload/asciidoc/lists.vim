@@ -1,6 +1,6 @@
 ""
 " Converts the currently selected lines into list items preceded by the
-" character given as {type}..
+" character given as {type}.
 "
 " FIXME: This is a bit dumb as it converts each line to another list item.
 " There is no way to retain paragraphs or other complex content.
