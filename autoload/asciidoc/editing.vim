@@ -142,9 +142,7 @@ function! asciidoc#editing#toggle_title() abort "{{{1
     endif
 
     " jump to the title
-    execute 'normal! ' . title_line . 'G'
-    echo line('.')
-    echo getline(line('.'))
+    execute 'normal! ' . title_line . 'G0'
 
     " Find out which kind of title it is. Make the search land on the _text_
     " for SETEXT and we can rely on a '=' at column one means it's ATX.
