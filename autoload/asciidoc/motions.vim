@@ -184,7 +184,11 @@ function! asciidoc#motions#find_next_section_heading(start_line, search_flags) a
   call setpos('.', [0, a:start_line, 0, 0])
   let l:next_atx = search(s:atx_title, a:search_flags)
   let l:next_setext = s:find_next_setext_section_title(a:start_line, a:search_flags)
-  let l:next = min(filter([l:next_atx, l:next_setext], 'v:val != 0'))
+  if a:search_flags =~# 'b'
+    let l:next = max(filter([l:next_atx, l:next_setext], 'v:val != 0'))
+  else
+    let l:next = min(filter([l:next_atx, l:next_setext], 'v:val != 0'))
+  endif
   call setpos('.', l:old_pos)
   return l:next
 endfunction
