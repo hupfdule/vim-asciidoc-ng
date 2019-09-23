@@ -46,6 +46,8 @@ Mappings
 | ][                       | AsciidocNextSectionEnd        | Jump to the next section end
 | [[                       | AsciidocPrevSection           | Jump to the previous section heading
 | ]]                       | AsciidocPrevSectionEnd        | Jump to the previous section end
+// TODO: Provide Prev/NextSibling jumps restricted to the curent parent
+// section?
 | ]}                       | AsciidocNextSiblingSection    | Jump to the next section heading of the same level as the current one
 | [{                       | AsciidocPrevSiblingSection    | Jump to the previous section heading of the same level as the current one
 | ]> (]j?)                 | AsciidocFirstSubSection       | Jump to the first subsection heading of the current one

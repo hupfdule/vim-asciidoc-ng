@@ -159,18 +159,24 @@ set cpo&vim
 
       " FIXME: Should we allow arguments to jump to the x-most section from here?
       "        (Accept a count)
-      command -buffer -count=1 AsciidocPrevSection    execute 'normal!' . asciidoc#motions#jump_to_prior_section_title()
-      command -buffer -count=1 AsciidocPrevSectionEnd execute 'normal!' . asciidoc#motions#jump_to_prior_section_end()
-      command -buffer -count=1 AsciidocNextSection    execute 'normal!' . asciidoc#motions#jump_to_next_section_title()
-      command -buffer -count=1 AsciidocNextSectionEnd execute 'normal!' . asciidoc#motions#jump_to_next_section_end()
-      nnoremap <buffer> <Plug>(AsciidocPrevSection)    :AsciidocPrevSection<cr>
-      xnoremap <buffer> <Plug>(AsciidocPrevSection)    :AsciidocPrevSection<cr>
-      nnoremap <buffer> <Plug>(AsciidocPrevSectionEnd) :AsciidocPrevSectionEnd<cr>
-      xnoremap <buffer> <Plug>(AsciidocPrevSectionEnd) :AsciidocPrevSectionEnd<cr>
-      nnoremap <buffer> <Plug>(AsciidocNextSection)    :AsciidocNextSection<cr>
-      xnoremap <buffer> <Plug>(AsciidocNextSection)    :AsciidocNextSection<cr>
-      nnoremap <buffer> <Plug>(AsciidocNextSectionEnd) :AsciidocNextSectionEnd<cr>
-      xnoremap <buffer> <Plug>(AsciidocNextSectionEnd) :AsciidocNextSectionEnd<cr>
+      command -buffer -count=1 AsciidocPrevSection        execute 'normal!' . asciidoc#motions#jump_to_prior_section_title()
+      command -buffer -count=1 AsciidocPrevSectionEnd     execute 'normal!' . asciidoc#motions#jump_to_prior_section_end()
+      command -buffer -count=1 AsciidocNextSection        execute 'normal!' . asciidoc#motions#jump_to_next_section_title()
+      command -buffer -count=1 AsciidocNextSectionEnd     execute 'normal!' . asciidoc#motions#jump_to_next_section_end()
+      command -buffer -count=1 AsciidocPrevSiblingSection execute 'normal!' . asciidoc#motions#jump_to_prior_sibling_section_title()
+      command -buffer -count=1 AsciidocNextSiblingSection execute 'normal!' . asciidoc#motions#jump_to_next_sibling_section_title()
+      nnoremap <buffer> <Plug>(AsciidocPrevSection)           :AsciidocPrevSection<cr>
+      xnoremap <buffer> <Plug>(AsciidocPrevSection)           :AsciidocPrevSection<cr>
+      nnoremap <buffer> <Plug>(AsciidocPrevSectionEnd)        :AsciidocPrevSectionEnd<cr>
+      xnoremap <buffer> <Plug>(AsciidocPrevSectionEnd)        :AsciidocPrevSectionEnd<cr>
+      nnoremap <buffer> <Plug>(AsciidocNextSection)           :AsciidocNextSection<cr>
+      xnoremap <buffer> <Plug>(AsciidocNextSection)           :AsciidocNextSection<cr>
+      nnoremap <buffer> <Plug>(AsciidocNextSectionEnd)        :AsciidocNextSectionEnd<cr>
+      xnoremap <buffer> <Plug>(AsciidocNextSectionEnd)        :AsciidocNextSectionEnd<cr>
+      nnoremap <buffer> <Plug>(AsciidocPrevSiblingSection)    :AsciidocPrevSiblingSection<cr>
+      xnoremap <buffer> <Plug>(AsciidocPrevSiblingSection)    :AsciidocPrevSiblingSection<cr>
+      nnoremap <buffer> <Plug>(AsciidocNextSiblingSection)    :AsciidocNextSiblingSection<cr>
+      xnoremap <buffer> <Plug>(AsciidocNextSiblingSection)    :AsciidocNextSiblingSection<cr>
 
       if g:asciidoc_enable_mappings
         map <buffer> [[ <Plug>(AsciidocPrevSection)
@@ -179,6 +185,8 @@ set cpo&vim
         " FIXME: This should be placed on the last empty line. Otherwise it
         " lands on the anchors of the section. The same for []
         map <buffer> ][ <Plug>(AsciidocNextSectionEnd)
+        map <buffer> [{ <Plug>(AsciidocPrevSiblingSection)
+        map <buffer> ]} <Plug>(AsciidocNextSiblingSection)
       endif
 
     " END Section jumps }}}

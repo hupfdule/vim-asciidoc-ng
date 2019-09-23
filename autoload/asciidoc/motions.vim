@@ -172,6 +172,94 @@ function! asciidoc#motions#jump_to_next_section_end() abort
 endfunction
 
 ""
+" Jumps to the title of the previous section of the same level as the
+" current one..
+" If the cursor is at the title of the first section of that level, do
+" nothing.
+function! asciidoc#motions#jump_to_prior_sibling_section_title() abort
+  let old_pos = getpos('.')
+  let pos = old_pos
+  let pos[2] = 0
+  call setpos('.', pos)
+
+  " if not already on the currents section title, jump to it
+  let current_section_title = asciidoc#motions#get_section_title(line('.'))
+  if empty(current_section_title)
+    let heading_line = asciidoc#motions#find_next_section_heading(line('.'), 'bWn')
+    call cursor(heading_line, 0)
+    let current_section_title = asciidoc#motions#get_section_title(line('.'))
+  endif
+
+  " search for previous section title with the same level as the current one
+  let prev_sibling_line = 0
+  let prev_section_title = ['undefined']
+  while !empty(prev_section_title)
+    let heading_line = asciidoc#motions#find_next_section_heading(line('.'), 'bWn')
+    if heading_line ==# 0
+      break
+    endif
+    call cursor(heading_line, 0)
+    let prev_section_title = asciidoc#motions#get_section_title(line('.'))
+    if current_section_title['level'] ==# prev_section_title['level']
+      let prev_sibling_line = line('.')
+      break
+    endif
+  endwhile
+
+  call setpos('.', old_pos)
+  if prev_sibling_line ==# 0
+    return
+  endif
+  return prev_sibling_line . 'G'
+endfunction
+
+""
+" Jumps to the title of the next section of the same level as the
+" current one..
+" If the cursor is at the title of the last section of that level, do
+" nothing.
+"
+" FIXME: This is nearly identical to #jump_to_prev_... Only the
+" search_flags include no 'b'. Therefore we can combine these into a single
+" function.
+function! asciidoc#motions#jump_to_next_sibling_section_title() abort
+  let old_pos = getpos('.')
+  let pos = old_pos
+  let pos[2] = 0
+  call setpos('.', pos)
+
+  " if not already on the currents section title, jump to it
+  let current_section_title = asciidoc#motions#get_section_title(line('.'))
+  if empty(current_section_title)
+    let heading_line = asciidoc#motions#find_next_section_heading(line('.'), 'bWn')
+    call cursor(heading_line, 0)
+    let current_section_title = asciidoc#motions#get_section_title(line('.'))
+  endif
+
+  " search for next section title with the same level as the current one
+  let next_sibling_line = 0
+  let next_section_title = ['undefined']
+  while !empty(next_section_title)
+    let heading_line = asciidoc#motions#find_next_section_heading(line('.'), 'Wn')
+    if heading_line ==# 0
+      break
+    endif
+    call cursor(heading_line, 0)
+    let next_section_title = asciidoc#motions#get_section_title(line('.'))
+    if current_section_title['level'] ==# next_section_title['level']
+      let next_sibling_line = line('.')
+      break
+    endif
+  endwhile
+
+  call setpos('.', old_pos)
+  if next_sibling_line ==# 0
+    return
+  endif
+  return next_sibling_line . 'G'
+endfunction
+
+""
 " Find the next section after the given {startline}.
 " The given {searchflags} are the same as for the builtint search()
 " function.
@@ -227,6 +315,10 @@ function! asciidoc#motions#find_next_section_matching(pattern) abort
   call setpos('.', l:old_pos)
 
   return l:next
+endfunction
+
+function! asciidoc#motions#is_atx_section_title(line_number) abort
+   return !empty(asciidoc#motions#get_atx_section_title(a:line_number))
 endfunction
 
 function! asciidoc#motions#is_setext_section_title(line_number) abort
