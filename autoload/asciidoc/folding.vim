@@ -15,7 +15,7 @@
 " derived from https://github.com/mjakl/vim-asciidoc
 function! asciidoc#folding#foldexpr(lnum)
     let l0 = getline(a:lnum)
-    if l0 =~ '^=\{1,5}\s\+\S.*$' && synIDattr(synID(a:lnum, 1, 1), "name") =~ "asciidoc.*Title"
+    if l0 =~ '^=\{1,6}\s\+\S.*$' && synIDattr(synID(a:lnum, 1, 1), "name") =~ "asciidoc.*Title"
         " ATX style titles
         return '>'.matchend(l0, '^=\+')
     elseif asciidoc#motions#is_setext_section_title(a:lnum)
