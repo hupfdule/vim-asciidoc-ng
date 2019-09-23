@@ -50,8 +50,8 @@ Mappings
 // section?
 | ]}                       | AsciidocNextSiblingSection    | Jump to the next section heading of the same level as the current one
 | [{                       | AsciidocPrevSiblingSection    | Jump to the previous section heading of the same level as the current one
-| ]> (]j?)                 | AsciidocFirstSubSection       | Jump to the first subsection heading of the current one
-| [< (]k?)                 | AsciidocParentSection         | Jump to the section heading of the parent section of the current one
+| ]>                       | AsciidocFirstSubSection       | Jump to the first subsection heading of the current one
+| [<                       | AsciidocParentSection         | Jump to the section heading of the parent section of the current one
 | gf                       | AsciidocFollowLinkUnderCursor | Follow links and cross references (See <<Following Links>> for alternative mappings)
 | gx                       | AsciidocOpenLinkUnderCursor   | Open links in external application
 | <s-cr>                   | AsciidocAppendListItem        | Append a new list item or table row

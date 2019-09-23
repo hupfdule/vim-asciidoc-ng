@@ -165,6 +165,8 @@ set cpo&vim
       command -buffer -count=1 AsciidocNextSectionEnd     execute 'normal!' . asciidoc#motions#jump_to_next_section_end()
       command -buffer -count=1 AsciidocPrevSiblingSection execute 'normal!' . asciidoc#motions#jump_to_prior_sibling_section_title()
       command -buffer -count=1 AsciidocNextSiblingSection execute 'normal!' . asciidoc#motions#jump_to_next_sibling_section_title()
+      command -buffer -count=1 AsciidocParentSection      execute 'normal!' . asciidoc#motions#jump_to_parent_section_title()
+      command -buffer -count=1 AsciidocFirstSubsection    execute 'normal!' . asciidoc#motions#jump_to_first_subsection_title()
       nnoremap <buffer> <Plug>(AsciidocPrevSection)           :AsciidocPrevSection<cr>
       xnoremap <buffer> <Plug>(AsciidocPrevSection)           :AsciidocPrevSection<cr>
       nnoremap <buffer> <Plug>(AsciidocPrevSectionEnd)        :AsciidocPrevSectionEnd<cr>
@@ -177,6 +179,10 @@ set cpo&vim
       xnoremap <buffer> <Plug>(AsciidocPrevSiblingSection)    :AsciidocPrevSiblingSection<cr>
       nnoremap <buffer> <Plug>(AsciidocNextSiblingSection)    :AsciidocNextSiblingSection<cr>
       xnoremap <buffer> <Plug>(AsciidocNextSiblingSection)    :AsciidocNextSiblingSection<cr>
+      nnoremap <buffer> <Plug>(AsciidocParentSection)         :AsciidocParentSection<cr>
+      xnoremap <buffer> <Plug>(AsciidocParentSection)         :AsciidocParentSection<cr>
+      nnoremap <buffer> <Plug>(AsciidocFirstSubsection)       :AsciidocFirstSubsection<cr>
+      xnoremap <buffer> <Plug>(AsciidocFirstSubsection)       :AsciidocFirstSubsection<cr>
 
       if g:asciidoc_enable_mappings
         map <buffer> [[ <Plug>(AsciidocPrevSection)
@@ -187,6 +193,8 @@ set cpo&vim
         map <buffer> ][ <Plug>(AsciidocNextSectionEnd)
         map <buffer> [{ <Plug>(AsciidocPrevSiblingSection)
         map <buffer> ]} <Plug>(AsciidocNextSiblingSection)
+        map <buffer> [< <Plug>(AsciidocParentSection)
+        map <buffer> ]> <Plug>(AsciidocFirstSubsection)
       endif
 
     " END Section jumps }}}

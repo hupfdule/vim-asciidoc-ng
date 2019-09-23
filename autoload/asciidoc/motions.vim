@@ -224,6 +224,8 @@ endfunction " }}}
 " FIXME: This is nearly identical to #jump_to_prev_... Only the
 " search_flags include no 'b'. Therefore we can combine these into a single
 " function.
+" FIXME: If the cursor is before the first section title, this breaks with
+" an error. It should jump to the first section instead.
 function! asciidoc#motions#jump_to_next_sibling_section_title() abort " {{{1
   let old_pos = getpos('.')
   let pos = old_pos
@@ -259,6 +261,92 @@ function! asciidoc#motions#jump_to_next_sibling_section_title() abort " {{{1
     return
   endif
   return next_sibling_line . 'G'
+endfunction " }}}
+
+"" {{{2
+" Jumps to the title of the parent section of the current one.
+" If the current section doesn't have a parent, do nothing.
+"
+" FIXME: Even these methods are nearly the same as #jump_to_???_sibling_*
+function! asciidoc#motions#jump_to_parent_section_title() abort " {{{1
+  let old_pos = getpos('.')
+  let pos = old_pos
+  let pos[2] = 0
+  call setpos('.', pos)
+
+  " if not already on the currents section title, jump to it
+  let current_section_title = asciidoc#motions#get_section_title(line('.'))
+  if empty(current_section_title)
+    let heading_line = asciidoc#motions#find_next_section_heading(line('.'), 'bWn')
+    call cursor(heading_line, 0)
+    let current_section_title = asciidoc#motions#get_section_title(line('.'))
+  endif
+
+  " search for previous section title with the next smaller level as the current one
+  let parent_section_line = 0
+  let prev_section_title = ['undefined']
+  while !empty(prev_section_title)
+    let heading_line = asciidoc#motions#find_next_section_heading(line('.'), 'bWn')
+    if heading_line ==# 0
+      break
+    endif
+    call cursor(heading_line, 0)
+    let prev_section_title = asciidoc#motions#get_section_title(line('.'))
+    if current_section_title['level'] - 1 ==# prev_section_title['level']
+      let parent_section_line = line('.')
+      break
+    endif
+  endwhile
+
+  call setpos('.', old_pos)
+  if parent_section_line ==# 0
+    return
+  endif
+  return parent_section_line . 'G'
+endfunction " }}}
+
+"" {{{2
+" Jumps to the title of the first subsection of the current one.
+" If the current section doesn't have any subsections, do nothing.
+"
+" FIXME: Even these methods are nearly the same as #jump_to_???_sibling_*
+" FIXME: If the cursor is before the first section title, this breaks with
+" an error. It should jump to the first section instead.
+function! asciidoc#motions#jump_to_first_subsection_title() abort " {{{1
+  let old_pos = getpos('.')
+  let pos = old_pos
+  let pos[2] = 0
+  call setpos('.', pos)
+
+  " if not already on the currents section title, jump to it
+  let current_section_title = asciidoc#motions#get_section_title(line('.'))
+  if empty(current_section_title)
+    let heading_line = asciidoc#motions#find_next_section_heading(line('.'), 'bWn')
+    call cursor(heading_line, 0)
+    let current_section_title = asciidoc#motions#get_section_title(line('.'))
+  endif
+
+  " search for next section title with the next greater level as the current one
+  let first_subsection_line = 0
+  let next_section_title = ['undefined']
+  while !empty(next_section_title)
+    let heading_line = asciidoc#motions#find_next_section_heading(line('.'), 'Wn')
+    if heading_line ==# 0
+      break
+    endif
+    call cursor(heading_line, 0)
+    let next_section_title = asciidoc#motions#get_section_title(line('.'))
+    if current_section_title['level'] + 1 ==# next_section_title['level']
+      let first_subsection_line = line('.')
+      break
+    endif
+  endwhile
+
+  call setpos('.', old_pos)
+  if first_subsection_line ==# 0
+    return
+  endif
+  return first_subsection_line . 'G'
 endfunction " }}}
 
 "" {{{2
