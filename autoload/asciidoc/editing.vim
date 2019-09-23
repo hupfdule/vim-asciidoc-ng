@@ -1,6 +1,3 @@
-" Vim autoload file
-" vim-ft-asciidoc/autoload/editing.vim
-
 let g:setext_to_atx = {
             \ '=': '=',
             \ '-': '==',
@@ -17,11 +14,43 @@ let g:atx_to_setext = {
             \ '=====': '+',
             \ }
 
-function! asciidoc#editing#format_text(fchar) abort " {{{
+"" {{{2
+" Surround the selected text or the word under the cursor with the given
+" {fchar}.
+"
+" If the selected text doesn't end at word boundaries, it doubles the
+" {fchar} to create an unconstrained quote.
+"
+" FIXME: In line-wise visual mode, it wraps leading (and trailing?)
+" whitespace. I think that this is normally not desired.
+" FIXME: Also block-wise visual mode works as if character-wise visual
+" mode was used. What would be expected? I think the visual selection for
+" each line should be surrounded, like from
+"
+" first term
+" secnd term
+" third term
+" forth term
+"
+" to
+"
+" *first* term
+" *secnd* term
+" *third* term
+" *forth* term
+"
+" if the visual block was put around the words in the first column.
+" FIXME: Also it seems that normal mode is misidentified as v-mode.
+"        But still it behaves correctly…
+" FIXME: V does include the line ending. Actually leading and trailing
+" whitespace should always be omitted.
+function! asciidoc#editing#format_text(fchar) abort " {{{1
     let mode = visualmode()
     let save_reg = getreg('a', 1, 1)
     let save_reg_type = getregtype('a')
     let char = a:fchar
+    " If the selected area is not around a word boundary, double the fchar
+    " to create unconstrained quotes
     if mode == 'v'
         let p1 = '\w\%' . col("'<") . 'c'
         let p2 = '\%' . col("'>") . 'c.\w'
@@ -30,20 +59,25 @@ function! asciidoc#editing#format_text(fchar) abort " {{{
         if -1 != m1 || -1 != m2
             let char .= char
         endif
-        " echo m1
-        " echo m2
     endif
     execute 'normal! gv"ay'
     call setreg('a', '', 'ac')
     let text = @a
     let @a = char . text . char
-    execute "normal! `>a=char`<i=char"
+    execute "silent normal! `>a=char`<i=char"
     call setreg('a', save_reg, save_reg_type)
 endfunc " }}}
 
-" FIXME: This should operate on a range specified by the user (motion or
-" text object)
-function! asciidoc#editing#sentence_per_line(mode) abort " {{{
+"" {{{2
+" Reformat a block of text to 1 sentence per line.
+"
+" If called in visual mode it reformats the selected lines of text.
+"
+" If called in normal mode it reformats the current paragraph.
+"
+" @param {mode} 'n' if this function was called from normal mode or 'v' if
+"               it was called in visual mode.
+function! asciidoc#editing#sentence_per_line(mode) range abort " {{{1
     let save_cursor = getcurpos()
     if a:mode == 'n'
         let pat = '^$\|^[-_.*+=]\{2}'
@@ -54,25 +88,43 @@ function! asciidoc#editing#sentence_per_line(mode) abort " {{{
             execute 'normal! V' . (bot - top) . 'jJ0'
         endif
     elseif a:mode == 'v'
-        normal! VJ0
+        " Join all lines, retaining all blank lines. Idea was taken from https://superuser.com/a/200691/730833
+        " We also unset joinspace to avoid double spaces between the
+        " sentences (which would leave trailing whitespace characters)
+        let save_tw = &textwidth
+        let save_js = &joinspaces
+        setlocal textwidth=9999999
+        setlocal nojoinspaces
+        normal! gvgqg'<
+        let &textwidth=save_tw
+        let &joinspaces=save_js
+        unlet save_tw
+        unlet save_js
+    else
+      echoerr "Invalid mode: " . a:mode
     endif
+
+    " Now break the sentences starting at the last one
+    let firstline = line("'<")
+    let lastline = line("'>")
+    call cursor(lastline, 0)
+    normal! $
     while 1
-        let l = line('.')
-        normal! )
-        if l == line('.')
-            " `normal! b` will skip over some characters, better search back for
-            " first non-whitespace
-            " normal! blr
-            call search('\S', 'b')
-            normal! lr
-        else
-            break
-        endif
+      normal! (
+      if col('.') ==# 1 && line('.') ==# firstline
+        " finish if we are at the start of the first line
+        break
+      elseif col('.') ==# 1
+        normal! k$
+      else
+        normal! hr
+      endif
     endwhile
+
     call setpos('.', save_cursor)
 endfunc " }}}
 
-""
+"" {{{2
 " Toggle section title style of the current section between ATX and SETEXT
 " style.
 " FIXME: ATX style only uses asymmetric syntax. It should support symmetric
@@ -84,7 +136,7 @@ endfunc " }}}
 " the underline gets another underline.
 " FIXME: We need a way to _remove_ the heading indicators (make a heading
 " to a normal text).
-function! asciidoc#editing#toggle_title() abort "{{{
+function! asciidoc#editing#toggle_title() abort "{{{1
     let save_pos = getcurpos()
     " Find the last title. (Should really check that we aren't on a title already).
     let setext = '^[^. +/].*[^.]\n[-=~^+]\{3,}$'
@@ -130,3 +182,5 @@ function! asciidoc#editing#toggle_title() abort "{{{
     let @" = save_reg
     call setpos('.', save_pos)
 endfunc "}}}
+
+" vim: set foldmethod=marker :

@@ -221,7 +221,7 @@ set cpo&vim
     " Sentence per line .................................................. {{{
 
       " FIXME: Should accept a range
-      command -buffer -nargs=1 AsciidocSentencePerLine call asciidoc#editing#sentence_per_line(<f-args>)
+      command -buffer -range -nargs=1 AsciidocSentencePerLine call asciidoc#editing#sentence_per_line(<f-args>)
       nnoremap <buffer> <Plug>(AsciidocSentencePerLine) :AsciidocSentencePerLine n<cr>
       xnoremap <buffer> <Plug>(AsciidocSentencePerLine) :AsciidocSentencePerLine v<cr>
 
