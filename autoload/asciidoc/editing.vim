@@ -171,6 +171,9 @@ function! asciidoc#editing#toggle_title() abort "{{{1
         " Do the deed: SETEXT to ATX
         execute "normal! jdd"
         execute "normal! kI" . g:setext_to_atx[@"[0]] . " \<Esc>"
+        if g:asciidoc_title_style_atx ==# 'symmetric'
+          execute "normal! $a " . g:setext_to_atx[@"[0]] . "\<Esc>"
+        endif
         " Adjust the cursor position since ATX titles consume 1 line
         " less than SETEXT.
         " _Except_ the current cursor pos is on the title text.
