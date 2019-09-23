@@ -115,7 +115,7 @@ Detailled description of all commands
   If no style is given, use the default style defined in g:asciidoc_title_style.
 
 
-Text objects
+Text Objects
 ------------
 
 // FIXME: All of these mappings would shadow existing useful text objects.
@@ -144,7 +144,7 @@ anchors and cross references to other files.
 
 // TODO: Screenshot or screencast
 
-Syntax highlighting
+Syntax Highlighting
 -------------------
 
 ////
@@ -175,7 +175,7 @@ Known Shortcomings
   highlighted.
 // TODO: Screenshot?
 
-Related projects
+Related Projects
 ----------------
 
 === Inspirations
@@ -187,17 +187,18 @@ Related projects
 - https://github.com/habamax/vim-asciidoctor[habamax/vim-sciidoctor]
 - https://github.com/plasticboy/vim-markdown[plasticboy/vim-markdown] / https://github.com/gabrielelana/vim-markdown[gabrielelana/vim-markdown / https://github.com/vim-pandoc/vim-pandoc[vim-pandoc/vim-pandoc]
 
-=== Related Projects
+=== Complementary Plugins
+
+////
+Inspirations / Integrated projects / Other interesting projects
+////
 
 // TODO Write some more about each
 - https://github.com/machakann/vim-sandwich[machakann/vim-sandwich] / https://github.com/tpope/vim-surround[tpope/vim-surround]
 - https://github.com/godlygeek/tabular[godlygeek/tabular] / https://github.com/junegunn/vim-easy-align[junegunn/vim-easy-align]
 - https://github.com/hupfule/tagbar[hupfdule/tagbar] / https://github.com/vim-voom/VOoM[vim-voom/VOoM]
 - https://github.com/konfekt/fastfold[konfekt/fastfold]
+- https://github.com/hupfdule/compile-on-save.vim[hupfdule/compile-on-save.vim]
 
-
-////
-Inspirations / Integrated projects / Other interesting projects
-////
 
 
