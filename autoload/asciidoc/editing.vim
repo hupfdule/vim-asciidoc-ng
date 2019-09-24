@@ -133,7 +133,7 @@ endfunc " }}}
 "
 " FIXME: We need a way to _remove_ the heading indicators (make a heading
 " to a normal text).
-function! asciidoc#editing#toggle_title() abort "{{{1
+function! asciidoc#editing#toggle_title_style() abort "{{{1
     let save_pos = getcurpos()
     let title_line = asciidoc#motions#find_next_section_heading(line('.'), 'bcW')
     if title_line ==# 0

@@ -1,5 +1,5 @@
 
-" Pattern definitions {{{2
+" Pattern definitions {{{
 let s:macro_patterns = {
             \ 'include': '\f*\%#\f*',
             \ 'image'  : '\f*\%#\f*',
@@ -7,25 +7,6 @@ let s:macro_patterns = {
             \ 'menu'   : '\S*\%#\S*',
             \ 'btn'    : '\S*\%#\S*',
             \ }
-
-let s:list_prefix_pattern  = ''
-let s:list_prefix_pattern .= '^\s*\%('                        " optional leading space
-let s:list_prefix_pattern .= '\([\*\.]\+\)'                   " bulleted or numbered lists with increasing number of * or .
-let s:list_prefix_pattern .= '\|'                             " or
-let s:list_prefix_pattern .= '\(\-\)'                         " a single hyphen for a bulleted list
-let s:list_prefix_pattern .= '\|'                             " or
-let s:list_prefix_pattern .= '\('
-let s:list_prefix_pattern .=   '\%([0-9]\+\.\)'               " decimal numbered list (1.)
-let s:list_prefix_pattern .=   '\|'
-let s:list_prefix_pattern .=   '\%([a-z]\+\.\)'               " lowercase alpha numbered list (a.)
-let s:list_prefix_pattern .=   '\|'
-let s:list_prefix_pattern .=   '\%([A-Z]\+\.\)'               " uppercase alpha numbered list (A.)
-let s:list_prefix_pattern .=   '\|'
-let s:list_prefix_pattern .=   '\%([ivx]\+)\)'                " lowercase roman numbered list (i))
-let s:list_prefix_pattern .=   '\|'
-let s:list_prefix_pattern .=   '\%([IVX]\+)\)'                " uppercase roman numbered list (I))
-let s:list_prefix_pattern .= '\)'
-let s:list_prefix_pattern .= '\)\s\+'                         " mandatory trailing whitespace
 
 " A single-line ordered list item (or the first line of a multi-line one)
 let s:ordered_list_item_pattern  = ''
@@ -43,8 +24,7 @@ let s:ordered_list_item_pattern .=   '[IVX]\+)\@='            " uppercase roman 
 let s:ordered_list_item_pattern .= '\)'
 let s:ordered_list_item_pattern .= '\([\.\)]\)'               " either . or )
 let s:ordered_list_item_pattern .= '\(\s\+.*\)$'              " the remainder of the line (with mandatory white space)
-" }}}2
-
+" }}}
 
 "" {{{2
 " Follow the link at the cursor position.
@@ -710,3 +690,4 @@ function! asciidoc#base#custom_jump(motion, visual) range " {{{1
     let @/ = save_search
 endfunction "}}}
 
+" vim: set foldmethod=marker :

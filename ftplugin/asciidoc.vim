@@ -561,8 +561,8 @@ set cpo&vim
     " Toggle section heading style ....................................... {{{
 
       " FIXME: Provide a visual mode mapping? How should that work?
-      inoremap <buffer> <Plug>(AsciidocToggleSectionHeaderStyle) <c-o>:call asciidoc#editing#toggle_title()<cr>
-      nnoremap <buffer> <Plug>(AsciidocToggleSectionHeaderStyle) :call asciidoc#editing#toggle_title()<cr>
+      inoremap <buffer> <Plug>(AsciidocToggleSectionHeaderStyle) <c-o>:call asciidoc#editing#toggle_title_style()<cr>
+      nnoremap <buffer> <Plug>(AsciidocToggleSectionHeaderStyle) :call asciidoc#editing#toggle_title_style()<cr>
 
       " TODO: Provide a mapping to toggle between atx sync/async?
       imap <buffer> <LocalLeader>tt <Plug>(AsciidocToggleSectionHeaderStyle)
@@ -585,12 +585,12 @@ set cpo&vim
 " END Commands }}}
 
 " Text objects =========================================================== {{{
-  xnoremap <buffer> <silent> <LocalLeader>it :<C-U>call asciidoc#table#text_object_table(0, 1)<CR>
-  onoremap <buffer> <silent> <LocalLeader>it :<C-U>call asciidoc#table#text_object_table(0, 0)<CR>
-  xnoremap <buffer> <silent> <LocalLeader>at :<C-U>call asciidoc#table#text_object_table(1, 1)<CR>
-  onoremap <buffer> <silent> <LocalLeader>at :<C-U>call asciidoc#table#text_object_table(1, 0)<CR>
-  xnoremap <buffer> <silent> <LocalLeader>At :<C-U>call asciidoc#table#text_object_table(2, 1)<CR>
-  onoremap <buffer> <silent> <LocalLeader>At :<C-U>call asciidoc#table#text_object_table(2, 0)<CR>
+  xnoremap <buffer> <silent> <LocalLeader>it :<C-U>call asciidoc#textobjects#table(0, 1)<CR>
+  onoremap <buffer> <silent> <LocalLeader>it :<C-U>call asciidoc#textobjects#table(0, 0)<CR>
+  xnoremap <buffer> <silent> <LocalLeader>at :<C-U>call asciidoc#textobjects#table(1, 1)<CR>
+  onoremap <buffer> <silent> <LocalLeader>at :<C-U>call asciidoc#textobjects#table(1, 0)<CR>
+  xnoremap <buffer> <silent> <LocalLeader>At :<C-U>call asciidoc#textobjects#table(2, 1)<CR>
+  onoremap <buffer> <silent> <LocalLeader>At :<C-U>call asciidoc#textobjects#table(2, 0)<CR>
 
   xnoremap <buffer> <silent> <LocalLeader>ib :<C-U>call asciidoc#textobjects#delimited_block(0, 1)<CR>
   onoremap <buffer> <silent> <LocalLeader>ib :<C-U>call asciidoc#textobjects#delimited_block(0, 0)<CR>

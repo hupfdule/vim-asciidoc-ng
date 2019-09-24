@@ -1,6 +1,8 @@
-let s:asciidoc = {}
-let s:asciidoc.delimited_block_pattern = '^[-.~_+^=*\/]\{4,}\s*$'
-let s:asciidoc.heading_pattern = '^[-=~^+]\{4,}\s*$'
+" Pattern definitions
+  let s:asciidoc = {}
+  let s:asciidoc.delimited_block_pattern = '^[-.~_+^=*\/]\{4,}\s*$'
+  let s:asciidoc.heading_pattern = '^[-=~^+]\{4,}\s*$'
+"
 
 " TODO: Get rid of ERex. What is it really used for?
 let s:asciidoc.list_pattern = ERex.parse('

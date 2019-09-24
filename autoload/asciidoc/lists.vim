@@ -1,3 +1,24 @@
+" Pattern definitions {{{2
+let s:list_prefix_pattern  = ''
+let s:list_prefix_pattern .= '^\s*\%('                        " optional leading space
+let s:list_prefix_pattern .= '\([\*\.]\+\)'                   " bulleted or numbered lists with increasing number of * or .
+let s:list_prefix_pattern .= '\|'                             " or
+let s:list_prefix_pattern .= '\(\-\)'                         " a single hyphen for a bulleted list
+let s:list_prefix_pattern .= '\|'                             " or
+let s:list_prefix_pattern .= '\('
+let s:list_prefix_pattern .=   '\%([0-9]\+\.\)'               " decimal numbered list (1.)
+let s:list_prefix_pattern .=   '\|'
+let s:list_prefix_pattern .=   '\%([a-z]\+\.\)'               " lowercase alpha numbered list (a.)
+let s:list_prefix_pattern .=   '\|'
+let s:list_prefix_pattern .=   '\%([A-Z]\+\.\)'               " uppercase alpha numbered list (A.)
+let s:list_prefix_pattern .=   '\|'
+let s:list_prefix_pattern .=   '\%([ivx]\+)\)'                " lowercase roman numbered list (i))
+let s:list_prefix_pattern .=   '\|'
+let s:list_prefix_pattern .=   '\%([IVX]\+)\)'                " uppercase roman numbered list (I))
+let s:list_prefix_pattern .= '\)'
+let s:list_prefix_pattern .= '\)\s\+'                         " mandatory trailing whitespace
+" }}}2
+
 ""
 " Converts the currently selected lines into list items preceded by the
 " character given as {type}.
@@ -136,3 +157,4 @@ function! asciidoc#lists#increase_list_item_prefix(line) abort
   call setline(a:line, l:matchlist[1] . l:matchlist[2] . l:matchlist[3] . l:matchlist[4])
 endfunction
 
+" vim: set foldmethod=marker :
