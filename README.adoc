@@ -52,11 +52,14 @@ Mappings
 | [{                       | AsciidocPrevSiblingSection    | Jump to the previous section heading of the same level as the current one
 | ]>                       | AsciidocFirstSubSection       | Jump to the first subsection heading of the current one
 | [<                       | AsciidocParentSection         | Jump to the section heading of the parent section of the current one
+// TODO: Die Unterscheidung zwischen gf und gx muss noch gemacht werden
 | gf                       | AsciidocFollowLinkUnderCursor | Follow links and cross references (See <<Following Links>> for alternative mappings)
 | gx                       | AsciidocOpenLinkUnderCursor   | Open links in external application
 | <s-cr>                   | AsciidocAppendListItem        | Append a new list item or table row
+////
 | <c-t> / >>               | AsciidocOneLevelDeeper        | Increase the level of the selected/current heading / list item
 | <c-d> / <<               | AsciidocOneLevelHigher        | Decrease the level of the selected/current heading / list item
+////
 | <localleader>.           | AsciidocSentencePerLine       | Reformat text to one sentence per line
 | <localleader>0           | AsciidocSectionLevel0         | Convert the current section header or the current line into a section 0 heading
 | …                        | …                             | …
@@ -68,9 +71,13 @@ Mappings
 | <localleader>tk          | AsciidocSurround ^            | Surround some text with asterisks to mark it as ^superscript^
 | <localleader>tj          | AsciidocSurround ~            | Surround some text with asterisks to mark it as ~subscript~
 | <localleader>tp          | AsciidocSurround +            | Surround some text with asterisks to mark it as +passthrough+
+////
 | <c-t> / >>               | IndentListItem                | Indents list items (see AsciidocOneLevelDeeper above)
 | <c-d> / <<               | OutdentListItem               | Outdents list items (see AsciidocOneLevelHigher above)
+////
+////
 | ???                      | ToggleCheckListItem           | Toggle check list items
+////
 | <localleader>img         | ???                           | Insert `image:[]` macro
 | <localleader>inc         | ???                           | Insert `include::[]` macro
 | <localleader>link        | ???                           | Insert `link:[]` macro
@@ -153,6 +160,11 @@ Syntax Highlighting
 More detailed explanation of the syntax highlighting
 ////
 
+////
+FIXME: Syntax highlighting is really extremely slow. 
+The worst is asciidocLiteralParagraph. 
+But also asciidocTablePrefix and a few others
+////
 
 A good syntax highlighting fulfills two purposes:
 
@@ -164,7 +176,6 @@ Compiler
 
 Folding
 -------
-
 
 Known Shortcomings
 ------------------
