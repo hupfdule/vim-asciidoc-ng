@@ -1,0 +1,22 @@
+Syntax group    | Default style                            | Meaning
+-------------   | ---------------                          | -------------------------------------------------
+Normal          | Plain black                              | All normal text without special hightlighting
+Comment         | Lighter grey                             | Every comment (should not stand out)
+Bullet          | Bold?                                    | A bullet or numbering of a list item
+Link            | Underlined                               | A link or crossreference (could be linked or clicked on) or Email address
+Title           | Bold, colored                            | A document or Part title
+Section heading | Colored or Bold                          | A section heading (lower than doc title or part title)
+Caption         | Italic?, Slightly colored                | A caption to a table, image, code block, etc.
+Warning         | Red or red bg (or orange?)               | Some warning sign
+Error           | Red or red bg                            | Some error sign
+Note            | Yellow or yellow bg                      | Some note sign
+Todo            | Bold colored or colored bg
+Emphasized      | Italic                                   | Italic or emphasized text
+Strong          | Bold                                     | Bold or strong text
+Code            | Different Color                          | Usually monospaced texts like code listings
+Separator       | Different (maybe less outstanding) color | Separators between table cells, block delimiters?
+Attribute       | Different color                          | Some non-text attribute
+Special         | Different color (less outstanding?)      | Any special symbol (like brackets with special meaning <<xref>>, [[anchor]]
+Reference | Different color | Non-link references, like Footnotes, Index terms
+
+
