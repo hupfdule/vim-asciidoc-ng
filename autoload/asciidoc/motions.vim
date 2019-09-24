@@ -29,6 +29,12 @@ let s:setext_levels = ['=','-', '~', '^', '+']
 " FIXME: This function is not a motion, but depends on script-local
 " functions in this script. This should be refactored again.
 function! asciidoc#motions#set_atx_section_title(line_number, level, title, symmetric) abort " {{{1
+  if asciidoc#motions#is_setext_section_title(a:line_number)
+    let save_pos = getpos('.')
+    call cursor(a:line_number, 0)
+    call asciidoc#editing#toggle_title_style()
+    call setpos('.', save_pos)
+  endif
   let level_marks = repeat('=', a:level)
   call setline(a:line_number, level_marks . ' ' . a:title . (a:symmetric ? (' ' . level_marks) : ''))
 endfunction " }}}
@@ -56,6 +62,9 @@ endfunction " }}}
 " style specified by |g:asciidoc_title_style| and
 " |g:asciidoc_title_style_atx| is used.
 "
+" @parameter {level} the level to set the section header to. May be a
+"                    number from 1 to 6.
+"
 " FIXME: This function is not a motion, but depends on script-local
 " functions in this script. This should be refactored again.
 " FIXME: This function doesn't check the given {level} argument.
@@ -67,19 +76,23 @@ endfunction " }}}
 " possible
 " FIXME: When level 6 is selected in Setext style (which doesn't support
 " it), fallback to ATX style.
-" TODO: Provide function to increment/decrement current section.
 function! asciidoc#motions#set_section_title_level(level) abort " {{{1
+  if a:level < 1 || a:level > 6
+    echoerr "Invalid section title level: " . a:level
+    return
+  endif
+
   let line = line('.')
   let section_title = asciidoc#motions#get_section_title(line)
   if !empty(section_title)
-    if section_title.type == 'atx'
-      call asciidoc#motions#set_atx_section_title(section_title.line, a:level, section_title.title, section_title.symmetric)
+    if section_title.type == 'atx' || a:level ==# 6
+      call asciidoc#motions#set_atx_section_title(section_title.line, a:level, section_title.title, get(section_title, 'symmetric', g:asciidoc_title_style_atx != 'asymmetric'))
     else
       call asciidoc#motions#set_setext_section_title(section_title.line, a:level, section_title.title)
     endif
   else
     let title = getline('.')
-    if g:asciidoc_title_style == 'atx'
+    if g:asciidoc_title_style == 'atx' || a:level ==# 6
       call asciidoc#motions#set_atx_section_title(line, a:level, title, g:asciidoc_title_style_atx != 'asymmetric')
     else
       call asciidoc#motions#set_setext_section_title(line, a:level, title)
