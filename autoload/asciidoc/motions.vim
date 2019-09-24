@@ -1,4 +1,4 @@
-" Pattern definitions {{{2
+" Pattern definitions {{{
 " TODO: We could differentiate wheter to support markdown headings, 1 char
 " heading (only asciidoctor) or plain asciidoc headings (at least 2 char
 " headings), but is it worth the hassle? At the moment this regex matches
@@ -84,6 +84,42 @@ function! asciidoc#motions#set_section_title_level(level) abort " {{{1
     else
       call asciidoc#motions#set_setext_section_title(line, a:level, title)
     endif
+  endif
+endfunction " }}}
+
+
+"" {{{2
+" Indent or outdent the section heading at the cursor position.
+"
+" If no section heading is found at the cursor position it does nothing.
+"
+" If the secion heading already has the highest / lowest possible level it
+" does nothing.
+"
+" @param {dent} Either 'in' to indent the heading or 'out' to outdent it
+function! asciidoc#motions#dent_section(dent) abort " {{{1
+  " validate parameter
+  if a:dent !=# 'in' && a:dent !=# 'out'
+    echoerr "Invalid argument: " . a:dent
+    return
+  endif
+
+  let l:line = line('.')
+  let l:section_title = asciidoc#motions#get_section_title(line)
+  if !empty(l:section_title)
+    " do nothing if the lowest / highest level is already reached
+    if l:section_title['level'] ==# 1 && a:dent ==# 'out'
+      return
+    elseif l:section_title['level'] ==# 6 && a:dent ==# 'in'
+      return
+    endif
+
+    if a:dent ==# 'in'
+      let l:level = l:section_title['level'] + 1
+    else
+      let l:level = l:section_title['level'] - 1
+    endif
+    call asciidoc#motions#set_section_title_level(l:level)
   endif
 endfunction " }}}
 
