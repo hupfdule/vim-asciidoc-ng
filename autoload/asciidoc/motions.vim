@@ -67,15 +67,11 @@ endfunction " }}}
 "
 " FIXME: This function is not a motion, but depends on script-local
 " functions in this script. This should be refactored again.
-" FIXME: This function doesn't check the given {level} argument.
-" It should only accept valid arguments
 " FIXME: Which levels are valid? What is the topmost level? 0 or 1?
 " Therefore do we need to add +1 to the {level}?
 " Maybe change the expected level number?
 " Yes. It makes problem in other places. 0 should be topmost, 5 the lowest
 " possible
-" FIXME: When level 6 is selected in Setext style (which doesn't support
-" it), fallback to ATX style.
 function! asciidoc#motions#set_section_title_level(level) abort " {{{1
   if a:level < 1 || a:level > 6
     echoerr "Invalid section title level: " . a:level
