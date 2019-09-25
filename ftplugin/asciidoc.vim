@@ -141,6 +141,10 @@ set cpo&vim
   "        Or does this make the includeexpr obsolete?
   setlocal path=.
 
+  " FIXME: This is experimental. Does it do what we expect?
+  " FIXME: Also include anchors [[myanchor]]?
+  let &l:define = '^:\ze\S\+:\s\+\S\+'
+
   if executable('asciidoctor')
     compiler asciidoctor
   elseif executable('asciidoc')
