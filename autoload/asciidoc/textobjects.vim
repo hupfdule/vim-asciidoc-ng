@@ -15,6 +15,14 @@ function! asciidoc#textobjects#delimited_block(scope, visual) abort
   " FIXME: If the cursor is on or outside the delimiters, this doesn't find
   "        anything. We would not know if the current delimiter is the top
   "        or the bottom one.
+  "        → We could check whether we find a valid antagonist delimiter in
+  "          both directions. If this is the case we could emit a warning
+  "          that the cursor position is ambiguous and the user must move
+  "          the cursor inside the block. Otherwise we know whether we are
+  "          at the start or at the end
+  "          However, to avoid reading the entire and to lower the risk of
+  "          false positives we would need to find elements that are
+  "          definitley invalid inside the block. Which does not exist...
   " If no top delimiter can be found, do nothing
   let top = search('^[\=\-\.\+\_\*\/\`]\{4,}\s*\|^--\s*$', 'Wbn')
   if top ==# 0
