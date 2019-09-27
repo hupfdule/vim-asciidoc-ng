@@ -64,6 +64,19 @@ function! s:calc_sectnum(section_titles) abort " {{{1
 
   " Add the sectnum to the section title
   for l:section_title in a:section_titles
+    " TODO: Also add the file + linenr in the output (configurable)
+    " Example:
+    "      My large Book ...........       1
+    " 1    Introduction ............       20
+    " 1.1  The Why .................       32
+    " 1.2  The How .................       54
+    " 1.3  The Who .................       102
+    " 2    Closing ................. other#3
+    " 2.1  Bye ..................... other#32
+    " A    I've been the appendix ..       143
+    " A.1  Happened before .........       193
+    " A.2  Happened after ..........       249
+    " B    Glossary ................ gloss#304
     let l:section_title['f_sectnum'] = printf('%-' . l:longest_number . 'S', l:section_title['sectnum'])
   endfor
 
@@ -74,22 +87,22 @@ function! s:calc_sectnum(section_titles) abort " {{{1
   lopen
 
   " Now reformat the loclist
-  set modifiable
+  setlocal modifiable
   silent %s/\v^([^|]*\|){2,2}//e
-  set nomodified
-  set nomodifiable
+  setlocal nomodified
+  setlocal nomodifiable
 
   " Rehighlight the loclist buffer
   " FIXME: This doesn't work. Why?
   syntax clear
   syntax sync fromstart
-  syntax match asciidocTocLine       /^.*\n/
-  syntax match asciidocTocSectNum    /^\s*\zs\[\d\.]\+\ze\s*/ containedin=asciidocTocLine
+  "syntax match asciidocTocLine       /^.*\n/
+  "syntax match asciidocTocSectNum    /^\s*\zs\[\d\.]\+\ze\s*/ containedin=asciidocTocLine
   syntax keyword zehn 10 contained
   syntax on
 
-  highlight link asciidocTocLine Normal
-  highlight link asciidocTocSectNum Keyword
+  "highlight link asciidocTocLine Normal
+  "highlight link asciidocTocSectNum Keyword
   highlight link zehn Label
 
   noremap <buffer> q :lclose<cr>
