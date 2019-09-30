@@ -129,6 +129,8 @@ function! s:calc_sectnum(section_titles) abort " {{{1
   " Add the sectnum to the section title
   for l:section_title in a:section_titles
     " TODO: Also add the file + linenr in the output (configurable)
+    "       This needs information about file, line, attributes in the
+    "       section_title dict.
     " Example:
     "      My large Book ...........       1
     " 1    Introduction ............       20
@@ -147,7 +149,7 @@ endfunction " }}}1
 
 function! s:map_to_loclist_entry(idx, section_title) abort " {{{1
   let l:loclist_entry= {}
-  let l:loclist_entry['bufnr'] = bufnr()
+  let l:loclist_entry['bufnr'] = bufnr('.')
   let l:loclist_entry['lnum'] = a:section_title['line']
   let l:loclist_entry['col'] = 0
   let l:loclist_entry['text'] = a:section_title['f_sectnum'] . '  ' . a:section_title['title']
