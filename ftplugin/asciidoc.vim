@@ -95,6 +95,14 @@ set cpo&vim
     let g:asciidoc_block_delimiter_length = 4
   endif
 
+  ""
+  " The position of the TOC window (actually the location list).
+  " May be either 'left', 'right', 'top' or 'bottom'. (default = 'right')
+  "
+  if !exists('g:asciidoc_toc_position')
+    let g:asciidoc_toc_position = 'right'
+  endif
+
 " END Options }}}
 
 " Settings =============================================================== {{{
@@ -174,434 +182,441 @@ set cpo&vim
 
 " Commands =============================================================== {{{
 
-  " Navigation ----------------------------------------------------------- {{{
+" Navigation ----------------------------------------------------------- {{{
 
-    " Section jumps ........................................................ {{{
+" Section jumps ........................................................ {{{
 
-      " FIXME: Should we allow arguments to jump to the x-most section from here?
-      "        (Accept a count)
-      command -buffer -count=1 AsciidocPrevSection        execute 'normal!' . asciidoc#motions#jump_to_prior_section_title()
-      command -buffer -count=1 AsciidocPrevSectionEnd     execute 'normal!' . asciidoc#motions#jump_to_prior_section_end()
-      command -buffer -count=1 AsciidocNextSection        execute 'normal!' . asciidoc#motions#jump_to_next_section_title()
-      command -buffer -count=1 AsciidocNextSectionEnd     execute 'normal!' . asciidoc#motions#jump_to_next_section_end()
-      command -buffer -count=1 AsciidocPrevSiblingSection execute 'normal!' . asciidoc#motions#jump_to_prior_sibling_section_title()
-      command -buffer -count=1 AsciidocNextSiblingSection execute 'normal!' . asciidoc#motions#jump_to_next_sibling_section_title()
-      command -buffer -count=1 AsciidocParentSection      execute 'normal!' . asciidoc#motions#jump_to_parent_section_title()
-      command -buffer -count=1 AsciidocFirstSubsection    execute 'normal!' . asciidoc#motions#jump_to_first_subsection_title()
-      nnoremap <buffer> <Plug>(AsciidocPrevSection)           :AsciidocPrevSection<cr>
-      xnoremap <buffer> <Plug>(AsciidocPrevSection)           :AsciidocPrevSection<cr>
-      nnoremap <buffer> <Plug>(AsciidocPrevSectionEnd)        :AsciidocPrevSectionEnd<cr>
-      xnoremap <buffer> <Plug>(AsciidocPrevSectionEnd)        :AsciidocPrevSectionEnd<cr>
-      nnoremap <buffer> <Plug>(AsciidocNextSection)           :AsciidocNextSection<cr>
-      xnoremap <buffer> <Plug>(AsciidocNextSection)           :AsciidocNextSection<cr>
-      nnoremap <buffer> <Plug>(AsciidocNextSectionEnd)        :AsciidocNextSectionEnd<cr>
-      xnoremap <buffer> <Plug>(AsciidocNextSectionEnd)        :AsciidocNextSectionEnd<cr>
-      nnoremap <buffer> <Plug>(AsciidocPrevSiblingSection)    :AsciidocPrevSiblingSection<cr>
-      xnoremap <buffer> <Plug>(AsciidocPrevSiblingSection)    :AsciidocPrevSiblingSection<cr>
-      nnoremap <buffer> <Plug>(AsciidocNextSiblingSection)    :AsciidocNextSiblingSection<cr>
-      xnoremap <buffer> <Plug>(AsciidocNextSiblingSection)    :AsciidocNextSiblingSection<cr>
-      nnoremap <buffer> <Plug>(AsciidocParentSection)         :AsciidocParentSection<cr>
-      xnoremap <buffer> <Plug>(AsciidocParentSection)         :AsciidocParentSection<cr>
-      nnoremap <buffer> <Plug>(AsciidocFirstSubsection)       :AsciidocFirstSubsection<cr>
-      xnoremap <buffer> <Plug>(AsciidocFirstSubsection)       :AsciidocFirstSubsection<cr>
+" FIXME: Should we allow arguments to jump to the x-most section from here?
+"        (Accept a count)
+command -buffer -count=1 AsciidocPrevSection        execute 'normal!' . asciidoc#motions#jump_to_prior_section_title()
+command -buffer -count=1 AsciidocPrevSectionEnd     execute 'normal!' . asciidoc#motions#jump_to_prior_section_end()
+command -buffer -count=1 AsciidocNextSection        execute 'normal!' . asciidoc#motions#jump_to_next_section_title()
+command -buffer -count=1 AsciidocNextSectionEnd     execute 'normal!' . asciidoc#motions#jump_to_next_section_end()
+command -buffer -count=1 AsciidocPrevSiblingSection execute 'normal!' . asciidoc#motions#jump_to_prior_sibling_section_title()
+command -buffer -count=1 AsciidocNextSiblingSection execute 'normal!' . asciidoc#motions#jump_to_next_sibling_section_title()
+command -buffer -count=1 AsciidocParentSection      execute 'normal!' . asciidoc#motions#jump_to_parent_section_title()
+command -buffer -count=1 AsciidocFirstSubsection    execute 'normal!' . asciidoc#motions#jump_to_first_subsection_title()
+nnoremap <buffer> <Plug>(AsciidocPrevSection)           :AsciidocPrevSection<cr>
+xnoremap <buffer> <Plug>(AsciidocPrevSection)           :AsciidocPrevSection<cr>
+nnoremap <buffer> <Plug>(AsciidocPrevSectionEnd)        :AsciidocPrevSectionEnd<cr>
+xnoremap <buffer> <Plug>(AsciidocPrevSectionEnd)        :AsciidocPrevSectionEnd<cr>
+nnoremap <buffer> <Plug>(AsciidocNextSection)           :AsciidocNextSection<cr>
+xnoremap <buffer> <Plug>(AsciidocNextSection)           :AsciidocNextSection<cr>
+nnoremap <buffer> <Plug>(AsciidocNextSectionEnd)        :AsciidocNextSectionEnd<cr>
+xnoremap <buffer> <Plug>(AsciidocNextSectionEnd)        :AsciidocNextSectionEnd<cr>
+nnoremap <buffer> <Plug>(AsciidocPrevSiblingSection)    :AsciidocPrevSiblingSection<cr>
+xnoremap <buffer> <Plug>(AsciidocPrevSiblingSection)    :AsciidocPrevSiblingSection<cr>
+nnoremap <buffer> <Plug>(AsciidocNextSiblingSection)    :AsciidocNextSiblingSection<cr>
+xnoremap <buffer> <Plug>(AsciidocNextSiblingSection)    :AsciidocNextSiblingSection<cr>
+nnoremap <buffer> <Plug>(AsciidocParentSection)         :AsciidocParentSection<cr>
+xnoremap <buffer> <Plug>(AsciidocParentSection)         :AsciidocParentSection<cr>
+nnoremap <buffer> <Plug>(AsciidocFirstSubsection)       :AsciidocFirstSubsection<cr>
+xnoremap <buffer> <Plug>(AsciidocFirstSubsection)       :AsciidocFirstSubsection<cr>
 
-      if g:asciidoc_enable_mappings
-        map <buffer> [[ <Plug>(AsciidocPrevSection)
-        map <buffer> [] <Plug>(AsciidocPrevSectionEnd)
-        map <buffer> ]] <Plug>(AsciidocNextSection)
-        " FIXME: This should be placed on the last empty line. Otherwise it
-        " lands on the anchors of the section. The same for []
-        map <buffer> ][ <Plug>(AsciidocNextSectionEnd)
-        map <buffer> [{ <Plug>(AsciidocPrevSiblingSection)
-        map <buffer> ]} <Plug>(AsciidocNextSiblingSection)
-        map <buffer> [< <Plug>(AsciidocParentSection)
-        map <buffer> ]> <Plug>(AsciidocFirstSubsection)
+if g:asciidoc_enable_mappings
+  map <buffer> [[ <Plug>(AsciidocPrevSection)
+  map <buffer> [] <Plug>(AsciidocPrevSectionEnd)
+  map <buffer> ]] <Plug>(AsciidocNextSection)
+  " FIXME: This should be placed on the last empty line. Otherwise it
+  " lands on the anchors of the section. The same for []
+  map <buffer> ][ <Plug>(AsciidocNextSectionEnd)
+  map <buffer> [{ <Plug>(AsciidocPrevSiblingSection)
+  map <buffer> ]} <Plug>(AsciidocNextSiblingSection)
+  map <buffer> [< <Plug>(AsciidocParentSection)
+  map <buffer> ]> <Plug>(AsciidocFirstSubsection)
+endif
+
+" END Section jumps }}}
+
+" Following links and cross references --------------------------------- {{{
+
+command -buffer -nargs=? AsciidocFollowLinkUnderCursor          call asciidoc#base#follow_cursor_link(<f-args>)
+nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursor)              :AsciidocFollowLinkUnderCursor<cr>
+inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursor)         <c-o>:AsciidocFollowLinkUnderCursor<cr>
+nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInSplit)       :AsciidocFollowLinkUnderCursor split<cr>
+inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInSplit)  <c-o>:AsciidocFollowLinkUnderCursor split<cr>
+nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInVsplit)      :AsciidocFollowLinkUnderCursor vsplit<cr>
+inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInVsplit) <c-o>:AsciidocFollowLinkUnderCursor vsplit<cr>
+nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInTab)         :AsciidocFollowLinkUnderCursor tabedit<cr>
+inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInTab)    <c-o>:AsciidocFollowLinkUnderCursor tabedit<cr>
+
+if g:asciidoc_enable_mappings
+  " FIXME: Use <c-]> also in nmap? Would be more consistent, but also
+  " shadows the builtin <c-]> (jump to tag)
+  " What about the other mappings. Do they make sense? Are they
+  " consistent?
+  nmap <buffer> gf <Plug>(AsciidocFollowLinkUnderCursor)
+  imap <buffer> <c-]> <Plug>(AsciidocFollowLinkUnderCursor)
+  nmap <buffer> <c-w>f     <Plug>(AsciidocFollowLinkUnderCursorInSplit)
+  imap <buffer> <c-w>f     <Plug>(AsciidocFollowLinkUnderCursorInSplit)
+  nmap <buffer> <c-w><c-f> <Plug>(AsciidocFollowLinkUnderCursorInSplit)
+  imap <buffer> <c-w><c-f> <Plug>(AsciidocFollowLinkUnderCursorInSplit)
+  nmap <buffer> <c-w>F     <Plug>(AsciidocFollowLinkUnderCursorInVsplit)
+  imap <buffer> <c-w>F     <Plug>(AsciidocFollowLinkUnderCursorInVsplit)
+  nmap <buffer> <c-w>gf     <Plug>(AsciidocFollowLinkUnderCursorInTab)
+  imap <buffer> <c-w>gf     <Plug>(AsciidocFollowLinkUnderCursorInTab)
+endif
+
+" END Following links and cross references }}}
+
+" END Navigation }}}
+
+" Editing -------------------------------------------------------------- {{{
+
+" Sentence per line .................................................. {{{
+
+" FIXME: Should accept a range
+command -buffer -range -nargs=1 AsciidocSentencePerLine call asciidoc#editing#sentence_per_line(<f-args>)
+nnoremap <buffer> <Plug>(AsciidocSentencePerLine) :AsciidocSentencePerLine n<cr>
+xnoremap <buffer> <Plug>(AsciidocSentencePerLine) :AsciidocSentencePerLine v<cr>
+
+if g:asciidoc_enable_mappings
+  nmap <buffer> <leader>. <Plug>(AsciidocSentencePerLine)
+  xmap <buffer> <leader>. <Plug>(AsciidocSentencePerLine)
+endif
+
+" END Sentence per line }}}
+
+" Set section title level ............................................ {{{
+
+command -buffer -nargs=1 AsciidocSectionLevel call asciidoc#motions#set_section_title_level(<f-args>)
+nnoremap <buffer> <Plug>(AsciidocSectionLevel0) :AsciidocSectionLevel 1<cr>
+inoremap <buffer> <Plug>(AsciidocSectionLevel0) <c-o>:AsciidocSectionLevel 1<cr>
+nnoremap <buffer> <Plug>(AsciidocSectionLevel1) :AsciidocSectionLevel 2<cr>
+inoremap <buffer> <Plug>(AsciidocSectionLevel1) <c-o>:AsciidocSectionLevel 2<cr>
+nnoremap <buffer> <Plug>(AsciidocSectionLevel2) :AsciidocSectionLevel 3<cr>
+inoremap <buffer> <Plug>(AsciidocSectionLevel2) <c-o>:AsciidocSectionLevel 3<cr>
+nnoremap <buffer> <Plug>(AsciidocSectionLevel3) :AsciidocSectionLevel 4<cr>
+inoremap <buffer> <Plug>(AsciidocSectionLevel3) <c-o>:AsciidocSectionLevel 4<cr>
+nnoremap <buffer> <Plug>(AsciidocSectionLevel4) :AsciidocSectionLevel 5<cr>
+inoremap <buffer> <Plug>(AsciidocSectionLevel4) <c-o>:AsciidocSectionLevel 5<cr>
+nnoremap <buffer> <Plug>(AsciidocSectionLevel5) :AsciidocSectionLevel 6<cr>
+inoremap <buffer> <Plug>(AsciidocSectionLevel5) <c-o>:AsciidocSectionLevel 6<cr>
+
+if g:asciidoc_enable_mappings
+  nmap <buffer> <leader>0 <Plug>(AsciidocSectionLevel0)
+  imap <buffer> <leader>0 <Plug>(AsciidocSectionLevel0)
+  nmap <buffer> <leader>1 <Plug>(AsciidocSectionLevel1)
+  imap <buffer> <leader>1 <Plug>(AsciidocSectionLevel1)
+  nmap <buffer> <leader>2 <Plug>(AsciidocSectionLevel2)
+  imap <buffer> <leader>2 <Plug>(AsciidocSectionLevel2)
+  nmap <buffer> <leader>3 <Plug>(AsciidocSectionLevel3)
+  imap <buffer> <leader>3 <Plug>(AsciidocSectionLevel3)
+  nmap <buffer> <leader>4 <Plug>(AsciidocSectionLevel4)
+  imap <buffer> <leader>4 <Plug>(AsciidocSectionLevel4)
+  nmap <buffer> <leader>5 <Plug>(AsciidocSectionLevel5)
+  imap <buffer> <leader>5 <Plug>(AsciidocSectionLevel5)
+endif
+
+" END Set section title level }}}
+
+" Emphasize text (surround) .......................................... {{{
+
+command -buffer -nargs=1 AsciidocSurround call asciidoc#editing#format_text(<f-args>)
+""
+" Provide possible completions for quoted text attributes
+" See https://www.methods.co.nz/asciidoc/userguide.html#X96
+" This quoted text attribute syntax is deprecated in asciidoctor.
+" However, there is no reason not to support it
+function! s:asciidocQuotedAttr(ArgLead, CmdLine, CursorPos)
+  return "big\nsmall\nunderline\noverline\nline-through\n" .
+        \ "white\nsilver\ngray\nblack\nred\nmaroon\nyellow\nolive\n" .
+        \ "lime\ngreen\naqua\nteal\nblue\nnavy\nfuchsia\npurple" .
+        \ "white-background\nsilver-background\ngray-background\n" .
+        \ "black-background\nred-background\nmaroon-background\n" .
+        \ "yellow-background\nolive-background\nlime-background\n" .
+        \ "green-background\naqua-background\nteal-background\n" .
+        \ "blue-background\nnavy-background\nfuchsia-background\n" .
+        \ "purple-background"
+endfunction
+command -buffer -nargs=1 -complete=custom,s:asciidocQuotedAttr AsciidocSurroundAttr
+      \ :normal <Esc>`>a#<Esc>`<i[<args>]#<Esc>
+" Provide a mapping with autocompletion
+" FIXME: This is likely not the best selection of keys
+vnoremap <buffer> <LocalLeader>tt :<c-u>AsciidocSurroundAttr<space>
+nnoremap <buffer> <LocalLeader>tt viw:<c-u>AsciidocSurroundAttr<space>
+" Provide default mappings for the most common attributes
+" FIXME: Refine key strokes
+" line through
+vnoremap <buffer> <LocalLeader>t- :<c-u>AsciidocSurroundAttr line-through<cr>
+nnoremap <buffer> <LocalLeader>t- viw:<c-u>AsciidocSurroundAttr line-through<cr>
+" underline
+vnoremap <buffer> <LocalLeader>t_ :<c-u>AsciidocSurroundAttr underline<cr>
+nnoremap <buffer> <LocalLeader>t_ viw:<c-u>AsciidocSurroundAttr underline<cr>
+
+" surround with text styles
+nnoremap <buffer> <Plug>(AsciidocSurround*) :AsciidocSurround *<cr>
+vnoremap <buffer> <Plug>(AsciidocSurround*) :AsciidocSurround *<cr>
+nnoremap <buffer> <Plug>(AsciidocSurround_) :AsciidocSurround _<cr>
+vnoremap <buffer> <Plug>(AsciidocSurround_) :AsciidocSurround _<cr>
+nnoremap <buffer> <Plug>(AsciidocSurround`) :AsciidocSurround `<cr>
+vnoremap <buffer> <Plug>(AsciidocSurround`) :AsciidocSurround `<cr>
+nnoremap <buffer> <Plug>(AsciidocSurround^) :AsciidocSurround ^<cr>
+vnoremap <buffer> <Plug>(AsciidocSurround^) :AsciidocSurround ^<cr>
+nnoremap <buffer> <Plug>(AsciidocSurround~) :AsciidocSurround ~<cr>
+vnoremap <buffer> <Plug>(AsciidocSurround~) :AsciidocSurround ~<cr>
+nnoremap <buffer> <Plug>(AsciidocSurround+) :AsciidocSurround +<cr>
+vnoremap <buffer> <Plug>(AsciidocSurround+) :AsciidocSurround +<cr>
+
+" FIXME: Refine key strokes
+
+" strong
+nnoremap <buffer> <LocalLeader>ts viw<Esc>:AsciidocSurround *<CR>
+vnoremap <buffer> <LocalLeader>ts <Esc>:AsciidocSurround *<CR>
+
+" emphasis
+nnoremap <buffer> <LocalLeader>te viw<Esc>:AsciidocSurround _<CR>
+vnoremap <buffer> <LocalLeader>te <Esc>:AsciidocSurround _<CR>
+
+" code
+nnoremap <buffer> <LocalLeader>tc viw<Esc>:AsciidocSurround `<CR>
+vnoremap <buffer> <LocalLeader>tc <Esc>:AsciidocSurround `<CR>
+
+" superscript
+nnoremap <buffer> <LocalLeader>tk viw<Esc>:AsciidocSurround ^<CR>
+vnoremap <buffer> <LocalLeader>tk <Esc>:AsciidocSurround ^<CR>
+
+" subscript
+nnoremap <buffer> <LocalLeader>tj viw<Esc>:AsciidocSurround ~<CR>
+vnoremap <buffer> <LocalLeader>tj <Esc>:AsciidocSurround ~<CR>
+
+" passthrough
+nnoremap <buffer> <LocalLeader>tp viw<Esc>:AsciidocSurround +<CR>
+vnoremap <buffer> <LocalLeader>tp <Esc>:AsciidocSurround +<CR>
+
+" END Emphasize text (surround) }}}
+
+" Insert macros ...................................................... {{{
+
+command! -buffer -nargs=+ AsciidocToMacroTarget call asciidoc#base#insert_macro_target(<f-args>)
+command! -buffer -nargs=+ AsciidocToMacroAttribute call asciidoc#base#insert_macro_attribs(<f-args>)
+
+" Image
+" FIXME: Provide a sophisticated function for insert mode with
+" omni-completion that takes the :imagesdir: document attribute into account.
+inoremap <buffer> <LocalLeader>img image:[]<Left>
+nnoremap <buffer> <LocalLeader>img :AsciidocToMacroTarget n inline image<CR>
+vnoremap <buffer> <LocalLeader>img :<C-U>AsciidocToMacroTarget v inline image<CR>
+
+" Include
+nnoremap <buffer> <LocalLeader>inc :AsciidocToMacroTarget n block include<CR>
+vnoremap <buffer> <LocalLeader>inc :<C-U>AsciidocToMacroTarget v block include<CR>
+
+" Link
+" FIXME: This is broken when called on an empty line. It then creates: link:%20[]
+nnoremap <buffer> <LocalLeader>link :AsciidocToMacroTarget n inline link<CR>
+vnoremap <buffer> <LocalLeader>link :<C-U>AsciidocToMacroTarget v inline link<CR>
+
+" kbd (Asciidoctor experimental)
+" FIXME: Emit warning when this is used without the :experimental:
+" document attribute?
+inoremap <buffer> <LocalLeader>kbd kbd:[]<Left>
+nnoremap <buffer> <LocalLeader>kbd :AsciidocToMacroAttribute n inline kbd<CR>
+vnoremap <buffer> <LocalLeader>kbd :<C-U>AsciidocToMacroAttribute v inline kbd<CR>
+
+" menu (Asciidoctor experimental)
+" FIXME: Emit warning when this is used without the :experimental:
+" document attribute?
+inoremap <buffer> <LocalLeader>menu menu:[]<Left>
+nnoremap <buffer> <LocalLeader>menu :AsciidocToMacroAttribute n inline menu<CR>
+vnoremap <buffer> <LocalLeader>menu :<C-U>AsciidocToMacroAttribute v inline menu<CR>
+
+" btn (Asciidoctor experimental)
+" FIXME: Emit warning when this is used without the :experimental:
+" document attribute?
+inoremap <buffer> <LocalLeader>btn btn:[]<Left>
+nnoremap <buffer> <LocalLeader>btn :AsciidocToMacroAttribute n inline btn<CR>
+vnoremap <buffer> <LocalLeader>btn :<C-U>AsciidocToMacroAttribute v inline btn<CR>
+
+" END Insert macros }}}
+
+" Insert blocks ...................................................... {{{
+
+command! -buffer -nargs=+ AdocInsertParagraph call asciidoc#base#insert_paragraph(<f-args>)
+
+" FIXME: The number of separator chars should be configurable (default
+" to 4) g:asciidoc_block_separator_length =  75?
+" FIXME: Provide a mapping for a block with empty metadata (eg. to
+" create the 'music' block, that has no mapping on its own).
+
+" code block
+inoremap <buffer> <LocalLeader>code <Esc>:AdocInsertParagraph i - source<CR>
+nnoremap <buffer> <LocalLeader>code :AdocInsertParagraph n - source<CR>
+vnoremap <buffer> <LocalLeader>code :<C-U>AdocInsertParagraph v - source<CR>
+
+" comment block
+inoremap <buffer> <LocalLeader>comment <Esc>:AdocInsertParagraph i / <CR>
+nnoremap <buffer> <LocalLeader>comment :AdocInsertParagraph n / <CR>
+vnoremap <buffer> <LocalLeader>comment :<C-U>AdocInsertParagraph v / <CR>
+
+" example block
+inoremap <buffer> <LocalLeader>example <Esc>:AdocInsertParagraph i = <CR>
+nnoremap <buffer> <LocalLeader>example :AdocInsertParagraph n =CR>
+vnoremap <buffer> <LocalLeader>example :<C-U>AdocInsertParagraph v = <CR>
+
+" literal block
+inoremap <buffer> <LocalLeader>literal <Esc>:AdocInsertParagraph i . <CR>
+nnoremap <buffer> <LocalLeader>literal :AdocInsertParagraph n .CR>
+vnoremap <buffer> <LocalLeader>literal :<C-U>AdocInsertParagraph v . <CR>
+
+" open block
+" FIXME: Open blocks don't work anymore with this function
+inoremap <buffer> <LocalLeader>open <Esc>:AdocInsertParagraph i --<CR>
+nnoremap <buffer> <LocalLeader>open :AdocInsertParagraph n --<CR>
+vnoremap <buffer> <LocalLeader>open :<C-U>AdocInsertParagraph v --<CR>
+
+" passthrough block
+inoremap <buffer> <LocalLeader>passthrough <Esc>:AdocInsertParagraph i + <CR>
+nnoremap <buffer> <LocalLeader>passthrough :AdocInsertParagraph n + <CR>
+vnoremap <buffer> <LocalLeader>passthrough :<C-U>AdocInsertParagraph v + <CR>
+
+" quote block
+inoremap <buffer> <LocalLeader>quote <Esc>:AdocInsertParagraph i _ quote author source<CR>
+nnoremap <buffer> <LocalLeader>quote :AdocInsertParagraph n _ quote author source<CR>
+vnoremap <buffer> <LocalLeader>quote :<C-U>AdocInsertParagraph v _ quote author source<CR>
+
+" sidebar block
+inoremap <buffer> <LocalLeader>sidebar <Esc>:AdocInsertParagraph i * <CR>
+nnoremap <buffer> <LocalLeader>sidebar :AdocInsertParagraph n * <CR>
+vnoremap <buffer> <LocalLeader>sidebar :<C-U>AdocInsertParagraph v * <CR>
+
+" verse block
+inoremap <buffer> <LocalLeader>verse <Esc>:AdocInsertParagraph i _ verse author source<CR>
+nnoremap <buffer> <LocalLeader>verse :AdocInsertParagraph n _ verse author source<CR>
+vnoremap <buffer> <LocalLeader>verse :<C-U>AdocInsertParagraph v _ verse author source<CR>
+
+" Admonitions
+" caution
+inoremap <buffer> <LocalLeader>caution <Esc>:AdocInsertParagraph i = CAUTION<CR>
+nnoremap <buffer> <LocalLeader>caution :AdocInsertParagraph n = CAUTION<CR>
+vnoremap <buffer> <LocalLeader>caution :<C-U>AdocInsertParagraph v = CAUTION<CR>
+
+" important
+inoremap <buffer> <LocalLeader>important <Esc>:AdocInsertParagraph i = IMPORTANT<CR>
+nnoremap <buffer> <LocalLeader>important :AdocInsertParagraph n = IMPORTANT<CR>
+vnoremap <buffer> <LocalLeader>important :<C-U>AdocInsertParagraph v = IMPORTANT<CR>
+
+" note
+inoremap <buffer> <LocalLeader>note <Esc>:AdocInsertParagraph i = NOTE<CR>
+nnoremap <buffer> <LocalLeader>note :AdocInsertParagraph n = NOTE<CR>
+vnoremap <buffer> <LocalLeader>note :<C-U>AdocInsertParagraph v = NOTE<CR>
+
+" tip
+inoremap <buffer> <LocalLeader>tip <Esc>:AdocInsertParagraph i = TIP<CR>
+nnoremap <buffer> <LocalLeader>tip :AdocInsertParagraph n = TIP<CR>
+vnoremap <buffer> <LocalLeader>tip :<C-U>AdocInsertParagraph v = TIP<CR>
+
+" warning
+inoremap <buffer> <LocalLeader>warning <Esc>:AdocInsertParagraph i = WARNING<CR>
+nnoremap <buffer> <LocalLeader>warning :AdocInsertParagraph n = WARNING<CR>
+vnoremap <buffer> <LocalLeader>warning :<C-U>AdocInsertParagraph v = WARNING<CR>
+" Admonitions end
+
+" END Insert blocks }}}
+
+" Insert tables ...................................................... {{{
+
+command! -buffer -nargs=1 AdocInsertTable call asciidoc#base#insert_table(<f-args>)
+
+inoremap <buffer> <LocalLeader>table <C-O>:AdocInsertTable i<CR>
+nnoremap <buffer> <LocalLeader>table :AdocInsertTable n<CR>
+vnoremap <buffer> <LocalLeader>table :<C-U>AdocInsertTable v<CR>
+" Table text objects
+" FIXME: Is this any different than other blocks? I don't think so and
+" I don't think that would be necessary. We could easily support
+" text-objects for any block. Maybe even differentiate _and_ have a
+" generic one like 'ib' for "in block" (generic) and 'i=' for "in block
+" delimited by =".
+" FIXME: More interesting text objects would be "table cell", "table
+" row" and "table column". But the former two may not be applicable in
+" all situations, because they are not necessarily in a continuous text
+" block.
+vnoremap <buffer> <silent> <LocalLeader>it :<C-U>call asciidoc#table#text_object(1, 1)<CR>
+onoremap <buffer> <silent> <LocalLeader>it :<C-U>call asciidoc#table#text_object(1, 0)<CR>
+vnoremap <buffer> <silent> <LocalLeader>at :<C-U>call asciidoc#table#text_object(0, 1)<CR>
+onoremap <buffer> <silent> <LocalLeader>at :<C-U>call asciidoc#table#text_object(0, 0)<CR>
+" Table attributes
+" FIXME: Only one of the below mappings actually inserts text into the
+" metadata (e.g. [cols=""]). If the other is used afterwards, it just
+" puts the cursor into the brackets, but doesn't insert anything.
+nnoremap <buffer> <silent> <LocalLeader>cols :call asciidoc#table#insert_attributes('cols')<CR>
+nnoremap <buffer> <silent> <LocalLeader>opts :call asciidoc#table#insert_attributes('options')<CR>
+
+" Support for Tabular plugin . . . . . . . . . . . . . . . . . . . . . {{{
+" TODO: We should also support vim-easyalign and maybe vim-lion
+if exists(':Tabularize')
+  " Use <Leader>| to realign tables with the Tabuliarize plugin
+  nnoremap <buffer> <LocalLeader><Bar> :Tabularize /<Bar>\(===\)\@!<CR> " we need a negative lookahead to avoid breaking the block delimiters
+  vnoremap <buffer> <LocalLeader><Bar> :Tabularize /<Bar>\(===\)\@!<CR> " we need a negative lookahead to avoid breaking the block delimiters
+
+  " Realign table when entering a |
+  if g:asciidoc_table_autoalign == 1
+    inoremap <buffer> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
+    function! s:align()
+      if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# '^\s*|' || getline(line('.')+1) =~# '^\s*|')
+        let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
+        let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
+        Tabularize /|\(=\)\@!
+        normal! 0
+        call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
       endif
+    endfunction
+  endif
+endif
+" END Support for Tabular plugin }}}
 
-    " END Section jumps }}}
-
-    " Following links and cross references --------------------------------- {{{
-
-      command -buffer -nargs=? AsciidocFollowLinkUnderCursor          call asciidoc#base#follow_cursor_link(<f-args>)
-      nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursor)              :AsciidocFollowLinkUnderCursor<cr>
-      inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursor)         <c-o>:AsciidocFollowLinkUnderCursor<cr>
-      nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInSplit)       :AsciidocFollowLinkUnderCursor split<cr>
-      inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInSplit)  <c-o>:AsciidocFollowLinkUnderCursor split<cr>
-      nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInVsplit)      :AsciidocFollowLinkUnderCursor vsplit<cr>
-      inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInVsplit) <c-o>:AsciidocFollowLinkUnderCursor vsplit<cr>
-      nnoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInTab)         :AsciidocFollowLinkUnderCursor tabedit<cr>
-      inoremap <buffer> <Plug>(AsciidocFollowLinkUnderCursorInTab)    <c-o>:AsciidocFollowLinkUnderCursor tabedit<cr>
-
-      if g:asciidoc_enable_mappings
-        " FIXME: Use <c-]> also in nmap? Would be more consistent, but also
-        " shadows the builtin <c-]> (jump to tag)
-        " What about the other mappings. Do they make sense? Are they
-        " consistent?
-        nmap <buffer> gf <Plug>(AsciidocFollowLinkUnderCursor)
-        imap <buffer> <c-]> <Plug>(AsciidocFollowLinkUnderCursor)
-        nmap <buffer> <c-w>f     <Plug>(AsciidocFollowLinkUnderCursorInSplit)
-        imap <buffer> <c-w>f     <Plug>(AsciidocFollowLinkUnderCursorInSplit)
-        nmap <buffer> <c-w><c-f> <Plug>(AsciidocFollowLinkUnderCursorInSplit)
-        imap <buffer> <c-w><c-f> <Plug>(AsciidocFollowLinkUnderCursorInSplit)
-        nmap <buffer> <c-w>F     <Plug>(AsciidocFollowLinkUnderCursorInVsplit)
-        imap <buffer> <c-w>F     <Plug>(AsciidocFollowLinkUnderCursorInVsplit)
-        nmap <buffer> <c-w>gf     <Plug>(AsciidocFollowLinkUnderCursorInTab)
-        imap <buffer> <c-w>gf     <Plug>(AsciidocFollowLinkUnderCursorInTab)
-      endif
-
-    " END Following links and cross references }}}
-
-  " END Navigation }}}
-
-  " Editing -------------------------------------------------------------- {{{
-
-    " Sentence per line .................................................. {{{
-
-      " FIXME: Should accept a range
-      command -buffer -range -nargs=1 AsciidocSentencePerLine call asciidoc#editing#sentence_per_line(<f-args>)
-      nnoremap <buffer> <Plug>(AsciidocSentencePerLine) :AsciidocSentencePerLine n<cr>
-      xnoremap <buffer> <Plug>(AsciidocSentencePerLine) :AsciidocSentencePerLine v<cr>
-
-      if g:asciidoc_enable_mappings
-        nmap <buffer> <leader>. <Plug>(AsciidocSentencePerLine)
-        xmap <buffer> <leader>. <Plug>(AsciidocSentencePerLine)
-      endif
-
-    " END Sentence per line }}}
-
-    " Set section title level ............................................ {{{
-
-      command -buffer -nargs=1 AsciidocSectionLevel call asciidoc#motions#set_section_title_level(<f-args>)
-      nnoremap <buffer> <Plug>(AsciidocSectionLevel0) :AsciidocSectionLevel 1<cr>
-      inoremap <buffer> <Plug>(AsciidocSectionLevel0) <c-o>:AsciidocSectionLevel 1<cr>
-      nnoremap <buffer> <Plug>(AsciidocSectionLevel1) :AsciidocSectionLevel 2<cr>
-      inoremap <buffer> <Plug>(AsciidocSectionLevel1) <c-o>:AsciidocSectionLevel 2<cr>
-      nnoremap <buffer> <Plug>(AsciidocSectionLevel2) :AsciidocSectionLevel 3<cr>
-      inoremap <buffer> <Plug>(AsciidocSectionLevel2) <c-o>:AsciidocSectionLevel 3<cr>
-      nnoremap <buffer> <Plug>(AsciidocSectionLevel3) :AsciidocSectionLevel 4<cr>
-      inoremap <buffer> <Plug>(AsciidocSectionLevel3) <c-o>:AsciidocSectionLevel 4<cr>
-      nnoremap <buffer> <Plug>(AsciidocSectionLevel4) :AsciidocSectionLevel 5<cr>
-      inoremap <buffer> <Plug>(AsciidocSectionLevel4) <c-o>:AsciidocSectionLevel 5<cr>
-      nnoremap <buffer> <Plug>(AsciidocSectionLevel5) :AsciidocSectionLevel 6<cr>
-      inoremap <buffer> <Plug>(AsciidocSectionLevel5) <c-o>:AsciidocSectionLevel 6<cr>
-
-      if g:asciidoc_enable_mappings
-        nmap <buffer> <leader>0 <Plug>(AsciidocSectionLevel0)
-        imap <buffer> <leader>0 <Plug>(AsciidocSectionLevel0)
-        nmap <buffer> <leader>1 <Plug>(AsciidocSectionLevel1)
-        imap <buffer> <leader>1 <Plug>(AsciidocSectionLevel1)
-        nmap <buffer> <leader>2 <Plug>(AsciidocSectionLevel2)
-        imap <buffer> <leader>2 <Plug>(AsciidocSectionLevel2)
-        nmap <buffer> <leader>3 <Plug>(AsciidocSectionLevel3)
-        imap <buffer> <leader>3 <Plug>(AsciidocSectionLevel3)
-        nmap <buffer> <leader>4 <Plug>(AsciidocSectionLevel4)
-        imap <buffer> <leader>4 <Plug>(AsciidocSectionLevel4)
-        nmap <buffer> <leader>5 <Plug>(AsciidocSectionLevel5)
-        imap <buffer> <leader>5 <Plug>(AsciidocSectionLevel5)
-      endif
-
-      " END Set section title level }}}
-
-    " Emphasize text (surround) .......................................... {{{
-
-      command -buffer -nargs=1 AsciidocSurround call asciidoc#editing#format_text(<f-args>)
-      ""
-      " Provide possible completions for quoted text attributes
-      " See https://www.methods.co.nz/asciidoc/userguide.html#X96
-      " This quoted text attribute syntax is deprecated in asciidoctor.
-      " However, there is no reason not to support it
-      function! s:asciidocQuotedAttr(ArgLead, CmdLine, CursorPos)
-        return "big\nsmall\nunderline\noverline\nline-through\n" .
-              \ "white\nsilver\ngray\nblack\nred\nmaroon\nyellow\nolive\n" .
-              \ "lime\ngreen\naqua\nteal\nblue\nnavy\nfuchsia\npurple" .
-              \ "white-background\nsilver-background\ngray-background\n" .
-              \ "black-background\nred-background\nmaroon-background\n" .
-              \ "yellow-background\nolive-background\nlime-background\n" .
-              \ "green-background\naqua-background\nteal-background\n" .
-              \ "blue-background\nnavy-background\nfuchsia-background\n" .
-              \ "purple-background"
-      endfunction
-      command -buffer -nargs=1 -complete=custom,s:asciidocQuotedAttr AsciidocSurroundAttr
-            \ :normal <Esc>`>a#<Esc>`<i[<args>]#<Esc>
-      " Provide a mapping with autocompletion
-      " FIXME: This is likely not the best selection of keys
-      vnoremap <buffer> <LocalLeader>tt :<c-u>AsciidocSurroundAttr<space>
-      nnoremap <buffer> <LocalLeader>tt viw:<c-u>AsciidocSurroundAttr<space>
-      " Provide default mappings for the most common attributes
-      " FIXME: Refine key strokes
-      " line through
-      vnoremap <buffer> <LocalLeader>t- :<c-u>AsciidocSurroundAttr line-through<cr>
-      nnoremap <buffer> <LocalLeader>t- viw:<c-u>AsciidocSurroundAttr line-through<cr>
-      " underline
-      vnoremap <buffer> <LocalLeader>t_ :<c-u>AsciidocSurroundAttr underline<cr>
-      nnoremap <buffer> <LocalLeader>t_ viw:<c-u>AsciidocSurroundAttr underline<cr>
-
-      " surround with text styles
-      nnoremap <buffer> <Plug>(AsciidocSurround*) :AsciidocSurround *<cr>
-      vnoremap <buffer> <Plug>(AsciidocSurround*) :AsciidocSurround *<cr>
-      nnoremap <buffer> <Plug>(AsciidocSurround_) :AsciidocSurround _<cr>
-      vnoremap <buffer> <Plug>(AsciidocSurround_) :AsciidocSurround _<cr>
-      nnoremap <buffer> <Plug>(AsciidocSurround`) :AsciidocSurround `<cr>
-      vnoremap <buffer> <Plug>(AsciidocSurround`) :AsciidocSurround `<cr>
-      nnoremap <buffer> <Plug>(AsciidocSurround^) :AsciidocSurround ^<cr>
-      vnoremap <buffer> <Plug>(AsciidocSurround^) :AsciidocSurround ^<cr>
-      nnoremap <buffer> <Plug>(AsciidocSurround~) :AsciidocSurround ~<cr>
-      vnoremap <buffer> <Plug>(AsciidocSurround~) :AsciidocSurround ~<cr>
-      nnoremap <buffer> <Plug>(AsciidocSurround+) :AsciidocSurround +<cr>
-      vnoremap <buffer> <Plug>(AsciidocSurround+) :AsciidocSurround +<cr>
-
-      " FIXME: Refine key strokes
-
-      " strong
-      nnoremap <buffer> <LocalLeader>ts viw<Esc>:AsciidocSurround *<CR>
-      vnoremap <buffer> <LocalLeader>ts <Esc>:AsciidocSurround *<CR>
-
-      " emphasis
-      nnoremap <buffer> <LocalLeader>te viw<Esc>:AsciidocSurround _<CR>
-      vnoremap <buffer> <LocalLeader>te <Esc>:AsciidocSurround _<CR>
-
-      " code
-      nnoremap <buffer> <LocalLeader>tc viw<Esc>:AsciidocSurround `<CR>
-      vnoremap <buffer> <LocalLeader>tc <Esc>:AsciidocSurround `<CR>
-
-      " superscript
-      nnoremap <buffer> <LocalLeader>tk viw<Esc>:AsciidocSurround ^<CR>
-      vnoremap <buffer> <LocalLeader>tk <Esc>:AsciidocSurround ^<CR>
-
-      " subscript
-      nnoremap <buffer> <LocalLeader>tj viw<Esc>:AsciidocSurround ~<CR>
-      vnoremap <buffer> <LocalLeader>tj <Esc>:AsciidocSurround ~<CR>
-
-      " passthrough
-      nnoremap <buffer> <LocalLeader>tp viw<Esc>:AsciidocSurround +<CR>
-      vnoremap <buffer> <LocalLeader>tp <Esc>:AsciidocSurround +<CR>
-
-      " END Emphasize text (surround) }}}
-
-    " Insert macros ...................................................... {{{
-
-      command! -buffer -nargs=+ AsciidocToMacroTarget call asciidoc#base#insert_macro_target(<f-args>)
-      command! -buffer -nargs=+ AsciidocToMacroAttribute call asciidoc#base#insert_macro_attribs(<f-args>)
-
-      " Image
-      " FIXME: Provide a sophisticated function for insert mode with
-      " omni-completion that takes the :imagesdir: document attribute into account.
-      inoremap <buffer> <LocalLeader>img image:[]<Left>
-      nnoremap <buffer> <LocalLeader>img :AsciidocToMacroTarget n inline image<CR>
-      vnoremap <buffer> <LocalLeader>img :<C-U>AsciidocToMacroTarget v inline image<CR>
-
-      " Include
-      nnoremap <buffer> <LocalLeader>inc :AsciidocToMacroTarget n block include<CR>
-      vnoremap <buffer> <LocalLeader>inc :<C-U>AsciidocToMacroTarget v block include<CR>
-
-      " Link
-      " FIXME: This is broken when called on an empty line. It then creates: link:%20[]
-      nnoremap <buffer> <LocalLeader>link :AsciidocToMacroTarget n inline link<CR>
-      vnoremap <buffer> <LocalLeader>link :<C-U>AsciidocToMacroTarget v inline link<CR>
-
-      " kbd (Asciidoctor experimental)
-      " FIXME: Emit warning when this is used without the :experimental:
-      " document attribute?
-      inoremap <buffer> <LocalLeader>kbd kbd:[]<Left>
-      nnoremap <buffer> <LocalLeader>kbd :AsciidocToMacroAttribute n inline kbd<CR>
-      vnoremap <buffer> <LocalLeader>kbd :<C-U>AsciidocToMacroAttribute v inline kbd<CR>
-
-      " menu (Asciidoctor experimental)
-      " FIXME: Emit warning when this is used without the :experimental:
-      " document attribute?
-      inoremap <buffer> <LocalLeader>menu menu:[]<Left>
-      nnoremap <buffer> <LocalLeader>menu :AsciidocToMacroAttribute n inline menu<CR>
-      vnoremap <buffer> <LocalLeader>menu :<C-U>AsciidocToMacroAttribute v inline menu<CR>
-
-      " btn (Asciidoctor experimental)
-      " FIXME: Emit warning when this is used without the :experimental:
-      " document attribute?
-      inoremap <buffer> <LocalLeader>btn btn:[]<Left>
-      nnoremap <buffer> <LocalLeader>btn :AsciidocToMacroAttribute n inline btn<CR>
-      vnoremap <buffer> <LocalLeader>btn :<C-U>AsciidocToMacroAttribute v inline btn<CR>
-
-    " END Insert macros }}}
-
-    " Insert blocks ...................................................... {{{
-
-      command! -buffer -nargs=+ AdocInsertParagraph call asciidoc#base#insert_paragraph(<f-args>)
-
-      " FIXME: The number of separator chars should be configurable (default
-      " to 4) g:asciidoc_block_separator_length =  75?
-      " FIXME: Provide a mapping for a block with empty metadata (eg. to
-      " create the 'music' block, that has no mapping on its own).
-
-      " code block
-      inoremap <buffer> <LocalLeader>code <Esc>:AdocInsertParagraph i - source<CR>
-      nnoremap <buffer> <LocalLeader>code :AdocInsertParagraph n - source<CR>
-      vnoremap <buffer> <LocalLeader>code :<C-U>AdocInsertParagraph v - source<CR>
-
-      " comment block
-      inoremap <buffer> <LocalLeader>comment <Esc>:AdocInsertParagraph i / <CR>
-      nnoremap <buffer> <LocalLeader>comment :AdocInsertParagraph n / <CR>
-      vnoremap <buffer> <LocalLeader>comment :<C-U>AdocInsertParagraph v / <CR>
-
-      " example block
-      inoremap <buffer> <LocalLeader>example <Esc>:AdocInsertParagraph i = <CR>
-      nnoremap <buffer> <LocalLeader>example :AdocInsertParagraph n =CR>
-      vnoremap <buffer> <LocalLeader>example :<C-U>AdocInsertParagraph v = <CR>
-
-      " literal block
-      inoremap <buffer> <LocalLeader>literal <Esc>:AdocInsertParagraph i . <CR>
-      nnoremap <buffer> <LocalLeader>literal :AdocInsertParagraph n .CR>
-      vnoremap <buffer> <LocalLeader>literal :<C-U>AdocInsertParagraph v . <CR>
-
-      " open block
-      " FIXME: Open blocks don't work anymore with this function
-      inoremap <buffer> <LocalLeader>open <Esc>:AdocInsertParagraph i --<CR>
-      nnoremap <buffer> <LocalLeader>open :AdocInsertParagraph n --<CR>
-      vnoremap <buffer> <LocalLeader>open :<C-U>AdocInsertParagraph v --<CR>
-
-      " passthrough block
-      inoremap <buffer> <LocalLeader>passthrough <Esc>:AdocInsertParagraph i + <CR>
-      nnoremap <buffer> <LocalLeader>passthrough :AdocInsertParagraph n + <CR>
-      vnoremap <buffer> <LocalLeader>passthrough :<C-U>AdocInsertParagraph v + <CR>
-
-      " quote block
-      inoremap <buffer> <LocalLeader>quote <Esc>:AdocInsertParagraph i _ quote author source<CR>
-      nnoremap <buffer> <LocalLeader>quote :AdocInsertParagraph n _ quote author source<CR>
-      vnoremap <buffer> <LocalLeader>quote :<C-U>AdocInsertParagraph v _ quote author source<CR>
-
-      " sidebar block
-      inoremap <buffer> <LocalLeader>sidebar <Esc>:AdocInsertParagraph i * <CR>
-      nnoremap <buffer> <LocalLeader>sidebar :AdocInsertParagraph n * <CR>
-      vnoremap <buffer> <LocalLeader>sidebar :<C-U>AdocInsertParagraph v * <CR>
-
-      " verse block
-      inoremap <buffer> <LocalLeader>verse <Esc>:AdocInsertParagraph i _ verse author source<CR>
-      nnoremap <buffer> <LocalLeader>verse :AdocInsertParagraph n _ verse author source<CR>
-      vnoremap <buffer> <LocalLeader>verse :<C-U>AdocInsertParagraph v _ verse author source<CR>
-
-      " Admonitions
-      " caution
-      inoremap <buffer> <LocalLeader>caution <Esc>:AdocInsertParagraph i = CAUTION<CR>
-      nnoremap <buffer> <LocalLeader>caution :AdocInsertParagraph n = CAUTION<CR>
-      vnoremap <buffer> <LocalLeader>caution :<C-U>AdocInsertParagraph v = CAUTION<CR>
-
-      " important
-      inoremap <buffer> <LocalLeader>important <Esc>:AdocInsertParagraph i = IMPORTANT<CR>
-      nnoremap <buffer> <LocalLeader>important :AdocInsertParagraph n = IMPORTANT<CR>
-      vnoremap <buffer> <LocalLeader>important :<C-U>AdocInsertParagraph v = IMPORTANT<CR>
-
-      " note
-      inoremap <buffer> <LocalLeader>note <Esc>:AdocInsertParagraph i = NOTE<CR>
-      nnoremap <buffer> <LocalLeader>note :AdocInsertParagraph n = NOTE<CR>
-      vnoremap <buffer> <LocalLeader>note :<C-U>AdocInsertParagraph v = NOTE<CR>
-
-      " tip
-      inoremap <buffer> <LocalLeader>tip <Esc>:AdocInsertParagraph i = TIP<CR>
-      nnoremap <buffer> <LocalLeader>tip :AdocInsertParagraph n = TIP<CR>
-      vnoremap <buffer> <LocalLeader>tip :<C-U>AdocInsertParagraph v = TIP<CR>
-
-      " warning
-      inoremap <buffer> <LocalLeader>warning <Esc>:AdocInsertParagraph i = WARNING<CR>
-      nnoremap <buffer> <LocalLeader>warning :AdocInsertParagraph n = WARNING<CR>
-      vnoremap <buffer> <LocalLeader>warning :<C-U>AdocInsertParagraph v = WARNING<CR>
-      " Admonitions end
-
-    " END Insert blocks }}}
-
-    " Insert tables ...................................................... {{{
-
-      command! -buffer -nargs=1 AdocInsertTable call asciidoc#base#insert_table(<f-args>)
-
-      inoremap <buffer> <LocalLeader>table <C-O>:AdocInsertTable i<CR>
-      nnoremap <buffer> <LocalLeader>table :AdocInsertTable n<CR>
-      vnoremap <buffer> <LocalLeader>table :<C-U>AdocInsertTable v<CR>
-      " Table text objects
-      " FIXME: Is this any different than other blocks? I don't think so and
-      " I don't think that would be necessary. We could easily support
-      " text-objects for any block. Maybe even differentiate _and_ have a
-      " generic one like 'ib' for "in block" (generic) and 'i=' for "in block
-      " delimited by =".
-      " FIXME: More interesting text objects would be "table cell", "table
-      " row" and "table column". But the former two may not be applicable in
-      " all situations, because they are not necessarily in a continuous text
-      " block.
-      vnoremap <buffer> <silent> <LocalLeader>it :<C-U>call asciidoc#table#text_object(1, 1)<CR>
-      onoremap <buffer> <silent> <LocalLeader>it :<C-U>call asciidoc#table#text_object(1, 0)<CR>
-      vnoremap <buffer> <silent> <LocalLeader>at :<C-U>call asciidoc#table#text_object(0, 1)<CR>
-      onoremap <buffer> <silent> <LocalLeader>at :<C-U>call asciidoc#table#text_object(0, 0)<CR>
-      " Table attributes
-      " FIXME: Only one of the below mappings actually inserts text into the
-      " metadata (e.g. [cols=""]). If the other is used afterwards, it just
-      " puts the cursor into the brackets, but doesn't insert anything.
-      nnoremap <buffer> <silent> <LocalLeader>cols :call asciidoc#table#insert_attributes('cols')<CR>
-      nnoremap <buffer> <silent> <LocalLeader>opts :call asciidoc#table#insert_attributes('options')<CR>
-
-      " Support for Tabular plugin . . . . . . . . . . . . . . . . . . . . . {{{
-        " TODO: We should also support vim-easyalign and maybe vim-lion
-        if exists(':Tabularize')
-            " Use <Leader>| to realign tables with the Tabuliarize plugin
-            nnoremap <buffer> <LocalLeader><Bar> :Tabularize /<Bar>\(===\)\@!<CR> " we need a negative lookahead to avoid breaking the block delimiters
-            vnoremap <buffer> <LocalLeader><Bar> :Tabularize /<Bar>\(===\)\@!<CR> " we need a negative lookahead to avoid breaking the block delimiters
-
-            " Realign table when entering a |
-            if g:asciidoc_table_autoalign == 1
-              inoremap <buffer> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
-              function! s:align()
-                  if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# '^\s*|' || getline(line('.')+1) =~# '^\s*|')
-                      let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
-                      let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
-                      Tabularize /|\(=\)\@!
-                      normal! 0
-                      call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
-                  endif
-              endfunction
-            endif
-        endif
-      " END Support for Tabular plugin }}}
-
-    " END Insert tables }}}
-
-    " Insert xref ........................................................ {{{
-
-      " FIXME: When used in normal mode, but nothing is selected, the result
-      " is: <<,  >> with the cursor positioned after the comma. Why are there
-      " two spaces after the comma? The comma shouldn't be there in the first
-      " place, when no target has been inserted. Instead it should be <<>>
-      " with the cursor in the middle.
-      " FIXME: When used in normal mode with the cursor over an existing
-      " word or with a visual selection, this word is used as the target _and_ as the link text. Not
-      " very useful.
-      " FIXME: We need an insert mode mapping and especially an omnifunc that
-      " populates a menu with the possible values! That would be the most
-      " helpful.
-
-      command! -buffer -nargs=1 AdocInsertXref call asciidoc#base#create_xref(<f-args>)
-      vnoremap <buffer> <LocalLeader>xr :<C-U>AdocInsertXref v<CR>
-      nnoremap <buffer> <LocalLeader>xr :AdocInsertXref n<CR>
-
-    " END Insert xref }}}
-
-    " Toggle section heading style ....................................... {{{
-
-      " FIXME: Provide a visual mode mapping? How should that work?
-      inoremap <buffer> <Plug>(AsciidocToggleSectionHeaderStyle) <c-o>:call asciidoc#editing#toggle_title_style()<cr>
-      nnoremap <buffer> <Plug>(AsciidocToggleSectionHeaderStyle) :call asciidoc#editing#toggle_title_style()<cr>
-
-      " TODO: Provide a mapping to toggle between atx sync/async?
-      imap <buffer> <LocalLeader>tt <Plug>(AsciidocToggleSectionHeaderStyle)
-      nmap <buffer> <LocalLeader>tt <Plug>(AsciidocToggleSectionHeaderStyle)
-
-    " END Toggle section heading style }}}
-
-    " Append list item ................................................... {{{
-
-      inoremap <buffer> <Plug>(AsciidocAppendListItem) <c-o>:call asciidoc#lists#append_list_item()<cr>
-      nnoremap <buffer> <Plug>(AsciidocAppendListItem) :call asciidoc#lists#append_list_item()<cr>
-
-      imap <buffer> <s-cr> <Plug>(AsciidocAppendListItem)
-      nmap <buffer> <s-cr> <Plug>(AsciidocAppendListItem)
-
-    " END Append list item }}}
-
-  " END Editing }}}
+" END Insert tables }}}
+
+" Insert xref ........................................................ {{{
+
+" FIXME: When used in normal mode, but nothing is selected, the result
+" is: <<,  >> with the cursor positioned after the comma. Why are there
+" two spaces after the comma? The comma shouldn't be there in the first
+" place, when no target has been inserted. Instead it should be <<>>
+" with the cursor in the middle.
+" FIXME: When used in normal mode with the cursor over an existing
+" word or with a visual selection, this word is used as the target _and_ as the link text. Not
+" very useful.
+" FIXME: We need an insert mode mapping and especially an omnifunc that
+" populates a menu with the possible values! That would be the most
+" helpful.
+
+command! -buffer -nargs=1 AdocInsertXref call asciidoc#base#create_xref(<f-args>)
+vnoremap <buffer> <LocalLeader>xr :<C-U>AdocInsertXref v<CR>
+nnoremap <buffer> <LocalLeader>xr :AdocInsertXref n<CR>
+
+" END Insert xref }}}
+
+" Toggle section heading style ....................................... {{{
+
+" FIXME: Provide a visual mode mapping? How should that work?
+inoremap <buffer> <Plug>(AsciidocToggleSectionHeaderStyle) <c-o>:call asciidoc#editing#toggle_title_style()<cr>
+nnoremap <buffer> <Plug>(AsciidocToggleSectionHeaderStyle) :call asciidoc#editing#toggle_title_style()<cr>
+
+" TODO: Provide a mapping to toggle between atx sync/async?
+imap <buffer> <LocalLeader>tt <Plug>(AsciidocToggleSectionHeaderStyle)
+nmap <buffer> <LocalLeader>tt <Plug>(AsciidocToggleSectionHeaderStyle)
+
+" END Toggle section heading style }}}
+
+" Append list item ................................................... {{{
+
+inoremap <buffer> <Plug>(AsciidocAppendListItem) <c-o>:call asciidoc#lists#append_list_item()<cr>
+nnoremap <buffer> <Plug>(AsciidocAppendListItem) :call asciidoc#lists#append_list_item()<cr>
+
+imap <buffer> <s-cr> <Plug>(AsciidocAppendListItem)
+nmap <buffer> <s-cr> <Plug>(AsciidocAppendListItem)
+
+" END Append list item }}}
+
+" END Editing }}}
+
+" TOC ------------------------------------------------------------------ {{{
+
+command -buffer          TOC   call asciidoc#toc#toc()
+nnoremap <buffer> <Plug>(TOC)  :TOC<cr>
+
+" END TOC }}}
 
 " END Commands }}}
 
