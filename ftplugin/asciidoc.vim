@@ -99,6 +99,12 @@ set cpo&vim
 
 " Settings =============================================================== {{{
 
+  " Prepare undo_ftplugin to unset all settings on ft switch
+  if !exists('b:undo_ftplugin')
+    " simply unlet a dummy variable (idea taken from Colorizer.vim)
+    let b:undo_ftplugin = "unlet! b:asciidoc_foobar"
+  endif
+
   " FIXME; Provide an option to disable setting these?
   "        Or rather only options for specific settings (like
   "        g:asciidoc_enable_spell_checking)?
@@ -107,6 +113,7 @@ set cpo&vim
   " FIXME: Is there an easy way to delete the (auto-inserted) comment leader with a single <BS>?
   "        I think we need a separate mapping to delete to the start of the line without moving the cursor
   setlocal comments+=fb:*,fb:.,fb:- " Misuse the 'comments' options for auto-insertion of bullet points
+  let b:undo_ftplugin .= "| setlocal commentstring< comments<"
 
   " FIXME: Let the user avoid setting these options via config flag?
   setlocal formatoptions+=t " Auto-wrap text using textwidth
@@ -119,13 +126,16 @@ set cpo&vim
   setlocal formatoptions+=q " Allow formatting of comments with 'gq'
   setlocal formatoptions+=n " When formatting text, recognize numbered lists. Requires a useful 'formatlistpat'
   setlocal formatoptions+=j " Where it makes sense, remove a comment leader when joining lines.
+  let b:undo_ftplugin .= "| setlocal formatoptions<"
 
   " FIXME: This only has an effect when indentexpr is set.
   "        Therefore we need such an indentexpr. Use implementation from dahu?
   setlocal indentkeys=!^F,o,O " Autoindent only if user presses ^F in insert mode or 'o' or 'O' in normal mode
+  let b:undo_ftplugin .= "| setlocal indentkeys<"
 
   " Remove '#' from isfname to let 'gf' correctly handle cross references to external files
   setlocal isfname-=#
+  let b:undo_ftplugin .= "| setlocal isfname<"
 
   " FIXME: This is experimental. Does it do what we expect?
   " FIXME: Problem is '[I' only finds values in the current file, not in an
@@ -140,6 +150,7 @@ set cpo&vim
   " FIXME: Does it make sense to set the 'path'?
   "        Or does this make the includeexpr obsolete?
   setlocal path=.
+  let b:undo_ftplugin .= "| setlocal include< includeexpr< path<"
 
   if executable('asciidoctor')
     compiler asciidoctor
