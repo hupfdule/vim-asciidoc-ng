@@ -111,6 +111,9 @@ set cpo&vim
   " FIXME: Let the user avoid setting these options via config flag?
   setlocal formatoptions+=t " Auto-wrap text using textwidth
   setlocal formatoptions+=c " Auto-wrap comments using textwidth, inserting the current comment leader automatically
+  " FIXME: Remove these? As is bothers me when creating a comment block and
+  " then hitten enter to insert the content it prepends the line with a new
+  " comment leader
   setlocal formatoptions+=r " Automatically insert the current comment leader after hitting <Enter> in Insert mode
   setlocal formatoptions+=o " Automatically insert the current comment leader after hitting 'o' or 'O' in Normal mode
   setlocal formatoptions+=q " Allow formatting of comments with 'gq'
@@ -123,6 +126,20 @@ set cpo&vim
 
   " Remove '#' from isfname to let 'gf' correctly handle cross references to external files
   setlocal isfname-=#
+
+  " FIXME: This is experimental. Does it do what we expect?
+  " FIXME: Problem is '[I' only finds values in the current file, not in an
+  " included file. However calling gf on an included file _does_ work. But
+  " do we really call the internal gf?
+  " The filname of include files is the part between '::' and '[]'
+  setlocal include=\v^include::\zs[^\[]+\ze\[\]$
+  " Prepend the directory of the current file to the included file
+  " FIXME: This doesn't seem to be necessary. The referenced files are
+  " corretly found.
+  "setlocal includeexpr=substitute(v:fname,'^',\=expand('%:h').'/','')
+  " FIXME: Does it make sense to set the 'path'?
+  "        Or does this make the includeexpr obsolete?
+  setlocal path=.
 
   if executable('asciidoctor')
     compiler asciidoctor
