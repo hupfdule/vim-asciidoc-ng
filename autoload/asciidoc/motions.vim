@@ -212,7 +212,8 @@ function! asciidoc#motions#jump_to_prior_section_end() abort " {{{1
     call cursor(prior, 0)
   endfor
 
-  let prev_non_blank = prevnonblank(prior - 1)
+  let prev_blank = s:prevblank(prior)
+  let prev_non_blank = prevnonblank(prev_blank)
 
   call setpos('.', old_pos)
   if prev_non_blank <= 1
@@ -246,14 +247,16 @@ function! asciidoc#motions#jump_to_next_section_end() abort " {{{1
     let next_atx = search(s:atx_title, 'Wn')
     let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
     let next = max([next_atx, next_setext])
-    let prev_non_blank = prevnonblank(next - 1)
+    let prev_blank = s:prevblank(next)
+    let prev_non_blank = prevnonblank(prev_blank)
     if prev_non_blank <= old_pos[1]
       call cursor(next, 0)
       " FIXME: Reduce this code duplication?
       let next_atx = search(s:atx_title, 'Wn')
       let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
       let next = max([next_atx, next_setext])
-      let prev_non_blank = prevnonblank(next - 1)
+      let prev_blank = s:prevblank(next)
+      let prev_non_blank = prevnonblank(prev_blank)
     endif
     call cursor(next, 0)
   endfor
@@ -649,6 +652,19 @@ endfunction " }}}
 function! asciidoc#motions#is_setext_underline(line_number) abort " {{{1
   let line = getline(a:line_number)
   return line =~# '^' . s:setext_title_underline
+endfunction " }}}
+
+"" {{{2
+" Return the line number of the first line at or above {lnum} that is
+" blank.
+" When {lnum} is invalid or there is no blank line at or above it, zero is
+" returned.
+function! s:prevblank(lnum) abort " {{{1
+  let old_pos = getpos('.')
+  call cursor(a:lnum, 0)
+  let prev_blank = search('^\s*$', 'Wbcn')
+  call setpos('.', old_pos)
+  return prev_blank
 endfunction " }}}
 
 " vim: set foldmethod=marker :

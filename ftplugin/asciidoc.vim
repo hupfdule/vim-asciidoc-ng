@@ -186,8 +186,6 @@ set cpo&vim
 
 " Section jumps ........................................................ {{{
 
-" FIXME: Should we allow arguments to jump to the x-most section from here?
-"        (Accept a count)
 command -buffer -count=1 AsciidocPrevSection        execute 'normal!' . asciidoc#motions#jump_to_prior_section_title()
 command -buffer -count=1 AsciidocPrevSectionEnd     execute 'normal!' . asciidoc#motions#jump_to_prior_section_end()
 command -buffer -count=1 AsciidocNextSection        execute 'normal!' . asciidoc#motions#jump_to_next_section_title()
@@ -217,8 +215,6 @@ if g:asciidoc_enable_mappings
   map <buffer> [[ <Plug>(AsciidocPrevSection)
   map <buffer> [] <Plug>(AsciidocPrevSectionEnd)
   map <buffer> ]] <Plug>(AsciidocNextSection)
-  " FIXME: This should be placed on the last empty line. Otherwise it
-  " lands on the anchors of the section. The same for []
   map <buffer> ][ <Plug>(AsciidocNextSectionEnd)
   map <buffer> [{ <Plug>(AsciidocPrevSiblingSection)
   map <buffer> ]} <Plug>(AsciidocNextSiblingSection)
