@@ -381,23 +381,21 @@ function! asciidoc#motions#jump_to_parent_section_title() abort " {{{1
     let current_section_title = asciidoc#motions#get_section_title(line('.'))
   endif
 
-  for i in range(1, v:count1)
-    " search for previous section title with the next smaller level as the current one
-    let parent_section_line = 0
-    let prev_section_title = ['undefined']
-    while !empty(prev_section_title)
-      let heading_line = asciidoc#motions#find_next_section_heading(line('.'), 'bWn')
-      if heading_line ==# 0
-        break
-      endif
-      call cursor(heading_line, 0)
-      let prev_section_title = asciidoc#motions#get_section_title(line('.'))
-      if current_section_title['level'] - 1 ==# prev_section_title['level']
-        let parent_section_line = line('.')
-        break
-      endif
-    endwhile
-  endfor
+  " search for previous section title with the next smaller level as the current one
+  let parent_section_line = 0
+  let prev_section_title = ['undefined']
+  while !empty(prev_section_title)
+    let heading_line = asciidoc#motions#find_next_section_heading(line('.'), 'bWn')
+    if heading_line ==# 0
+      break
+    endif
+    call cursor(heading_line, 0)
+    let prev_section_title = asciidoc#motions#get_section_title(line('.'))
+    if current_section_title['level'] - v:count1 ==# prev_section_title['level']
+      let parent_section_line = line('.')
+      break
+    endif
+  endwhile
 
   call setpos('.', old_pos)
   if parent_section_line ==# 0
@@ -427,23 +425,21 @@ function! asciidoc#motions#jump_to_first_subsection_title() abort " {{{1
     let current_section_title = asciidoc#motions#get_section_title(line('.'))
   endif
 
-  for i in range(1, v:count1)
-    " search for next section title with the next greater level as the current one
-    let first_subsection_line = 0
-    let next_section_title = ['undefined']
-    while !empty(next_section_title)
-      let heading_line = asciidoc#motions#find_next_section_heading(line('.'), 'Wn')
-      if heading_line ==# 0
-        break
-      endif
-      call cursor(heading_line, 0)
-      let next_section_title = asciidoc#motions#get_section_title(line('.'))
-      if current_section_title['level'] + 1 ==# next_section_title['level']
-        let first_subsection_line = line('.')
-        break
-      endif
-    endwhile
-  endfor
+  " search for next section title with the next greater level as the current one
+  let first_subsection_line = 0
+  let next_section_title = ['undefined']
+  while !empty(next_section_title)
+    let heading_line = asciidoc#motions#find_next_section_heading(line('.'), 'Wn')
+    if heading_line ==# 0
+      break
+    endif
+    call cursor(heading_line, 0)
+    let next_section_title = asciidoc#motions#get_section_title(line('.'))
+    if current_section_title['level'] + v:count1 ==# next_section_title['level']
+      let first_subsection_line = line('.')
+      break
+    endif
+  endwhile
 
   call setpos('.', old_pos)
   if first_subsection_line ==# 0
