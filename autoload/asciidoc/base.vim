@@ -286,14 +286,13 @@ endfunc " }}}
 "        'target').
 "        For example 'image' or 'include'.
 "
-" FIXME: Should this leave the user in insert mode afterwards?
 " FIXME: It seems to have whitespace problems sometimes. Sometimes it adds
 "        an additional space before the macro, sometimes it removes the
 "        space after the macro and sometimes it does both. Also sometimes
 "        it adds a space after the macro.
 " FIXME: Use omnicompletion? Auto start completion menu?
 " FIXME: Allow to operate on motions
-" FIXME: Do not throw an error on unescaped ], but instead escape it.
+" FIXME: Do not throw an error on unescaped ], but instead escape it?
 " FIXME: Placing the cursor at the end of the attribute list my not be the
 "        expected behaviour.
 function! asciidoc#base#insert_macro_attribs(mode, type, name) abort " {{{1
@@ -315,10 +314,10 @@ function! asciidoc#base#insert_macro_attribs(mode, type, name) abort " {{{1
     let save_reg_type = getregtype('a')
     let save_search = @/
     let viz_eol = a:mode != 'n' && col("'>") < (col("$") - 1)
-    if a:mode == 'n'
+    if a:mode ==# 'n'
         let @/ = get(s:macro_patterns, a:name, '\w*\%#\w*')
         execute 'normal! gn"ad'
-    elseif a:mode == 'v'
+    elseif a:mode == #'v'
         execute 'normal! gv"ad'
     else
         echoerr "invalid mode (" . a:mode . ")"
@@ -329,14 +328,17 @@ function! asciidoc#base#insert_macro_attribs(mode, type, name) abort " {{{1
     for attrib in quoted_attribs
         call add(attribs, substitute(attrib, "^'\|'$", '', ''))
     endfor
-    let @a = <SID>insert_macro(type, name, target, attribs)
-    if viz_eol
+    let @a = s:create_macro(type, name, target, attribs)
+    if viz_eol || a:mode ==# 'n'
         normal! "aP
     else
         normal! "ap
     endif
     call setreg('a', save_reg, save_reg_type)
     let @/ = save_search
+    if a:mode !=# 'v'
+      startinsert
+    endif
 endfunc " }}}
 
 "" {{{2
@@ -363,7 +365,6 @@ endfunc " }}}
 "        'target').
 "        For example 'image' or 'include'.
 "
-" FIXME: Should this leave the user in insert mode afterwards?
 " FIXME: It seems to have whitespace problems sometimes. Sometimes it adds
 "        an additional space before the macro, sometimes it removes the
 "        space after the macro and sometimes it does both. Also sometimes
@@ -388,24 +389,25 @@ function! asciidoc#base#insert_macro_target(mode, type, name) abort " {{{1
     let save_reg_type = getregtype('a')
     let save_search = @/
     let viz_eol = col("'>") < (col("$") - 1)
-    if a:mode == 'n'
+    if a:mode ==# 'n'
         let @/ = get(s:macro_patterns, a:name, '\w*\%#\w*')
         execute 'normal! gn"ad'
-    elseif a:mode == 'v'
+    elseif a:mode ==# 'v'
         execute 'normal! gv"ad'
     else
         echoerr "invalid mode (" . a:mode . ")"
     endif
     call setreg('a', '', 'ac')
     let target = @a
-    let @a = <SID>insert_macro(type, a:name, @a, attribs)
-    if viz_eol
+    let @a = s:create_macro(type, a:name, @a, attribs)
+    if viz_eol || a:mode ==# 'n'
         normal! "aP
     else
         normal! "ap
     endif
     call setreg('a', save_reg, save_reg_type)
     let @/ = save_search
+    startinsert
 endfunc " }}}
 
 "" {{{2
@@ -450,18 +452,22 @@ endfunc " }}}
 " [attributes] a list of attributes to prepend to the block
 "
 " FIXME: Why are all attributes except the first one preselected?
+" FIXME: Still doesn't work for visual mode. It always converts only a
+" single line. That _does_ work for normal mode.
 function! asciidoc#base#insert_paragraph(mode, delim, ...) range abort " {{{1
     let l:delim_count = get(g:, 'asciidoc_block_delimiter_length', 4)
     if l:delim_count ==# 'textwidth'
       let l:delim_count = &textwidth
     endif
     let l:delim = repeat(a:delim, l:delim_count)
-    let line_before = a:firstline - 1
-    let line_after = a:lastline
     if a:mode == 'i' || a:mode == 'n'
+        let line_before = a:firstline - 1
+        let line_after = a:lastline
         let append_before = getline(line('.') - 1) == "" ? [l:delim] : ["", l:delim]
         let append_after = getline(line('.') + 1) == "" ? [l:delim] : [l:delim, ""]
     elseif a:mode == 'v'
+        let line_before = line("'<") -1
+        let line_after = line("'>")
         let append_before = getline(line("'<") - 1) == "" ? [l:delim] : ["", l:delim]
         let append_after = getline(line("'>") + 1) == "" ? [l:delim] : [l:delim, ""]
     endif
@@ -580,7 +586,7 @@ endfunc " }}}
 "        something like s:create_macro()
 " FIXME: Instead of throwing an error on invalid attributes, just silently
 "        escape the ']'?
-function! s:insert_macro(type, name, target, attribs) abort " {{{1
+function! s:create_macro(type, name, target, attribs) abort " {{{1
     let name = a:name
     if a:type == "block"
         let colon = "::"
