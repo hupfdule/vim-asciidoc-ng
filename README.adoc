@@ -42,12 +42,14 @@ Mappings
 |===
 | Mapping                  | Command                       | Functionality
 
+// The following 4 mappings can be prefixed with a count
 | ]]                       | AsciidocNextSection           | Jump to the next section heading
 | ][                       | AsciidocNextSectionEnd        | Jump to the next section end
 | [[                       | AsciidocPrevSection           | Jump to the previous section heading
 | ]]                       | AsciidocPrevSectionEnd        | Jump to the previous section end
 // TODO: Provide Prev/NextSibling jumps restricted to the curent parent
 // section?
+// TODO: The following 4 need to be modified to allow a count
 | ]}                       | AsciidocNextSiblingSection    | Jump to the next section heading of the same level as the current one
 | [{                       | AsciidocPrevSiblingSection    | Jump to the previous section heading of the same level as the current one
 | ]>                       | AsciidocFirstSubSection       | Jump to the first subsection heading of the current one

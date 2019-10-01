@@ -137,15 +137,25 @@ endfunction " }}}
 " If the cursor already is at the title of the current section,
 " jump to the title of the previous section.
 " If the cursor is at the title of the first section, do nothing.
+"
+" This function evaluates the 'v:count' parameter to jump more than one
+" section.
 function! asciidoc#motions#jump_to_prior_section_title() abort " {{{1
   let old_pos = getpos('.')
   let pos = old_pos
   let pos[2] = 0
   call setpos('.', pos)
-  let prior_atx = search(s:atx_title, 'Wbn')
-  let prior_setext = s:find_next_setext_section_title(line('.'), 'Wbn')
+  let prior = 0
+
+  for i in range(1, v:count1)
+    let prior_atx = search(s:atx_title, 'Wbn')
+    let prior_setext = s:find_next_setext_section_title(line('.'), 'Wbn')
+    let prior = max([prior_atx, prior_setext])
+    let pos[1] = prior
+    call setpos('.', pos)
+  endfor
+
   call setpos('.', old_pos)
-  let prior = max([prior_atx, prior_setext])
   if prior == 0
     return
   endif
@@ -156,10 +166,25 @@ endfunction " }}}
 " Jumps to the title of the next section.
 " If the cursor already is at the title of the last section,
 " do nothing.
+"
+" This function evaluates the 'v:count' parameter to jump more than one
+" section.
+"
+" FIXME: Should the jump_to_next/prior... function be joined into a single
+" function with parameters 'backwards' 'start/end'?
 function! asciidoc#motions#jump_to_next_section_title() abort " {{{1
   let next_atx = search(s:atx_title, 'Wn')
   let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
   let next = min(filter([next_atx, next_setext], 'v:val != 0'))
+  let next = 0
+
+  for i in range(1, v:count1)
+    let next_atx = search(s:atx_title, 'Wn')
+    let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
+    let next = max([next_atx, next_setext])
+    call cursor(next, 0)
+  endfor
+
   if next == 0
     return
   endif
@@ -170,20 +195,31 @@ endfunction " }}}
 " Jumps to the last non-empty line of the previous section.
 " If the cursor already is at the end of the first section,
 " do nothing.
+"
+" This function evaluates the 'v:count' parameter to jump more than one
+" section.
 function! asciidoc#motions#jump_to_prior_section_end() abort " {{{1
   let old_pos = getpos('.')
   let pos = old_pos
   let pos[2] = 0
   call setpos('.', pos)
-  let prior_atx = search(s:atx_title, 'Wbn')
-  let prior_setext = s:find_next_setext_section_title(line('.'), 'Wbn')
+  let prior = 0
+
+  for i in range(1, v:count1)
+    let prior_atx = search(s:atx_title, 'Wbn')
+    let prior_setext = s:find_next_setext_section_title(line('.'), 'Wbn')
+    let prior = max([prior_atx, prior_setext])
+    call cursor(prior, 0)
+  endfor
+
+  let prev_non_blank = prevnonblank(prior - 1)
+
   call setpos('.', old_pos)
-  let prior = max([prior_atx, prior_setext])
-  if prior <= 1
+  if prev_non_blank <= 1
     " FIXME: We need to take leading comments and whitespace into account
     return
   endif
-  return prior - 1 . 'G'
+  return prev_non_blank . 'G'
 endfunction " }}}
 
 "" {{{2
@@ -191,30 +227,44 @@ endfunction " }}}
 " If the cursor already is at the end of the current section,
 " jump to the end of the next section.
 " If the cursor is at the end of the last section, do nothing.
+"
+" This function evaluates the 'v:count' parameter to jump more than one
+" section.
 function! asciidoc#motions#jump_to_next_section_end() abort " {{{1
   let old_pos = getpos('.')
+  let pos = old_pos
+  let pos[2] = 0
+  call setpos('.', pos)
+
+  " jump to next section header
   let next_atx = search(s:atx_title, 'Wn')
   let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
-  let next = min(filter([next_atx, next_setext], 'v:val != 0'))
-  if next == 0
-    " FIXME: This is a bit too much code duplication
-    return prevnonblank(line('$')) . 'G'
-  endif
-  let prev_non_blank = prevnonblank(next - 1)
-  if prev_non_blank <= old_pos[1]
-    " FIXME: This should be refactored to be a recursive call
-    let old_pos[1] = next
-    call setpos('.', old_pos)
+  let next = max([next_atx, next_setext])
+
+  " search for the next section end
+  for i in range(1, v:count1)
     let next_atx = search(s:atx_title, 'Wn')
-    let next_setext = search(s:setext_title, 'Wn')
-    let next = min(filter([next_atx, next_setext], 'v:val != 0'))
-    if next == 0
-      return prevnonblank(line('$')) . 'G'
-    else
-      return next -1 . 'G'
+    let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
+    let next = max([next_atx, next_setext])
+    let prev_non_blank = prevnonblank(next - 1)
+    if prev_non_blank <= old_pos[1]
+      call cursor(next, 0)
+      " FIXME: Reduce this code duplication?
+      let next_atx = search(s:atx_title, 'Wn')
+      let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
+      let next = max([next_atx, next_setext])
+      let prev_non_blank = prevnonblank(next - 1)
     endif
+    call cursor(next, 0)
+  endfor
+
+  call setpos('.', old_pos)
+  if prev_non_blank == 0
+    " if there is no next section header, jump to the last nonblank line
+    return prevnonblank(line('$')) . 'G'
   else
-    return next - 1 . 'G'
+    " otherwise return the last non-blank line before that section header
+    return prev_non_blank . 'G'
   endif
 endfunction " }}}
 
