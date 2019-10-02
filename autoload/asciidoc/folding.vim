@@ -10,14 +10,20 @@
 " TODO: At the moment this function incorrectly identifies some code blocks
 "       as section titles if they are preceded by any non-empty line.
 "
+" TODO: Optionally allow flat folding (ommiting the nesting and placing
+"       everything on the same level.
 "
 " Based on https://github.com/jjaderberg/vim-ft-asciidoc which itself is
 " derived from https://github.com/mjakl/vim-asciidoc
 function! asciidoc#folding#foldexpr(lnum)
     let l0 = getline(a:lnum)
+    " FIXME: This doesn't work with dagwieers syntax file, because it uses
+    " different syntax names.
+    " FIXME: Why checking for '^=' additionally to the synIDattr?
     if l0 =~ '^=\{1,6}\s\+\S.*$' && synIDattr(synID(a:lnum, 1, 1), "name") =~ "asciidoc.*Title"
         " ATX style titles
         return '>'.matchend(l0, '^=\+')
+    " FIXME: Why not use synIDattr with setext too?
     elseif asciidoc#motions#is_setext_section_title(a:lnum)
         " Setext style titles
         " FIXME: Wir _müssen_ den Beginn der Sektion ">" angeben.
@@ -35,3 +41,15 @@ function! asciidoc#folding#foldexpr(lnum)
         return '='
     endif
 endfunction
+
+""
+" Prints the fold levels for all lines in the current file.
+" Also displays any errors on folding.
+" Taken from https://vi.stackexchange.com/a/19916/21417
+function! asciidoc#folding#debug() abort
+  let fold_levels = map(range(1, line('$')), 'v:val . "\t" . asciidoc#folding#foldexpr(v:val) . "\t" . getline(v:val)')
+  for fl in fold_levels
+    echo fl
+  endfor
+endfunction
+

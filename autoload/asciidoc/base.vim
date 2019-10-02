@@ -7,23 +7,6 @@ let s:macro_patterns = {
             \ 'menu'   : '\S*\%#\S*',
             \ 'btn'    : '\S*\%#\S*',
             \ }
-
-" A single-line ordered list item (or the first line of a multi-line one)
-let s:ordered_list_item_pattern  = ''
-let s:ordered_list_item_pattern .= '^\(\s*\)'                 " optional leading whitespace
-let s:ordered_list_item_pattern .= '\('
-let s:ordered_list_item_pattern .=   '[0-9]\+\.\@='           " arabic numbers
-let s:ordered_list_item_pattern .=   '\|'
-let s:ordered_list_item_pattern .=   '[a-z]\+\.\@='           " lowercase alpha letters
-let s:ordered_list_item_pattern .=   '\|'
-let s:ordered_list_item_pattern .=   '[A-Z]\+\.\@='           " uppercase alpha letters
-let s:ordered_list_item_pattern .=   '\|'
-let s:ordered_list_item_pattern .=   '[ivx]\+)\@='            " lowercase roman numbers
-let s:ordered_list_item_pattern .=   '\|'
-let s:ordered_list_item_pattern .=   '[IVX]\+)\@='            " uppercase roman numbers
-let s:ordered_list_item_pattern .= '\)'
-let s:ordered_list_item_pattern .= '\([\.\)]\)'               " either . or )
-let s:ordered_list_item_pattern .= '\(\s\+.*\)$'              " the remainder of the line (with mandatory white space)
 " }}}
 
 "" {{{2

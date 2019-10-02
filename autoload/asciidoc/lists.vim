@@ -17,6 +17,24 @@ let s:list_prefix_pattern .=   '\|'
 let s:list_prefix_pattern .=   '\%([IVX]\+)\)'                " uppercase roman numbered list (I))
 let s:list_prefix_pattern .= '\)'
 let s:list_prefix_pattern .= '\)\s\+'                         " mandatory trailing whitespace
+
+" A single-line ordered list item (or the first line of a multi-line one)
+let s:ordered_list_item_pattern  = ''
+let s:ordered_list_item_pattern .= '^\(\s*\)'                 " optional leading whitespace
+let s:ordered_list_item_pattern .= '\('
+let s:ordered_list_item_pattern .=   '[0-9]\+\.\@='           " arabic numbers
+let s:ordered_list_item_pattern .=   '\|'
+let s:ordered_list_item_pattern .=   '[a-z]\+\.\@='           " lowercase alpha letters
+let s:ordered_list_item_pattern .=   '\|'
+let s:ordered_list_item_pattern .=   '[A-Z]\+\.\@='           " uppercase alpha letters
+let s:ordered_list_item_pattern .=   '\|'
+let s:ordered_list_item_pattern .=   '[ivx]\+)\@='            " lowercase roman numbers
+let s:ordered_list_item_pattern .=   '\|'
+let s:ordered_list_item_pattern .=   '[IVX]\+)\@='            " uppercase roman numbers
+let s:ordered_list_item_pattern .= '\)'
+let s:ordered_list_item_pattern .= '\([\.\)]\)'               " either . or )
+let s:ordered_list_item_pattern .= '\(\s\+.*\)$'              " the remainder of the line (with mandatory white space)
+
 " }}}2
 
 ""
@@ -94,7 +112,7 @@ function! asciidoc#lists#append_list_item() abort "{{{
         let @" = ""
         call append(line('.'), '')
         let line = getline(line('.'))
-        let list_prefix = matchstr(line, g:list_prefix_pattern)
+        let list_prefix = matchstr(line, s:list_prefix_pattern)
         let @" = list_prefix
         normal! j0P$
 
@@ -131,7 +149,7 @@ endfunc "}}}
 "       providing that formatting logic, but it should be called by the
 "       user.
 function! asciidoc#lists#increase_list_item_prefix(line) abort
-  let l:matchlist = matchlist(getline(a:line), g:ordered_list_item_pattern)
+  let l:matchlist = matchlist(getline(a:line), s:ordered_list_item_pattern)
   if empty(l:matchlist)
     return
   endif

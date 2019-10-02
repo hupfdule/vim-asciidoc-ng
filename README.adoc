@@ -3,7 +3,7 @@ Asciidoc Plugin for Vim
 Marco Herrn <marco@mherrn.de>
 2019-09-17
 :experimental:
-:toc: left
+:too: left
 :icons: font
 
 ////
@@ -16,6 +16,29 @@ Marco Herrn <marco@mherrn.de>
 already very usable, but be aware that some of the functionality described here
 may not be implemented or doesn't work reliably.
 --
+
+////
+Some nice ideas for IDE support of Asciidoc can be found here:
+https://discuss.asciidoctor.org/Ideas-for-an-Asciidoctor-Editor-IDE-td3542.html
+
+Especially:
+- Change rag of biblio reference (what is in the [[[]]]) and have it
+  updated everywhere in the document
+- Display all internal xrefs that have no target (why doesn't asciidoctor
+  complain about that?)
+- Bibliography management (what could that be? Integrate bibtex?)
+- Add include / image via file selection dialog
+- Command / Map to select possible attributes for a macro (like image
+  'align')
+  The same would be nice for other elements (tables, etc.)
+- A table editor (but how should that work?)
+////
+
+// TODO: Command / Map for caption texobject. Then we could 'cic' to edit
+// the caption. Maybe use the same to add it (select the place where it
+// would appear)?
+
+// TODO: Toggle between inline and block macro (for images, etc.)
 
 Introduction
 ------------
@@ -30,6 +53,40 @@ Short overview of
  - mappings
  - commands
 ////
+
+This plugin tries to achieve the following goals:
+
+  - Support all valid asciidoc / asciidoctor syntax elements
+  - Provide a good out-of-the-box experience without any configuration
+  - Allow configuration to override or disable defaults
+  - Provide asciidoc-specific functionality to ease the creation and
+    modification of asciidoc documents
+  
+Some of the highlights of this plugin:
+
+ Intelligent cross references::
+   This plugin provides a list of possible anchors for inserting cross
+   references. This avoids illegal cross reference due to typos or having
+   to manually look up the correct anchor name.
+ Navigation mappings::
+   This plugin provides mappings for easy navigation between the sections
+   of the document.
+ Text objects::
+   This plugin provides text objects for several typical asciidoc elements
+   to allow easy selection and modification of such elements, like
+   sections, blocks or list items.
+ Document structure outline::
+   This plugin can display an outline of the the current document to have a
+   quick glance over all section titles. This outline view can be used for
+   navigating to specific sections, too.
+ // Syntax highlighting?
+ // Integration with makeprg to fill quickfix list with compilation errors
+ // or warnings?
+ // Folding?
+ // Resemble document structure in this list and let the titles be links to
+ // the corresponding sections?
+
+
 
 Mappings
 --------
