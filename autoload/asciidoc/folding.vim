@@ -7,35 +7,22 @@
 "         - document header
 "         - blocks
 "
-" TODO: At the moment this function incorrectly identifies some code blocks
-"       as section titles if they are preceded by any non-empty line.
-"
 " TODO: Optionally allow flat folding (ommiting the nesting and placing
 "       everything on the same level.
-"
-" Based on https://github.com/jjaderberg/vim-ft-asciidoc which itself is
-" derived from https://github.com/mjakl/vim-asciidoc
 function! asciidoc#folding#foldexpr(lnum)
     let l0 = getline(a:lnum)
-    " FIXME: This doesn't work with dagwieers syntax file, because it uses
-    " different syntax names.
-    " FIXME: Why checking for '^=' additionally to the synIDattr?
-    if l0 =~ '^=\{1,6}\s\+\S.*$' && synIDattr(synID(a:lnum, 1, 1), "name") =~ "asciidoc.*Title"
+    if asciidoc#motions#is_atx_section_title(a:lnum)
         " ATX style titles
-        return '>'.matchend(l0, '^=\+')
-    " FIXME: Why not use synIDattr with setext too?
+        let l:atx_level = asciidoc#motions#get_atx_section_title_level(a:lnum)
+        return '>' . l:atx_level
     elseif asciidoc#motions#is_setext_section_title(a:lnum)
         " Setext style titles
-        " FIXME: Wir _müssen_ den Beginn der Sektion ">" angeben.
         let l:setext_level = asciidoc#motions#get_setext_section_title_level(a:lnum)
-        " FIXME: this function never returns -1…
-        if l:setext_level != -1
-          let l:is_underline = asciidoc#motions#is_setext_underline(a:lnum)
-          if l:is_underline
-            return l:setext_level
-          else
-            return '>'.l:setext_level
-          endif
+        let l:is_underline = asciidoc#motions#is_setext_underline(a:lnum)
+        if l:is_underline
+          return l:setext_level
+        else
+          return '>' . l:setext_level
         endif
     else
         return '='

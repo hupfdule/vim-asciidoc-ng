@@ -577,23 +577,12 @@ function! asciidoc#motions#get_setext_section_title(line_number) abort " {{{1
     let underline = getline(a:line_number + 1)
     let precedingline = getline(a:line_number - 1)
   endif
-
+  "
   " Check whether the title really matches a setext title
-  if precedingline . "\n" . line !~ s:setext_title_text
-    " FIXME: This check seems to be broken.
-    " The following 3 lines match a a setext header which is incorrect:
-    " Hello World!" // <3>
-    " end
-    " ----
-    " Actually it matches any block that it directly adjacent to some other
-    " line
-    " Also this one is taken as section header:
-    " [Sektion 2.5]
-    " -------------
-    " AHA: Problem ist das '\%^', das in der preceding line matchen soll.
-    "      Da wir hier nur einen String haben, matcht '\%^' offenbar immer,
-    "      da das immer der Anfang der "Datei" ist.
-    return 0
+  " The line before must be empty or start with a dot, the line itself must
+  " not start with a dot.
+  if !( line =~# '^[^.].*$' && precedingline =~# '^\%(\s*\|\[.*\]\s*\)$')
+    return {}
   endif
 
   " remove all whitespace from the end
@@ -617,6 +606,19 @@ function! asciidoc#motions#get_section_title(line_number) abort " {{{1
   else
     return asciidoc#motions#get_setext_section_title(a:line_number)
   endif
+endfunction " }}}
+
+"" {{{2
+" Return the level of the section title on the given line.
+"
+" The topmost level start at 1.
+" FIXME: It should actually start at 0
+"
+" Attention! The return value is undefined if the given line number doesn't
+" contain a section title.
+function! asciidoc#motions#get_atx_section_title_level(line_number) abort " {{{1
+  let l:line = getline(a:line_number)
+  return matchend(l:line, '^[=#]\+')
 endfunction " }}}
 
 "" {{{2
