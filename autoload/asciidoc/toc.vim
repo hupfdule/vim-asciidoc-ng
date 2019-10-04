@@ -91,19 +91,22 @@ endfunction " }}}1
 "
 " FIXME: Use A,B, etc. for section headings marked with [appendix]
 " FIXME: Leave sectnum out for Glossary, Bibliography, Index, etc.
+" FIXME: Skip numbering level 0 sections.
 function! s:calc_sectnum(section_titles) abort " {{{1
   let l:section_number = []
   let l:max_sectnum_length = 0
 
   " calculate the section numbering
   for l:section_title in a:section_titles
-    let l:level = l:section_title['level'] - 1
+    let l:level = l:section_title['level']
     if l:level < len(l:section_number)
       while l:level < len(l:section_number)
         call remove(l:section_number, -1)
       endwhile
       if len(l:section_number) > 0
         let l:section_number[-1] += 1
+      else
+        call add(l:section_number, 1)
       endif
     elseif l:level > len(l:section_number)
       while l:level > len(l:section_number)
@@ -112,7 +115,7 @@ function! s:calc_sectnum(section_titles) abort " {{{1
     else
       if l:level > 0
         let l:section_number[-1] += 1
-      else 
+      else
         call add(l:section_number, 1)
       endif
     endif
@@ -149,7 +152,7 @@ endfunction " }}}1
 
 function! s:map_to_loclist_entry(idx, section_title) abort " {{{1
   let l:loclist_entry= {}
-  let l:loclist_entry['bufnr'] = bufnr('.')
+  let l:loclist_entry['bufnr'] = bufnr()
   let l:loclist_entry['lnum'] = a:section_title['line']
   let l:loclist_entry['col'] = 0
   let l:loclist_entry['text'] = a:section_title['f_sectnum'] . '  ' . a:section_title['title']
