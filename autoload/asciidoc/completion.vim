@@ -14,7 +14,7 @@ function! asciidoc#completion#omnicomplete(findstart, base) abort
     let l:start = col('.') - 1
     let b:completion_type = ''
     while l:start > 0
-      " FIXME: Wir könnten auch noch nach andere Completions erlauben
+      " FIXME: We could allow other completions, too
       if l:line[l:start - 1] ==# '<' && l:line[l:start - 2] ==# '<'
         let b:completion_type = 'xref'
         break
