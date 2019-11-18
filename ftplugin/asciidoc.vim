@@ -621,8 +621,9 @@ set cpo&vim
 
   " TOC ------------------------------------------------------------------ {{{
 
-  command -buffer          TOC   call asciidoc#toc#toc()
-  nnoremap <buffer> <Plug>(TOC)  :TOC<cr>
+  command -buffer          AsciidocTOC   call asciidoc#toc#toc()
+  nnoremap <buffer> <Plug>(AsciidocTOC)  :AsciidocTOC<cr>
+  nmap gO <Plug>(AsciidocTOC)
 
   " END TOC }}}
 
