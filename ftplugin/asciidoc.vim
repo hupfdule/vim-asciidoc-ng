@@ -439,6 +439,10 @@ set cpo&vim
     nnoremap <buffer> <LocalLeader>btn :AsciidocToMacroAttribute n inline btn<CR>
     vnoremap <buffer> <LocalLeader>btn :<C-U>AsciidocToMacroAttribute v inline btn<CR>
 
+    inoremap <buffer> <LocalLeader>foot footnote:[]<Left>
+    nnoremap <buffer> <LocalLeader>foot :AsciidocToMacroAttribute n inline footnote<CR>
+    vnoremap <buffer> <LocalLeader>foot :<C-U>AsciidocToMacroAttribute v inline footnote<CR>
+
     " END Insert macros }}}
 
     " Insert blocks ...................................................... {{{
