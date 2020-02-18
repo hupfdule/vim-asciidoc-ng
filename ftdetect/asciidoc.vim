@@ -9,7 +9,7 @@
 augroup Asciidoc
   au!
   au BufRead *.txt,README,TODO,CHANGELOG,NOTES call s:FTasciidoc()
-  au BufRead,BufNewFile *.asciidoc,*.adoc,*.ad set filetype=asciidoc
+  au BufRead,BufNewFile *.asciidoc,*.adoc,*.ad setf asciidoc
 augroup END
 
 " Checks for a valid AsciiDoc document title after first skipping any
@@ -42,7 +42,7 @@ function! s:FTasciidoc() abort
     endif
   endwhile
   if line =~ '^[=#]\+\s\+\w'
-    set filetype=asciidoc
+    setf asciidoc
     return
   endif
   let len = len(line)
@@ -57,5 +57,5 @@ function! s:FTasciidoc() abort
   if len < (nextlen - 3) || len > (nextlen + 3)
     return
   endif
-  set filetype=asciidoc
+  setf asciidoc
 endfunction
