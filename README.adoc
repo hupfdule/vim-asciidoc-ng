@@ -61,7 +61,7 @@ This plugin tries to achieve the following goals:
   - Allow configuration to override or disable defaults
   - Provide asciidoc-specific functionality to ease the creation and
     modification of asciidoc documents
-  
+
 Some of the highlights of this plugin:
 
  Intelligent cross references::
@@ -219,8 +219,8 @@ More detailed explanation of the syntax highlighting
 ////
 
 ////
-FIXME: Syntax highlighting is really extremely slow. 
-The worst is asciidocLiteralParagraph. 
+FIXME: Syntax highlighting is really extremely slow.
+The worst is asciidocLiteralParagraph.
 But also asciidocTablePrefix and a few others
 ////
 
