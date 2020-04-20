@@ -48,10 +48,10 @@ endfunction " }}}
 function! asciidoc#motions#set_setext_section_title(line_number, level, title) abort " {{{1
   let line_number = a:line_number + 1
   let level_marks = repeat(s:setext_levels[a:level - 1], len(a:title))
-  if getline(line_number) =~ '^$'
-    call append(line_number - 1, level_marks)
-  else
+  if asciidoc#motions#is_setext_underline(line_number)
     call setline(line_number, level_marks)
+  else
+    call append(line_number - 1, level_marks)
   endif
 endfunction " }}}
 

@@ -1,3 +1,5 @@
+* [ ] Fix bugs
+
 * [ ] Syntax highlighting
   - Based on dagwieers, with some additional fixes.
   - [ ] Highlight Title
@@ -69,7 +71,7 @@
   - [x] follow automatic references (for sections)
         For example if we have a section "My third Section", it gets an
         auto-generated id "my-third-section". Therefore the link
-        <<other.adoc#my-third-section>> should correctly jump to 
+        <<other.adoc#my-third-section>> should correctly jump to
         == My third Section
         We must therefore search relaxed.
           - Search case insensitive
@@ -110,7 +112,7 @@ Nudel
 
 Integrate even more plugings:
 
-- [ ] https://github.com/aecepoglu/vim-asciidoc-utils 
+- [ ] https://github.com/aecepoglu/vim-asciidoc-utils
       Press "enter" to add or toggle list items
       Seems to need lua... :-(
 - [ ] https://github.com/TheNiteCoder/asciidoc.vim
