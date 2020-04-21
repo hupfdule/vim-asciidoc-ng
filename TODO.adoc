@@ -10,6 +10,22 @@
   - [ ] Use italics for emph
   - [ ] highlight bullets
   - [ ] Color highlight admonition types (WARNING, IMPORTANT, CAUTION in red)
+        We need to define categories for text documents (instead of source code)
+        - ERROR    (or better ATTENTION?)
+        - WARNING  (or better ATTENTION?)
+        - INFO
+        - TITLE
+        - HEADING (or even HEADING1, HEADING2, …)
+        - CAPTION (for images, figures, etc.) (or LABEL)
+        - XREF
+        - QUOTE (?)
+        - SIDENOTE (like footnote, sitenote)
+        - STRONGTEXT
+        - EMPHTEXT
+        - MONOSPACETEXT (or CODETEXT)
+        - SUBSCRIPT/SUPERSCRIPT
+        - BULLET (also for numbering; means only the leading bullet, not
+          the text)
   - different colors for attributes (like :toc:) and its values
   - Highlight block captions
   - Highlight callout markers
