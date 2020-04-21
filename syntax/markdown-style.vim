@@ -28,9 +28,7 @@ syn match  asciidocMarkdownCodeLanguage  /\(`\{3}\)\@<=\i\+/                    
 syn region asciidocMarkdownCode          start=/^\z(`\{3}\)[^`]*$/    end=/^\z1`*\s*$/  contains=asciidocMarkdownCodeLanguage
 
 " markdown style horizontal rules
-syn match  asciidocMarkdownHRule         /^\s*\*\s\{0,1}\*\s\{0,1}\*\(\*\|\s\)*$/
-syn match  asciidocMarkdownHRule         /^\s*-\s\{0,1}-\s\{0,1}-\(-\|\s\)*$/
-syn match  asciidocMarkdownHRule         /^\s*_\s\{0,1}_\s\{0,1}_\(_\|\s\)*$/
+syn match  asciidocMarkdownHRule         /^\s*\([\*_-]\)\(\s*\)\1\2\1\s*$/
 
 
 " TODO: Specify "fancy" colors
