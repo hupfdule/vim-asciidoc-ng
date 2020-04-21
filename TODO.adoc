@@ -1,4 +1,8 @@
 * [ ] Fix bugs
+  - [ ] TOC wird teilweise in einem viel zu großen Fenster angezeigt.
+        Beispiel: kurzes Dokument (weniger als der Bildschirm); TOC nimmt
+        den gesamten Bildschirm ein; Das Dokument kriegt nur noch eine
+        Zeile
 
 * [ ] Syntax highlighting
   - Based on dagwieers, with some additional fixes.
@@ -121,6 +125,10 @@ Integrate even more plugings:
       diverse Folding, but no Setext headings
 - [ ] https://github.com/jhradilek/vim-asciidoc
       Tagbar integration (with toc, included, images, videos)
+- [ ] https://github.com/QMHTMY/asciidoc-preview.vim
+      HTML preview with synchronized scrolling (doesn't work?)
+- [ ] https://github.com/habamax/vim-do-outline
+      Alternative TOC implementation
 
 Das prüft das jetzige Syntax-File nämlich nicht.
 
@@ -132,3 +140,4 @@ See also:
  - gabrielelana/vim-markdown
  - plasticboy/vim-markdown
  - some other plugins...
+
