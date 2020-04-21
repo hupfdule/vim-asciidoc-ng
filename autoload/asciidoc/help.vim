@@ -2,7 +2,7 @@ let s:default_syntax_help_file= expand('<sfile>:p:h:h:h') . '/help/asciidoc_synt
 "let s:user_syntax_help_file= get(g:, 'asciidoc_syntax_help_file', split(&rtp, ',')[0]. '/backup')
 let s:user_syntax_help_file= split(&rtp, ',')[0]. '/vim-asciidoc-ng/asciidoc_syntax_help.adoc'
 
-"" {{{2
+"" {{{2 @deprecated Use asciidoc#help#syntax() instead
 "
 function! asciidoc#help#syntax_OBSOLETE() abort " {{{1
   if !executable('asciidoc')
@@ -20,9 +20,15 @@ function! asciidoc#help#syntax_OBSOLETE() abort " {{{1
   setlocal filetype=asciidoc buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap nomodifiable
 endfunction " }}}1
 
-"" {{{2
+"" Open a short syntax help in a new window                                 {{{2
 "
-function! asciidoc#help#syntax() abort " {{{1
+" If a user provided help file is found at
+" `.vim/vim-asciidoc-ng/asciidoc_syntax_help.adoc` that one is displayed.
+" Otherwise the default help file provided by this plugin is displayed.
+"
+" The option 'g:asciidoc_help_vertial' defines whether the new windows be
+" be split vertically.
+function! asciidoc#help#syntax() abort                                    " {{{1
   " TODO: Additionally to split/vsplit support tabs and floating windows
   " TODO: DIfferentiate betwen "syntax help" and "vim plugin help".
   "       Provide both. Can "vim plugin help" be generated somehow?
@@ -41,4 +47,6 @@ function! asciidoc#help#syntax() abort " {{{1
   execute l:cmd
   setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap nomodifiable
   normal gg
-endfunction " }}}1
+endfunction                                                               " }}}1
+
+" vim: set foldmethod=marker :
