@@ -11,7 +11,7 @@ Text formatting
 ---------------
   *bold text*                 (boldface font)
   _emphasized text_           (normally italics)
-  'emphasized text'           (only in AsciiDoc Pythong)
+  'emphasized text'           (only in AsciiDoc Python)
   `monospaced text`           (proportional font)
   +_literal text+             (inline literal passthrough)
 
