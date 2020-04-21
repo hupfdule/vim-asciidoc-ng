@@ -72,6 +72,7 @@ Paragraphs
 ----------
 A normal paragraph.           (styles: literal,verse,quote,listing,
                                        NOTE,TIP,WARNING,IMPORTANT,CAUTION)
+
   An indented literal
   paragraph.
 
