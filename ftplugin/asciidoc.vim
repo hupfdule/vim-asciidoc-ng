@@ -642,6 +642,14 @@ set cpo&vim
 
   " END TOC }}}
 
+  " Help ----------------------------------------------------------------- {{{
+
+  command -buffer          AsciidocHelp   call asciidoc#help#syntax()
+  nnoremap <buffer> <Plug>(AsciidocHelp)  :AsciidocHelp<cr>
+  nmap g? <Plug>(AsciidocHelp)
+
+  " END Help }}}
+
 " END Commands }}}
 
 " Text objects =========================================================== {{{
