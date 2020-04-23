@@ -525,6 +525,7 @@ function! s:find_next_setext_section_title(start_line, search_flags) abort " {{{
   let l:old_pos = getpos('.')
   call setpos('.', [0, a:start_line, 0, 0])
   let l:next_setext = search(s:setext_title, a:search_flags)
+  call setpos('.', old_pos)
   if l:next_setext == 0
     return
   endif
@@ -535,7 +536,6 @@ function! s:find_next_setext_section_title(start_line, search_flags) abort " {{{
   let l:title_underline = substitute(l:title_underline, '\s\+$', '', '') " Remove all whitespace from the end
   let l:title_underline_length = strlen(l:title_underline)
   if abs(l:title_text_length - l:title_underline_length) <= 1
-    call setpos('.', old_pos)
     return l:next_setext
   else
     if a:search_flags =~# 'b'
