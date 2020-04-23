@@ -14,7 +14,23 @@ let s:atx_title_complex += '\s*'                                                
 let s:atx_title_complex += '\(\([[\[A-Za-z:_\]\[A-Za-z0-9\.\-\]\{-\}]]\)*\)'    " secondary anchors (optional)
 let s:atx_title_complex += '\(\s\+\1\)\?$'                                      " trailing section markers (optional)
 let s:atx_title = '^\(=\{1,6}\|\#\{1,6}\)\s\+\(\S.\{-}\)\(\s\+\1\)\?$'
-let s:setext_title_text = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=[^.].*'
+let s:setext_title_text  = ''
+let s:setext_title_text .= '\('
+let s:setext_title_text .=   '^\s*$\n'                      " empty line
+let s:setext_title_text .=   '\|'                           " or
+let s:setext_title_text .=   '\%^'                          " start of file
+let s:setext_title_text .=   '\|'                           " or
+let s:setext_title_text .=   '^\[.*\]\s*$\n'                " anchor line
+let s:setext_title_text .=   '\|'                           " or
+let s:setext_title_text .=   '^\.[^.].*\s*$\n'              " label line
+let s:setext_title_text .= '\)\@<='                         " must precede
+let s:setext_title_text .= '\%('                            " actual heading text which
+let s:setext_title_text .=   '\%(^[^[].*[^]]\s*\)'          " must not be enclosed in brackets (must not be an anchor) AND
+let s:setext_title_text .=   '\&'
+let s:setext_title_text .=   '\%(^[^.].*$\)'                " must not start with a dot (must not be a label)
+let s:setext_title_text .= '\)'
+
+"let s:setext_title_text = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=[^.].*'
 "let s:setext_title_text = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=\(\[.*\]\)\@!\&\([^\.].*\)$'
 let s:setext_title_underline = '[=\-~^+]\{2,}\s*$'
 let s:setext_title = s:setext_title_text . '\n' . s:setext_title_underline
@@ -177,6 +193,9 @@ function! asciidoc#motions#jump_to_next_section_title() abort " {{{1
     let next_atx = search(s:atx_title, 'Wn')
     let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
     let next = min(filter([next_atx, next_setext], 'v:val != 0'))
+    echom 'na: ' . next_atx
+    echom 'ns: ' . next_setext
+    echom 'n : ' . next
     call cursor(next, 0)
   endfor
 
@@ -525,6 +544,8 @@ function! s:find_next_setext_section_title(start_line, search_flags) abort " {{{
   let l:old_pos = getpos('.')
   call setpos('.', [0, a:start_line, 0, 0])
   let l:next_setext = search(s:setext_title, a:search_flags)
+  echom s:setext_title
+  echom 'nst: '.l:next_setext
   call setpos('.', old_pos)
   if l:next_setext == 0
     return
