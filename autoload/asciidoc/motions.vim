@@ -173,15 +173,10 @@ endfunction " }}}
 " FIXME: Should the jump_to_next/prior... function be joined into a single
 " function with parameters 'backwards' 'start/end'?
 function! asciidoc#motions#jump_to_next_section_title() abort " {{{1
-  let next_atx = search(s:atx_title, 'Wn')
-  let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
-  let next = min(filter([next_atx, next_setext], 'v:val != 0'))
-  let next = 0
-
   for i in range(1, v:count1)
     let next_atx = search(s:atx_title, 'Wn')
     let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
-    let next = max([next_atx, next_setext])
+    let next = min(filter([next_atx, next_setext], 'v:val != 0'))
     call cursor(next, 0)
   endfor
 
