@@ -29,11 +29,21 @@ let s:setext_title_text .=   '\%(^[^[].*[^]]\s*\)'          " must not be enclos
 let s:setext_title_text .=   '\&'
 let s:setext_title_text .=   '\%(^[^.].*$\)'                " must not start with a dot (must not be a label)
 let s:setext_title_text .= '\)'
+let s:setext_title_text .= '\n'                             " then a newline
+let s:setext_title_text .= '\('
+let s:setext_title_text .=   '\([=\-~^+]\)\3\+'             " then one of the underline chars at least twice
+let s:setext_title_text .=   '\s*$'                         " and optional trailing whitespace
+let s:setext_title_text .= '\)'
+
+" FIXME: These regexes are _way_ too complex. Should we separate them to
+" one regex per line and verify each on their own? Could be faster.
 
 "let s:setext_title_text = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=[^.].*'
 "let s:setext_title_text = '\(^\s*$\n\|\%^\|^\[.*\]\s*$\n\)\@<=\(\[.*\]\)\@!\&\([^\.].*\)$'
-let s:setext_title_underline = '[=\-~^+]\{2,}\s*$'
-let s:setext_title = s:setext_title_text . '\n' . s:setext_title_underline
+"let s:setext_title_underline = '[=\-~^+]\{2,}\s*$'
+let s:setext_title_underline = '\([=\-~^+]\)\1\+\s*$'
+"let s:setext_title = s:setext_title_text . '\n' . s:setext_title_underline
+let s:setext_title = s:setext_title_text
 let s:setext_levels = ['=','-', '~', '^', '+']
 
 " }}}
@@ -193,9 +203,6 @@ function! asciidoc#motions#jump_to_next_section_title() abort " {{{1
     let next_atx = search(s:atx_title, 'Wn')
     let next_setext = s:find_next_setext_section_title(line('.'), 'Wn')
     let next = min(filter([next_atx, next_setext], 'v:val != 0'))
-    echom 'na: ' . next_atx
-    echom 'ns: ' . next_setext
-    echom 'n : ' . next
     call cursor(next, 0)
   endfor
 
@@ -544,8 +551,6 @@ function! s:find_next_setext_section_title(start_line, search_flags) abort " {{{
   let l:old_pos = getpos('.')
   call setpos('.', [0, a:start_line, 0, 0])
   let l:next_setext = search(s:setext_title, a:search_flags)
-  echom s:setext_title
-  echom 'nst: '.l:next_setext
   call setpos('.', old_pos)
   if l:next_setext == 0
     return
