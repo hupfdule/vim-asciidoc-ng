@@ -35,6 +35,8 @@ let s:setext_title_text .=   '\([=\-~^+]\)\3\+'             " then one of the un
 let s:setext_title_text .=   '\s*$'                         " and optional trailing whitespace
 let s:setext_title_text .= '\)'
 
+let g:ast = s:setext_title_text
+
 " FIXME: These regexes are _way_ too complex. Should we separate them to
 " one regex per line and verify each on their own? Could be faster.
 
@@ -588,6 +590,10 @@ function! asciidoc#motions#get_atx_section_title(line_number) abort " {{{1
   endif
 endfunction " }}}
 
+function! asciidoc#motions#hurz(line_number)  abort 
+   
+endfunction
+
 function! asciidoc#motions#get_setext_section_title(line_number) abort " {{{1
   let line = getline(a:line_number)
   if line =~ '^' . s:setext_title_underline
@@ -602,6 +608,8 @@ function! asciidoc#motions#get_setext_section_title(line_number) abort " {{{1
   " Check whether the title really matches a setext title
   " The line before must be empty or start with a dot, the line itself must
   " not start with a dot.
+  " FIXME: Is this still necessary? We are now using a very complex, but
+  "        very correct regex for detecting a setex section heading
   if !( line =~# '^[^.].*$' && precedingline =~# '^\%(\s*\|\[.*\]\s*\)$')
     return {}
   endif
@@ -612,19 +620,24 @@ function! asciidoc#motions#get_setext_section_title(line_number) abort " {{{1
 
   " FIXME: In the code above we compare with <1. Which should be
   " incorrect...
-  if abs(len(line) - len(underline)) < 2 && (line . "\n" . underline) =~ s:setext_title
+  " FIXME: This check fails! We cannot compare at string against out regex,
+  "        since it is missing the preceding parts.
+  "        But it should not be necessary to check this again.
+  "if abs(len(line) - len(underline)) < 2 && (line . "\n" . underline) =~ s:setext_title
     let level = 1 + index(s:setext_levels, underline[0])
     return {'line' : a:line_number, 'type' : 'setext', 'level' : level, 'title' : line}
-  else
-    return {}
-  endif
+  "else
+  "  return {}
+  "endif
 endfunction " }}}
 
 function! asciidoc#motions#get_section_title(line_number) abort " {{{1
   let atx = asciidoc#motions#get_atx_section_title(a:line_number)
+  echom 'A ' . string(atx)
   if !empty(atx)
     return atx
   else
+    echom 'B ' . string(asciidoc#motions#get_setext_section_title(a:line_number)) 
     return asciidoc#motions#get_setext_section_title(a:line_number)
   endif
 endfunction " }}}

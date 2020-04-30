@@ -29,6 +29,13 @@ set cpo&vim
   endif
 
   ""
+  " Whether to enable the exact (and slower) syntax highlighting (default 1)
+  " See |...|
+  if !exists('g:asciidoc_enable_exact_syntax_highlighting')
+    let g:asciidoc_enable_exact_syntax_highlighting = 1
+  endif
+
+  ""
   " Whether to enable the fancy syntax highlighting (default 0)
   " See |...|
   if !exists('g:asciidoc_enable_fancy_syntax_highlighting')

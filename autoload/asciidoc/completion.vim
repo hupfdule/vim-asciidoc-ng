@@ -50,8 +50,11 @@ function! s:getAllSectionHeaders() abort
   let l:all_section_headers = []
 
   let l:next_section_header_line = asciidoc#motions#find_next_section_heading(0, 'Wnc')
+  echom "nl " . string(l:next_section_header_line)
   while l:next_section_header_line !=# 0
     let l:next_section_header = asciidoc#motions#get_section_title(l:next_section_header_line)
+
+    echom "nn " . string(l:next_section_header)
 
     let l:submatches =  matchlist(l:next_section_header['title'], s:atx_title_line)
 

@@ -118,6 +118,38 @@ syn region asciidocHLabel start=/^\s*/ end=/\(::\|;;\)\(\s\+\|\\$\)/ oneline con
 " Starts with any of the above.
 syn region asciidocList start=/^\s*\(-\|\*\{1,5}\)\s/ start=/^\s*\(\(\d\+\.\)\|\.\{1,5}\|\(\a\.\)\|\([ivxIVX]\+)\)\)\s\+/ start=/.\+\(:\{2,4}\|;;\)$/ end=/\(^[=*]\{4,}$\)\@=/ end=/\(^\(+\|--\)\?\s*$\)\@=/ contains=asciidocList.\+,asciidocQuoted.*,asciidocMacroAttributes,asciidocAttributeRef,asciidocEntityRef,asciidocEmail,asciidocURL,asciidocBackslash,asciidocCommentLine,asciidocAttributeList,asciidocToDo
 
+
+" Here we redefine some regexes to give more correct results. Unfortunately
+" this slows vim down.
+" FIXME: Really provide the "faster" regexes? Should we instead rely on
+" other plugins to provide the syntax then?
+if get(g:, 'asciidoc_enable_exact_syntax_highlighting', v:false)
+  " FIXME: This is a duplication of the regex. We need to source it from an
+  " autoload script.
+  let s:setext_title_text  = ''
+  let s:setext_title_text .= '\('
+  let s:setext_title_text .=   '^\s*$\n'                      " empty line
+  let s:setext_title_text .=   '\|'                           " or
+  let s:setext_title_text .=   '\%^'                          " start of file
+  let s:setext_title_text .=   '\|'                           " or
+  let s:setext_title_text .=   '^\[.*\]\s*$\n'                " anchor line
+  let s:setext_title_text .=   '\|'                           " or
+  let s:setext_title_text .=   '^\.[^.].*\s*$\n'              " label line
+  let s:setext_title_text .= '\)\@<='                         " must precede
+  let s:setext_title_text .= '\%('                            " actual heading text which
+  let s:setext_title_text .=   '\%(^[^[].*[^]]\s*\)'          " must not be enclosed in brackets (must not be an anchor) AND
+  let s:setext_title_text .=   '\&'
+  let s:setext_title_text .=   '\%(^[^.].*$\)'                " must not start with a dot (must not be a label)
+  let s:setext_title_text .= '\)'
+  let s:setext_title_text .= '\n'                             " then a newline
+  let s:setext_title_text .= '\('
+  let s:setext_title_text .=   '\([=\-~^+]\)\3\+'             " then one of the underline chars at least twice
+  let s:setext_title_text .=   '\s*$'                         " and optional trailing whitespace
+  let s:setext_title_text .= '\)'
+
+  execute 'syn match asciidocTwoLineTitle /'.s:setext_title_text.'/ contains=asciidocQuoted.*,asciidocMacroAttributes,asciidocAttributeRef,asciidocEntityRef,asciidocEmail,asciidocURL,asciidocBackslash,asciidocTitleUnderline'
+endif
+
 hi def link asciidocAdmonition Special
 hi def link asciidocAnchorMacro Macro
 hi def link asciidocAttributeEntry Special

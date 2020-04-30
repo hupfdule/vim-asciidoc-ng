@@ -1,9 +1,95 @@
 * [ ] Fix bugs
+  - [ ] Nach dem Setzen des Setex Heading-Levels _im Insert-Modus_ sollte der
+        Cursor an das Ende der Unterlinie gesetzt werden.
+        Also aus (`|` stellt den Cursor dar)
+
+        Nudelbauer|
++
+        wird
+
+        Nudelbauer
+        ----------|
++
+        Ist das sinnvoll, wenn der Cursor irgendwo mitten im Wort steht?
+
+  - [ ] Setzen des Setex Heading-Levels, wenn der Cursor auf dem
+        Unterstrich steht, erzeugt einen _zusätzlichen_ Unterstrich. Aus
+
+        Nudelbauer
+        ----------|
++
+        wird dann
+
+        Nudelbauer
+        ----------
+        ----------
+
+
   - [ ] TOC wird teilweise in einem viel zu großen Fenster angezeigt.
         Beispiel: kurzes Dokument (weniger als der Bildschirm); TOC nimmt
         den gesamten Bildschirm ein; Das Dokument kriegt nur noch eine
-        Zeile
+        Zeile.
+  - [ ] Überschriften, die sowohl ATX als auch Setex sind, werden falsch
+        interpretiert. Asciidoctor wertet diese als Setex (und die Zeile
+        darunter dann als literal block. vim-asciidoc-ng wertet diese als
+        Setex.
+        Hier muss die ATX-Syntax noch als negativer lookbehind umgesetzt
+        werden.
 
+        == Nudelbauer
+        -------------
+
+  - [ ] Anker mit doppelten Klammern werden anders gehighlightet als Anker
+        mit einfachen Klammern. Warum?
+        Was ist überhaupt der Unterschied?
+
+        [[nochweiter]]
+        [davor]
+
+  - [ ] Inline-Anker werden nicht korrekt erkannt.
+        Das ist eine gültige Überschrift
+
+        [[darfdas]]Darf nur Sekundär sein?
+        ----------------------------------
+
+  - [ ] Eckige Klammer am Anfang wird offenbar falsch interpretiert.
+        Das ist eigentlich eine gültige Überschrift
+
+        [Was ist damit?
+        ---------------
+
+  - [ ] Label ohne Überschrift wird falsch interpretiert.
+        Das ist _keine_ gültige Überschrift
+
+        .Das geht nicht
+        ---------------
+
+  - [ ] Abschnitt "text emphasis" in example.adoc zeigt diverse falsche
+        Formatierungen.
+
+  - [ ] Codeblöcke werden inkorrekt gefaltet.
+        Dass sie gefaltet werden ist schön. Die Separator werden jedoch als
+        Setex Underline interpretiert. Das ist Quatsch, da sie eine andere
+        Länge haben. Damit könnte man das ausschließen.
+        - Das Problem ist, dass meine regex für Setext headings gut zum
+          Suchen ist, aber schlecht zum Vergleichen beliebiger Strings.
+          Besser wäre es wirklich jede Zeile gesondert gegen ein eigenes
+          Pattern zu vergleichen:
+          - preceding line pattern  (start of file, empty line, anchor, label)
+          - title text pattern
+          - Setex underline
+          + Länge 2 + 3 gleich (±1)
+
+* [ ] Preview
+      - [ ] with synchronized scrolling?
+      - [ ] continuous preview?
+- [ ] Preview diagram
+      - e.g. plantuml, but also ditaa, etc.
+      - parse diagram type in current region and pipe it to the converter,
+        then display the result in some other app. Continuous update would
+        be nice, but I don't know if that is possible.
+        It could be possible via auto-refresh (provided by the viewer or a
+        browser extension).
 * [ ] Syntax highlighting
   - Based on dagwieers, with some additional fixes.
   - [ ] Highlight Title
@@ -80,6 +166,8 @@
           possisble should then create the next list item, table row, etc.
         - How about continuation in lists with a '+' in the first column?
   - [ ] Support for checkbox inserttion/removal/toggle
+  - [ ] Support for moving an entry in a list up/down
+  - [ ] Support for indenting/outdenting list items
   - [ ] Command to create a table that asks for (or accepts as parameter) columns and rows
         - maybe even a command to exchange rows and columns (only on empty
           tables or even with content?)
@@ -109,17 +197,6 @@ dass zwei Elemente absolut gleich sein sollen. Damit kann man prüfen, dass die 
 von Blöcken absolut gleich sind.
 Also
 
-
-Formatierung für List items:
- - <CR> wiederholt das bullet der vorhergehenden Zeile und rückt
-   entsprechend ein
- - Wenn die vorhergehende Zeile kein bullet enthält, rücke nur ein
- - <CR> bei einem leeren Bullet löscht das Bullet, der Cursor bleibt wo er
-   ist
- - <CR> auf einer leeren Zeile (in einer Liste) löscht die vorangegangenen
-   Leerzeichen und macht einen normalen Zeilenumbruch
-
-
 =========
 Inhalt
 =========
@@ -129,6 +206,15 @@ statt
 =========
 Nudel
 ======
+
+Formatierung für List items:
+ - <CR> wiederholt das bullet der vorhergehenden Zeile und rückt
+   entsprechend ein
+ - Wenn die vorhergehende Zeile kein bullet enthält, rücke nur ein
+ - <CR> bei einem leeren Bullet löscht das Bullet, der Cursor bleibt wo er
+   ist
+ - <CR> auf einer leeren Zeile (in einer Liste) löscht die vorangegangenen
+   Leerzeichen und macht einen normalen Zeilenumbruch
 
 Integrate even more plugings:
 

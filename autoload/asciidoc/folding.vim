@@ -19,7 +19,11 @@ function! asciidoc#folding#foldexpr(lnum)
         " Setext style titles
         let l:setext_level = asciidoc#motions#get_setext_section_title_level(a:lnum)
         let l:is_underline = asciidoc#motions#is_setext_underline(a:lnum)
-        if l:is_underline
+        " level 0 means this line is actually no setext heading
+        " FIXME: This check should not be necessary if asciidoc#motions#is_setext_section_title would give the correct result
+        if l:setext_level ==# 0
+          return '='
+        elseif l:is_underline
           return l:setext_level
         else
           return '>' . l:setext_level

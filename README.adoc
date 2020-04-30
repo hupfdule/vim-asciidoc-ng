@@ -66,7 +66,7 @@ Some of the highlights of this plugin:
 
  Intelligent cross references::
    This plugin provides a list of possible anchors for inserting cross
-   references. This avoids illegal cross reference due to typos or having
+   references. This avoids illegal cross references due to typos or having
    to manually look up the correct anchor name.
  Navigation mappings::
    This plugin provides mappings for easy navigation between the sections
@@ -79,12 +79,17 @@ Some of the highlights of this plugin:
    This plugin can display an outline of the the current document to have a
    quick glance over all section titles. This outline view can be used for
    navigating to specific sections, too.
- // Syntax highlighting?
- // Integration with makeprg to fill quickfix list with compilation errors
- // or warnings?
- // Folding?
- // Resemble document structure in this list and let the titles be links to
- // the corresponding sections?
+ Integrated asciidoc syntax help::
+   This plugin can display a short buffer with the most common markup
+   in a cheatsheet like fashion.
+
+
+// Syntax highlighting?
+// Integration with makeprg to fill quickfix list with compilation errors
+// or warnings?
+// Folding?
+// Resemble document structure in this list and let the titles be links to
+// the corresponding sections?
 
 
 
@@ -179,7 +184,7 @@ Detailled description of all commands
 `:ApplyHeadingStyle [style]`::
   `[style]` may be any of `setext`, `atx`, `syncatx` +
   Apply a certain heading style on all section headings in the current buffer.
-  If no style is given, use the default style defined in g:asciidoc_title_style.
+  If no style is given, use the default style defined in `g:asciidoc_title_style`.
 
 
 Text Objects
@@ -238,12 +243,23 @@ Folding
 Known Shortcomings
 ------------------
 
-- Imperfect Sytax highlighting
+- Imperfect Syntax highlighting
   Due to the bad decision to use the same characters for Setext underlines
   as well as block delimiters and vims restricted syntax highlighting it is
   not always possible to differentiate between Setext section headers and the
   end delimiters of block elements. Therefore some blocks will be incorrectly
   highlighted.
+  +
+  One of the most prominent problems is that vims syntax files (being regex
+  based) do not allow checking the length of the title and the underline. 
+  While a difference of more than 1 (or 2 for python asciidoc) clearly is
+  not a setex title, vim syntax will still display it as such.
+  The only workaround is 
+   - removing the empty line before the line that is mistaken for a heading
+   - spliting the single line that is mistaken for a heading into multiple
+     lines
+   - adding an empty line after the last line of a block to avoid mistaking
+     it for a heading.
 // TODO: Screenshot?
 
 Related Projects
